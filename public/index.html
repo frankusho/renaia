@@ -1,0 +1,1211 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RenaIA — Todavía hay un camino.</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,500&family=DM+Sans:wght@300;400;500&display=swap');
+
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body {
+      font-family:'DM Sans',sans-serif;
+      background:#060a07;
+      color:#c8d8d0;
+      overflow-x:hidden;
+    }
+
+    /* ── TOKENS ── */
+    :root {
+      --green: #1a9e72;
+      --green-dim: #0f7a55;
+      --green-glow: rgba(26,158,114,.18);
+      --green-glow-sm: rgba(26,158,114,.08);
+      --surface: rgba(10,18,13,.82);
+      --border: rgba(26,158,114,.14);
+      --border-faint: rgba(255,255,255,.06);
+      --text-primary: #e8f2ec;
+      --text-secondary: #7a9e8a;
+      --text-muted: #3a5548;
+    }
+
+    /* ── REVEAL ── */
+    .reveal { opacity:0; transform:translateY(28px); transition:opacity .9s ease, transform .9s ease; }
+    .reveal.visible { opacity:1; transform:none; }
+    .reveal-left { opacity:0; transform:translateX(-28px); transition:opacity .9s ease, transform .9s ease; }
+    .reveal-left.visible { opacity:1; transform:none; }
+    .reveal-right { opacity:0; transform:translateX(28px); transition:opacity .9s ease, transform .9s ease; }
+    .reveal-right.visible { opacity:1; transform:none; }
+    .d1{transition-delay:.12s} .d2{transition-delay:.24s} .d3{transition-delay:.36s} .d4{transition-delay:.48s}
+
+    /* ── NAV ── */
+    nav {
+      position:fixed; top:0; left:0; right:0; z-index:100;
+      padding:1.25rem 3rem;
+      display:flex; align-items:center; justify-content:space-between;
+      transition:all .4s;
+    }
+    nav.scrolled {
+      background:rgba(6,10,7,.88);
+      backdrop-filter:blur(24px);
+      border-bottom:.5px solid var(--border);
+    }
+    .nav-logo { display:flex; align-items:center; gap:9px; text-decoration:none; }
+    .nav-logo-text { font-size:17px; font-weight:500; color:var(--text-primary); letter-spacing:-.3px; }
+    .nav-logo-text em { color:var(--green); font-style:normal; }
+    /* CENTER nav links */
+    .nav-links {
+      display:flex; align-items:center; gap:2.5rem; list-style:none;
+      position:absolute; left:50%; transform:translateX(-50%);
+    }
+    .nav-links a { font-size:13px; font-weight:300; color:#5a8070; text-decoration:none; transition:color .3s; letter-spacing:.2px; }
+    .nav-links a:hover { color:#b0ccc0; }
+    .nav-cta {
+      background:transparent; color:#b0ccc0;
+      padding:8px 22px; border-radius:100px;
+      border:.5px solid rgba(180,210,196,.2);
+      font-size:13px; font-weight:400; text-decoration:none;
+      transition:all .3s; letter-spacing:.3px;
+    }
+    .nav-cta:hover { border-color:rgba(26,158,114,.5); color:var(--green); background:rgba(26,158,114,.05); }
+
+    /* ── SECTION WRAPPER ── */
+    .si { max-width:1060px; margin:0 auto; }
+    .stag {
+      font-size:10px; font-weight:500; letter-spacing:3.5px;
+      text-transform:uppercase; color:var(--green); margin-bottom:1rem; opacity:.9;
+      display:flex; align-items:center; gap:8px;
+    }
+    .stag::before { content:''; display:block; width:20px; height:.5px; background:var(--green); opacity:.6; }
+
+    /* ── GLASS CARD BASE ── */
+    .glass {
+      background:var(--surface);
+      border:.5px solid var(--border);
+      border-radius:20px;
+      backdrop-filter:blur(16px);
+      position:relative; overflow:hidden;
+    }
+    .glass::before {
+      content:''; position:absolute; inset:0; border-radius:inherit;
+      background:radial-gradient(ellipse at 50% 0%, rgba(26,158,114,.06), transparent 60%);
+      pointer-events:none;
+    }
+
+    /* ══════════════════════════════════
+       HERO
+    ══════════════════════════════════ */
+    .hero {
+      min-height:100vh;
+      display:grid; grid-template-columns:1fr 1fr;
+      align-items:center;
+      padding:9rem 5rem 5rem;
+      position:relative; overflow:hidden;
+      background:
+        linear-gradient(90deg,
+          rgba(4,8,5,.96) 0%,
+          rgba(4,8,5,.86) 38%,
+          rgba(4,8,5,.38) 62%,
+          rgba(4,8,5,.52) 100%
+        ),
+        url('hero.jpg') center 28% / cover no-repeat;
+    }
+    .hero::after {
+      content:''; position:absolute; inset:0;
+      background:radial-gradient(ellipse at 20% 60%, rgba(26,158,114,.06), transparent 55%);
+      pointer-events:none;
+    }
+    .grain {
+      position:absolute; inset:0; z-index:1; opacity:.022; pointer-events:none;
+      background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size:256px;
+    }
+    .hero-text { position:relative; z-index:2; }
+    .hero-tag {
+      font-size:10px; font-weight:500; letter-spacing:3.5px; text-transform:uppercase;
+      color:var(--green); margin-bottom:2rem;
+      opacity:0; animation:fadeup 1s ease .3s forwards;
+      display:flex; align-items:center; gap:8px;
+    }
+    .hero-tag::before { content:''; display:block; width:20px; height:.5px; background:var(--green); }
+    .hero-title {
+      font-family:'Playfair Display',serif;
+      font-size:72px; font-weight:500; line-height:1.02; letter-spacing:-2px;
+      color:var(--text-primary); margin-bottom:2rem;
+      opacity:0; animation:fadeup 1s ease .55s forwards;
+    }
+    .hero-title em { font-style:italic; color:var(--green); display:block; }
+    /* green accent line under title */
+    .hero-title-line {
+      width:48px; height:1.5px; background:var(--green); margin-bottom:2rem;
+      opacity:0; animation:fadeup 1s ease .7s forwards;
+    }
+    .hero-sub {
+      font-size:15px; color:var(--text-secondary); font-weight:300; line-height:1.85;
+      margin-bottom:2.5rem; max-width:400px;
+      opacity:0; animation:fadeup 1s ease .85s forwards;
+    }
+    .hero-cta {
+      display:inline-flex; align-items:center; gap:10px;
+      background:var(--green-dim); color:white;
+      padding:16px 34px; border-radius:10px;
+      font-size:14px; font-weight:500; text-decoration:none;
+      opacity:0; animation:fadeup 1s ease 1s forwards;
+      transition:all .3s;
+      box-shadow:0 8px 36px rgba(15,122,85,.3);
+      letter-spacing:.2px;
+    }
+    .hero-cta:hover { background:var(--green); transform:translateY(-2px); box-shadow:0 14px 48px rgba(15,122,85,.4); }
+    .hero-cta-icon { font-size:12px; opacity:.8; }
+    /* social proof mini row */
+    .hero-social-proof {
+      display:flex; align-items:center; gap:10px;
+      margin-top:1.25rem;
+      opacity:0; animation:fadeup 1s ease 1.2s forwards;
+    }
+    .hero-sp-icon {
+      width:30px; height:30px; border-radius:8px;
+      background:rgba(26,158,114,.1); border:.5px solid var(--border);
+      display:flex; align-items:center; justify-content:center; font-size:13px;
+      flex-shrink:0;
+    }
+    .hero-sp-text { font-size:12px; color:var(--text-muted); line-height:1.5; }
+    .hero-sp-text em { color:var(--green); font-style:normal; font-weight:400; }
+
+    /* hero chat – atmosférico */
+    .hero-chat {
+      position:relative; z-index:2;
+      display:flex; flex-direction:column; align-items:flex-end; gap:1rem;
+      padding-top:3rem; padding-right:1rem;
+      opacity:0; animation:fadeup 1.2s ease 1.5s forwards;
+    }
+    .chat-bubble {
+      max-width:210px; padding:.9rem 1.1rem; border-radius:14px;
+      font-size:13px; font-weight:300; line-height:1.65;
+      backdrop-filter:blur(20px);
+    }
+    .chat-bubble.user {
+      background:rgba(255,255,255,.04); border:.5px solid rgba(255,255,255,.07);
+      color:#88a898; border-bottom-right-radius:3px;
+    }
+    .chat-bubble.ai {
+      background:rgba(26,158,114,.09); border:.5px solid rgba(26,158,114,.14);
+      color:#70a888; border-bottom-right-radius:3px;
+    }
+    .chat-ai-row { display:flex; align-items:center; gap:.5rem; align-self:flex-end; }
+    .chat-avatar {
+      width:26px; height:26px; border-radius:50%;
+      background:linear-gradient(135deg,#082818,#0f7a55);
+      display:flex; align-items:center; justify-content:center;
+      font-size:10px; color:white; font-weight:600; flex-shrink:0;
+    }
+
+    @keyframes fadeup { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:none; } }
+
+    /* ══════════════════════════════════
+       IDENTIFICACIÓN — "No estás solo"
+    ══════════════════════════════════ */
+    .ident {
+      padding:8rem 2rem;
+      background:radial-gradient(ellipse at 50% 30%, rgba(26,158,114,.06), transparent 65%), #060a07;
+    }
+    .ident-header { margin-bottom:3.5rem; }
+    .ident-title {
+      font-family:'Playfair Display',serif;
+      font-size:58px; font-weight:500; line-height:1.05; letter-spacing:-1.8px;
+      color:var(--text-primary); margin-bottom:.5rem;
+    }
+    .ident-title em { font-style:italic; color:var(--green); display:block; }
+    .ident-title-line { width:48px; height:1.5px; background:var(--green); margin:1.25rem 0; opacity:.7; }
+    .ident-sub { font-size:15px; color:var(--text-secondary); font-weight:300; line-height:1.8; max-width:480px; }
+    .ident-sub em { color:var(--green); font-style:normal; }
+    .ident-cards {
+      display:grid; grid-template-columns:repeat(4,1fr); gap:1rem; margin-bottom:1.5rem;
+    }
+    .ic {
+      background:rgba(8,16,11,.85); border:.5px solid var(--border);
+      border-radius:18px; padding:2rem 1.75rem;
+      transition:all .4s; position:relative; overflow:hidden;
+    }
+    .ic::after {
+      content:''; position:absolute; bottom:0; left:0; right:0; height:1.5px;
+      background:linear-gradient(90deg, transparent, var(--green), transparent);
+      opacity:0; transition:opacity .4s;
+    }
+    .ic:hover { border-color:rgba(26,158,114,.28); transform:translateY(-4px); }
+    .ic:hover::after { opacity:.6; }
+    .ic-icon-wrap {
+      width:42px; height:42px; border-radius:12px;
+      background:rgba(26,158,114,.08); border:.5px solid rgba(26,158,114,.18);
+      display:flex; align-items:center; justify-content:center; margin-bottom:1.5rem;
+      position:relative; z-index:1;
+    }
+    .ic-icon { font-size:17px; }
+    .ic-num {
+      font-size:10px; letter-spacing:2px; color:var(--green); opacity:.7;
+      margin-bottom:.75rem; font-weight:500;
+    }
+    .ic-text {
+      font-family:'Playfair Display',serif;
+      font-size:17px; font-weight:400; color:var(--text-primary); line-height:1.5;
+    }
+    /* bottom closing card */
+    .ident-close {
+      display:flex; align-items:center; gap:14px;
+      background:rgba(8,16,11,.7); border:.5px solid var(--border);
+      border-radius:14px; padding:1.25rem 1.75rem;
+      font-size:14px; color:var(--text-secondary); font-weight:300;
+    }
+    .ident-close-icon { color:var(--green); font-size:16px; flex-shrink:0; }
+    .ident-close em { color:var(--green); font-style:normal; font-weight:500; }
+
+    /* ══════════════════════════════════
+       REENCUADRE — "Esto no es el final"
+    ══════════════════════════════════ */
+    .reenc {
+      padding:8rem 2rem;
+      background:radial-gradient(ellipse at 70% 50%, rgba(26,158,114,.05), transparent 65%), #060a07;
+    }
+    .reenc-grid {
+      display:grid; grid-template-columns:1fr 1fr 1fr; gap:3.5rem; align-items:start;
+    }
+    .reenc-left {}
+    .reenc-title {
+      font-family:'Playfair Display',serif;
+      font-size:52px; font-weight:500; line-height:1.06; letter-spacing:-1.6px;
+      color:var(--text-primary); margin-bottom:1.5rem;
+    }
+    .reenc-title em { font-style:italic; color:var(--green); display:block; }
+    .reenc-title-line { width:48px; height:1.5px; background:var(--green); margin-bottom:1.5rem; opacity:.7; }
+    .reenc-body { font-size:14px; color:var(--text-secondary); font-weight:300; line-height:1.85; margin-bottom:1.5rem; }
+    .reenc-body em { color:var(--green); font-style:normal; }
+    /* belief card */
+    .reenc-belief {
+      display:flex; align-items:flex-start; gap:12px;
+      background:rgba(8,16,11,.7); border:.5px solid var(--border);
+      border-radius:14px; padding:1.25rem;
+    }
+    .reenc-belief-icon { color:var(--green); font-size:16px; margin-top:2px; flex-shrink:0; }
+    .reenc-belief-text { font-size:13px; color:var(--text-secondary); line-height:1.7; font-weight:300; }
+    .reenc-belief-text em { color:var(--green); font-style:normal; }
+    /* quote col */
+    .reenc-quote-col { padding-top:2rem; }
+    .reenc-quote-mark {
+      font-family:'Playfair Display',serif; font-size:72px; color:var(--green);
+      opacity:.25; line-height:.7; margin-bottom:1rem;
+    }
+    .reenc-quote-text {
+      font-family:'Playfair Display',serif; font-size:19px; font-style:italic;
+      color:#4a7060; line-height:1.85; margin-bottom:1.5rem;
+    }
+    .reenc-quote-text em { color:var(--green); font-style:italic; }
+    .reenc-quote-attr { font-size:11px; color:var(--text-muted); letter-spacing:2px; text-transform:uppercase; }
+    /* image col */
+    .reenc-img-col {
+      border-radius:18px; overflow:hidden; height:340px;
+      background:rgba(5,14,8,.9); border:.5px solid var(--border);
+      display:flex; align-items:center; justify-content:center;
+      position:relative;
+    }
+    .reenc-img-col::before {
+      content:''; position:absolute; inset:0;
+      background:radial-gradient(ellipse at 50% 30%, rgba(26,158,114,.18), transparent 65%);
+    }
+    /* micro-benefits row */
+    .reenc-benefits {
+      display:grid; grid-template-columns:repeat(4,1fr); gap:1rem; margin-top:3rem;
+    }
+    .reenc-benefit {
+      display:flex; align-items:flex-start; gap:10px;
+    }
+    .reenc-benefit-icon { color:var(--green); font-size:15px; margin-top:2px; flex-shrink:0; }
+    .reenc-benefit-title { font-size:12px; font-weight:500; color:var(--text-primary); margin-bottom:3px; }
+    .reenc-benefit-text { font-size:12px; color:var(--text-muted); font-weight:300; line-height:1.5; }
+
+    /* ══════════════════════════════════
+       QUÉ ES RENAIA — agentes unificados
+    ══════════════════════════════════ */
+    .agentes {
+      padding:8rem 2rem;
+      background:radial-gradient(ellipse at 30% 50%, rgba(26,158,114,.05), transparent 65%), #060a07;
+    }
+    .agentes-header {
+      display:grid; grid-template-columns:1fr 1fr; gap:4rem; align-items:start; margin-bottom:3.5rem;
+    }
+    .agentes-title {
+      font-family:'Playfair Display',serif;
+      font-size:56px; font-weight:500; line-height:1.04; letter-spacing:-1.8px;
+      color:var(--text-primary);
+    }
+    .agentes-title em { font-style:italic; color:var(--green); display:block; }
+    .agentes-title-line { width:48px; height:1.5px; background:var(--green); margin:1.25rem 0; opacity:.7; }
+    .agentes-sub { font-size:14px; color:var(--text-secondary); font-weight:300; line-height:1.85; }
+    .agentes-quote-col { padding-top:1rem; }
+    .agentes-quote-mark { font-family:'Playfair Display',serif; font-size:56px; color:var(--green); opacity:.22; line-height:.7; margin-bottom:.75rem; }
+    .agentes-quote-text { font-family:'Playfair Display',serif; font-size:20px; font-style:italic; color:#446858; line-height:1.8; }
+    /* 3 agent cards */
+    .ag-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1.25rem; margin-bottom:1.5rem; }
+    .ag-card {
+      border-radius:22px; padding:2.25rem; position:relative; overflow:hidden;
+      transition:all .4s; backdrop-filter:blur(14px);
+    }
+    .ag-card:hover { transform:translateY(-5px); }
+    /* glow at bottom */
+    .ag-card::after {
+      content:''; position:absolute; bottom:-20px; left:50%; transform:translateX(-50%);
+      width:60%; height:40px;
+      border-radius:50%; filter:blur(20px);
+      opacity:0; transition:opacity .4s;
+    }
+    .ag-card:hover::after { opacity:1; }
+    .ag-core {
+      background:linear-gradient(160deg, rgba(6,18,12,.95), rgba(4,12,8,.98));
+      border:.5px solid rgba(26,158,114,.2);
+    }
+    .ag-core::after { background:rgba(26,158,114,.25); }
+    .ag-core-glow { position:absolute; top:-60%; left:-30%; width:180%; height:180%; background:radial-gradient(ellipse at 40% 35%, rgba(26,158,114,.09), transparent 55%); pointer-events:none; }
+    .ag-path {
+      background:linear-gradient(160deg, rgba(6,10,20,.95), rgba(4,7,16,.98));
+      border:.5px solid rgba(70,100,190,.15);
+    }
+    .ag-path::after { background:rgba(70,100,190,.2); }
+    .ag-path-glow { position:absolute; top:-60%; right:-30%; width:180%; height:180%; background:radial-gradient(ellipse at 60% 35%, rgba(70,100,190,.07), transparent 55%); pointer-events:none; }
+    .ag-career {
+      background:linear-gradient(160deg, rgba(18,12,4,.95), rgba(12,9,3,.98));
+      border:.5px solid rgba(170,130,40,.15);
+    }
+    .ag-career::after { background:rgba(170,130,40,.2); }
+    .ag-career-glow { position:absolute; bottom:-60%; right:-30%; width:180%; height:180%; background:radial-gradient(ellipse at 60% 65%, rgba(170,130,40,.07), transparent 55%); pointer-events:none; }
+    .ag-num {
+      font-size:10px; font-weight:500; letter-spacing:2.5px;
+      margin-bottom:1.25rem; position:relative; z-index:1;
+      display:flex; align-items:center; justify-content:space-between;
+    }
+    .ag-core .ag-num { color:var(--green); }
+    .ag-path .ag-num { color:#6390dc; }
+    .ag-career .ag-num { color:#b48c32; }
+    .ag-num-icon {
+      width:36px; height:36px; border-radius:10px;
+      display:flex; align-items:center; justify-content:center; font-size:16px;
+    }
+    .ag-core .ag-num-icon { background:rgba(26,158,114,.12); border:.5px solid rgba(26,158,114,.2); }
+    .ag-path .ag-num-icon { background:rgba(70,100,190,.1); border:.5px solid rgba(70,100,190,.18); }
+    .ag-career .ag-num-icon { background:rgba(170,130,40,.1); border:.5px solid rgba(170,130,40,.18); }
+    .ag-title {
+      font-family:'Playfair Display',serif;
+      font-size:32px; font-weight:500; line-height:1.15;
+      color:var(--text-primary); margin-bottom:1rem; position:relative; z-index:1;
+    }
+    .ag-title-line {
+      height:1.5px; width:32px; margin-bottom:1.25rem; position:relative; z-index:1; opacity:.7;
+    }
+    .ag-core .ag-title-line { background:var(--green); }
+    .ag-path .ag-title-line { background:#6390dc; }
+    .ag-career .ag-title-line { background:#b48c32; }
+    .ag-feats { list-style:none; display:flex; flex-direction:column; gap:.6rem; margin-bottom:1.25rem; position:relative; z-index:1; }
+    .ag-feat {
+      display:flex; align-items:center; gap:8px;
+      font-size:13px; color:var(--text-secondary); font-weight:300;
+    }
+    .ag-feat-icon { font-size:13px; flex-shrink:0; }
+    .ag-core .ag-feat-icon { color:var(--green); }
+    .ag-path .ag-feat-icon { color:#6390dc; }
+    .ag-career .ag-feat-icon { color:#b48c32; }
+    .ag-desc { font-size:12.5px; color:#3a5548; font-weight:300; line-height:1.7; position:relative; z-index:1; }
+    /* unifier bar */
+    .ag-unifier {
+      display:flex; align-items:center; gap:14px;
+      background:rgba(8,16,11,.7); border:.5px solid var(--border);
+      border-radius:14px; padding:1.25rem 1.75rem;
+      font-size:14px; color:var(--text-secondary); font-weight:300;
+    }
+    .ag-unifier-icon { color:var(--green); font-size:16px; flex-shrink:0; }
+    .ag-unifier em { color:var(--green); font-style:normal; }
+
+    /* ══════════════════════════════════
+       CÓMO FUNCIONA
+    ══════════════════════════════════ */
+    .como {
+      padding:8rem 2rem; text-align:center;
+      background:radial-gradient(ellipse at 50% 40%, rgba(26,158,114,.05), transparent 65%), #060a07;
+    }
+    .como-title {
+      font-family:'Playfair Display',serif;
+      font-size:58px; font-weight:500; line-height:1.04; letter-spacing:-1.8px;
+      color:var(--text-primary); margin-bottom:.75rem;
+    }
+    .como-title em { font-style:italic; color:var(--green); }
+    .como-subtitle { font-size:15px; color:var(--text-secondary); font-weight:300; margin-bottom:3.5rem; }
+    .como-steps { display:grid; grid-template-columns:1fr auto 1fr auto 1fr; gap:1rem; align-items:start; }
+    .como-step {
+      background:rgba(8,16,11,.85); border:.5px solid var(--border);
+      border-radius:20px; padding:2.25rem 2rem; text-align:left;
+      transition:all .4s; position:relative; overflow:hidden;
+    }
+    .como-step:hover { border-color:rgba(26,158,114,.28); transform:translateY(-4px); }
+    .como-step:hover .como-step-glow { opacity:1; }
+    .como-step-glow {
+      position:absolute; top:0; left:50%; transform:translateX(-50%);
+      width:80%; height:2px; background:linear-gradient(90deg, transparent, var(--green), transparent);
+      opacity:0; transition:opacity .4s;
+    }
+    .como-icon-wrap {
+      width:52px; height:52px; border-radius:14px;
+      background:rgba(26,158,114,.08); border:.5px solid var(--border);
+      display:flex; align-items:center; justify-content:center;
+      font-size:22px; margin-bottom:1.5rem;
+    }
+    .como-n { font-size:11px; letter-spacing:2px; color:var(--green); margin-bottom:.75rem; font-weight:500; }
+    .como-h {
+      font-family:'Playfair Display',serif;
+      font-size:22px; font-weight:500; color:var(--text-primary); margin-bottom:.6rem; line-height:1.3;
+    }
+    .como-h-line { width:28px; height:1px; background:var(--green); opacity:.6; margin-bottom:.75rem; }
+    .como-p { font-size:13px; color:var(--text-secondary); font-weight:300; line-height:1.7; }
+    .como-p em { color:var(--green); font-style:normal; }
+    .como-badge {
+      display:inline-flex; align-items:center; gap:6px; margin-top:1.25rem;
+      background:rgba(26,158,114,.07); border:.5px solid var(--border);
+      border-radius:100px; padding:5px 12px;
+      font-size:11px; color:var(--text-muted); font-weight:300;
+    }
+    .como-badge-icon { color:var(--green); font-size:11px; }
+    .como-arrow { display:flex; align-items:center; padding-top:4rem; color:#1a3028; font-size:22px; }
+    /* closing line */
+    .como-close {
+      margin-top:3rem; display:flex; align-items:center; justify-content:center; gap:12px;
+      background:rgba(8,16,11,.6); border:.5px solid var(--border);
+      border-radius:14px; padding:1.25rem 2rem; max-width:580px; margin-inline:auto;
+    }
+    .como-close-icon { color:var(--green); font-size:18px; }
+    .como-close-text { font-size:14px; color:var(--text-secondary); font-weight:300; }
+    .como-close-text em { color:var(--green); font-style:normal; }
+
+    /* ══════════════════════════════════
+       HISTORIAS
+    ══════════════════════════════════ */
+    .social {
+      padding:8rem 2rem;
+      background:radial-gradient(ellipse at 60% 30%, rgba(26,158,114,.05), transparent 65%), #060a07;
+    }
+    .social-header {
+      display:grid; grid-template-columns:1fr 1fr; gap:3rem; align-items:start; margin-bottom:3rem;
+    }
+    .social-title {
+      font-family:'Playfair Display',serif;
+      font-size:52px; font-weight:500; line-height:1.06; letter-spacing:-1.6px; color:var(--text-primary);
+    }
+    .social-title em { font-style:italic; color:var(--green); }
+    .social-title-line { width:48px; height:1.5px; background:var(--green); margin:1.25rem 0; opacity:.7; }
+    .social-sub { font-size:15px; color:var(--text-secondary); font-weight:300; line-height:1.8; }
+    .social-sub em { color:var(--green); font-style:normal; }
+    .social-right-card {
+      background:rgba(8,16,11,.7); border:.5px solid var(--border);
+      border-radius:16px; padding:1.5rem; display:flex; align-items:flex-start; gap:14px;
+      align-self:center;
+    }
+    .social-right-icon { font-size:22px; color:var(--green); flex-shrink:0; margin-top:2px; }
+    .social-right-text { font-size:14px; color:var(--text-secondary); line-height:1.7; font-weight:300; }
+    .social-right-text em { color:var(--green); font-style:normal; font-weight:500; }
+    /* story cards */
+    .sc-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1.25rem; }
+    .sc {
+      background:rgba(8,16,11,.85); border:.5px solid var(--border);
+      border-radius:20px; overflow:hidden; transition:all .4s; position:relative;
+    }
+    .sc:hover { border-color:rgba(26,158,114,.25); transform:translateY(-4px); }
+    .sc-img {
+      height:180px; overflow:hidden; position:relative;
+      background:linear-gradient(135deg, #060f08, #0a1c10);
+      display:flex; align-items:center; justify-content:center;
+    }
+    .sc-img-placeholder {
+      font-size:48px; opacity:.15;
+    }
+    .sc-badge {
+      position:absolute; top:12px; left:12px;
+      display:flex; align-items:center; gap:6px;
+      background:rgba(6,10,7,.75); border:.5px solid var(--border);
+      border-radius:100px; padding:4px 10px;
+      font-size:9px; letter-spacing:2px; text-transform:uppercase;
+      backdrop-filter:blur(10px);
+    }
+    .sc-badge-dot { width:6px; height:6px; border-radius:50%; flex-shrink:0; }
+    .sc-badge-dot.green { background:var(--green); }
+    .sc-badge-dot.blue { background:#6390dc; }
+    .sc-badge-dot.amber { background:#b48c32; }
+    .sc-body { padding:1.75rem; }
+    .sc-av {
+      width:40px; height:40px; border-radius:50%;
+      background:linear-gradient(135deg, #082818, #0f7a55);
+      display:flex; align-items:center; justify-content:center;
+      font-size:14px; color:white; font-weight:600; margin-bottom:1rem;
+    }
+    .sc-name { font-family:'Playfair Display',serif; font-size:20px; font-weight:500; color:var(--text-primary); margin-bottom:2px; }
+    .sc-role { font-size:12px; color:var(--green); margin-bottom:1.25rem; opacity:.9; }
+    .sc-label { font-size:10px; font-weight:500; letter-spacing:2px; text-transform:uppercase; color:var(--green); margin-bottom:.4rem; opacity:.7; }
+    .sc-text { font-size:13px; color:var(--text-secondary); font-weight:300; line-height:1.7; margin-bottom:1rem; }
+    .sc-desire {
+      display:flex; align-items:center; gap:7px;
+      font-size:12px; color:var(--text-muted); font-weight:300;
+    }
+    .sc-desire-icon { color:var(--green); font-size:11px; flex-shrink:0; }
+    /* footer note */
+    .social-note {
+      margin-top:2.5rem; display:flex; align-items:center; justify-content:center; gap:10px;
+      font-size:13px; color:var(--text-muted); font-weight:300;
+    }
+    .social-note-icon { color:var(--green); font-size:13px; }
+    .social-note em { color:var(--green); font-style:normal; }
+
+    /* ══════════════════════════════════
+       PRICING
+    ══════════════════════════════════ */
+    .pricing {
+      padding:8rem 2rem;
+      background:radial-gradient(ellipse at 50% 30%, rgba(26,158,114,.07), transparent 65%), #060a07;
+    }
+    .pricing-tag { text-align:center; }
+    .pricing-tag-pill {
+      display:inline-flex; align-items:center; gap:8px;
+      background:rgba(8,16,11,.8); border:.5px solid var(--border);
+      border-radius:100px; padding:6px 18px;
+      font-size:10px; font-weight:500; letter-spacing:3px; text-transform:uppercase; color:var(--text-muted);
+      margin-bottom:3.5rem;
+    }
+    .pricing-grid { display:grid; grid-template-columns:1fr 1fr; gap:5rem; align-items:center; }
+    .pricing-left {}
+    .pricing-left-title {
+      font-family:'Playfair Display',serif;
+      font-size:52px; font-weight:500; line-height:1.06; letter-spacing:-1.6px; color:var(--text-primary);
+      margin-bottom:1rem;
+    }
+    .pricing-left-title em { font-style:italic; color:var(--green); display:block; }
+    .pricing-left-line { width:48px; height:1.5px; background:var(--green); margin-bottom:1.5rem; opacity:.7; }
+    .pricing-left-sub { font-size:14px; color:var(--text-secondary); font-weight:300; line-height:1.85; margin-bottom:2rem; }
+    .pricing-left-sub em { color:var(--green); font-style:normal; }
+    .pricing-belief {
+      display:flex; align-items:flex-start; gap:12px;
+      background:rgba(8,16,11,.7); border:.5px solid var(--border);
+      border-radius:14px; padding:1.25rem;
+    }
+    .pricing-belief-icon { color:var(--green); font-size:16px; margin-top:2px; flex-shrink:0; }
+    .pricing-belief-text { font-size:13px; color:var(--text-secondary); line-height:1.7; font-weight:300; }
+    .pricing-belief-text em { color:var(--green); font-style:normal; font-weight:500; }
+    /* card */
+    .pc {
+      background:linear-gradient(160deg, rgba(6,18,12,.97), rgba(4,12,8,.99));
+      border:.5px solid rgba(26,158,114,.22); border-radius:24px;
+      padding:2.5rem; position:relative; overflow:hidden;
+    }
+    .pc-glow-top {
+      position:absolute; top:-60px; left:50%; transform:translateX(-50%);
+      width:200px; height:120px;
+      background:radial-gradient(ellipse, rgba(26,158,114,.22), transparent 65%);
+      pointer-events:none;
+    }
+    .pc-spark {
+      display:flex; justify-content:center; align-items:center; gap:12px;
+      margin-bottom:1.5rem; position:relative; z-index:1;
+    }
+    .pc-spark-line { flex:1; height:.5px; background:linear-gradient(90deg, transparent, rgba(26,158,114,.4)); }
+    .pc-spark-line.r { background:linear-gradient(270deg, transparent, rgba(26,158,114,.4)); }
+    .pc-spark-icon { color:var(--green); font-size:14px; }
+    .pc-price {
+      font-family:'Playfair Display',serif; font-size:76px; font-weight:500;
+      color:var(--text-primary); letter-spacing:-2px; line-height:1;
+      text-align:center; margin-bottom:.25rem; position:relative; z-index:1;
+    }
+    .pc-period { font-size:13px; color:var(--text-muted); text-align:center; margin-bottom:1.75rem; position:relative; z-index:1; }
+    .pc-divider { height:.5px; background:linear-gradient(90deg, transparent, var(--border), transparent); margin-bottom:1.75rem; }
+    .pc-feats { list-style:none; display:flex; flex-direction:column; gap:.9rem; margin-bottom:2rem; position:relative; z-index:1; }
+    .pc-feat { display:flex; align-items:center; gap:10px; font-size:13.5px; color:var(--text-secondary); font-weight:300; }
+    .pc-feat-icon { font-size:15px; flex-shrink:0; color:var(--green); opacity:.85; }
+    .pc-btn {
+      display:flex; align-items:center; justify-content:space-between;
+      background:var(--green-dim); color:white;
+      padding:16px 24px; border-radius:12px; font-size:14px; font-weight:500;
+      text-decoration:none; transition:all .3s; position:relative; z-index:1;
+      box-shadow:0 8px 36px rgba(15,122,85,.3);
+    }
+    .pc-btn:hover { background:var(--green); transform:translateY(-2px); box-shadow:0 14px 48px rgba(15,122,85,.4); }
+    .pc-btn-arrow { font-size:16px; }
+    .pc-note {
+      text-align:center; margin-top:1rem; font-size:12px; color:var(--text-muted);
+      display:flex; align-items:center; justify-content:center; gap:6px; position:relative; z-index:1;
+    }
+    .pc-note-icon { font-size:12px; color:var(--text-muted); }
+    /* trust row */
+    .pricing-trust { display:grid; grid-template-columns:repeat(3,1fr); gap:1rem; margin-top:2.5rem; }
+    .pricing-trust-item { display:flex; align-items:center; gap:8px; font-size:12px; color:var(--text-muted); justify-content:center; }
+    .pricing-trust-icon { color:var(--green); font-size:14px; }
+
+    /* ══════════════════════════════════
+       CTA FINAL
+    ══════════════════════════════════ */
+    .ctafinal {
+      min-height:100vh; position:relative; overflow:hidden;
+      display:grid; grid-template-columns:1fr 1fr;
+      align-items:center; padding:9rem 5rem;
+      background:
+        linear-gradient(90deg,
+          rgba(4,8,5,.97) 0%,
+          rgba(4,8,5,.88) 40%,
+          rgba(4,8,5,.42) 65%,
+          rgba(4,8,5,.55) 100%
+        ),
+        url('hero.jpg') center 40% / cover no-repeat;
+    }
+    .ctafinal::after {
+      content:''; position:absolute; inset:0;
+      background:radial-gradient(ellipse at 20% 55%, rgba(26,158,114,.06), transparent 55%);
+    }
+    .ctafinal-text { position:relative; z-index:2; }
+    .ctafinal-title {
+      font-family:'Playfair Display',serif;
+      font-size:72px; font-weight:500; line-height:1.02; letter-spacing:-2px;
+      color:var(--text-primary); margin-bottom:2rem;
+    }
+    .ctafinal-title em { font-style:italic; color:var(--green); display:block; }
+    .ctafinal-line { width:48px; height:1.5px; background:var(--green); margin-bottom:2rem; opacity:.7; }
+    .ctafinal-sub { font-size:15px; color:var(--text-secondary); font-weight:300; line-height:1.85; margin-bottom:2.5rem; max-width:400px; }
+    .ctafinal-cta {
+      display:inline-flex; align-items:center; gap:10px;
+      background:var(--green-dim); color:white;
+      padding:16px 34px; border-radius:10px; font-size:14px; font-weight:500;
+      text-decoration:none; transition:all .3s; box-shadow:0 8px 36px rgba(15,122,85,.3);
+    }
+    .ctafinal-cta:hover { background:var(--green); transform:translateY(-2px); box-shadow:0 14px 48px rgba(15,122,85,.4); }
+    .ctafinal-proof {
+      display:flex; align-items:center; gap:10px; margin-top:1.25rem;
+    }
+    .ctafinal-proof-icon {
+      width:30px; height:30px; border-radius:8px;
+      background:rgba(26,158,114,.1); border:.5px solid var(--border);
+      display:flex; align-items:center; justify-content:center; font-size:12px;
+    }
+    .ctafinal-proof-text { font-size:12px; color:var(--text-muted); }
+    .ctafinal-proof-text em { color:var(--green); font-style:normal; }
+    /* divider line */
+    .ctafinal-divider {
+      position:absolute; bottom:0; left:50%; transform:translateX(-50%);
+      z-index:2; display:flex; align-items:center; gap:10px;
+      padding-bottom:2rem;
+    }
+    .ctafinal-div-line { width:60px; height:.5px; background:linear-gradient(90deg, transparent, rgba(26,158,114,.4)); }
+    .ctafinal-div-line.r { background:linear-gradient(270deg, transparent, rgba(26,158,114,.4)); }
+    .ctafinal-div-icon { color:var(--green); font-size:10px; }
+
+    /* ══════════════════════════════════
+       FOOTER
+    ══════════════════════════════════ */
+    footer {
+      background:rgba(4,8,5,.98);
+      border-top:.5px solid var(--border);
+      padding:3rem 5rem;
+      display:grid; grid-template-columns:1fr 1fr 1fr; gap:2rem; align-items:start;
+    }
+    .fl-logo { font-family:'Playfair Display',serif; font-size:20px; font-weight:500; color:var(--text-primary); margin-bottom:.5rem; }
+    .fl-logo em { color:var(--green); font-style:normal; }
+    .fl-tag { font-size:12px; color:var(--text-muted); font-weight:300; line-height:1.6; max-width:240px; margin-bottom:1.25rem; }
+    .fl-social { display:flex; gap:.75rem; }
+    .fl-social-btn {
+      width:34px; height:34px; border-radius:8px;
+      background:rgba(26,158,114,.07); border:.5px solid var(--border);
+      display:flex; align-items:center; justify-content:center;
+      font-size:13px; color:var(--text-muted); text-decoration:none; transition:all .3s;
+    }
+    .fl-social-btn:hover { border-color:var(--border); color:var(--green); background:rgba(26,158,114,.1); }
+    .fl-quote {
+      display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center;
+    }
+    .fl-quote-mark { font-family:'Playfair Display',serif; font-size:36px; color:var(--green); opacity:.25; line-height:.7; margin-bottom:.5rem; }
+    .fl-quote-text { font-family:'Playfair Display',serif; font-size:14px; font-style:italic; color:#3a5548; line-height:1.7; }
+    .fl-quote-text em { color:var(--green); font-style:italic; }
+    .fl-right { display:flex; flex-direction:column; align-items:flex-end; gap:1rem; }
+    .fl-links { display:flex; gap:1.5rem; }
+    .fl-links a { font-size:12px; color:var(--text-muted); text-decoration:none; transition:color .3s; }
+    .fl-links a:hover { color:#8ab0b8; }
+    .fl-copy { font-size:11px; color:#1a2820; }
+
+    /* ══════════════════════════════════
+       RESPONSIVE
+    ══════════════════════════════════ */
+    @media(max-width:900px){
+      .hero, .ctafinal { grid-template-columns:1fr; padding:7rem 1.75rem 4rem; }
+      .hero-chat { display:none; }
+      .hero-title, .ctafinal-title { font-size:48px; }
+      .nav-links { display:none; }
+      nav { padding:1rem 1.5rem; }
+      .ident-cards, .ag-grid, .sc-grid, .como-steps, .reenc-benefits { grid-template-columns:1fr; }
+      .reenc-grid, .agentes-header, .pricing-grid, .social-header { grid-template-columns:1fr; }
+      .como-arrow { display:none; }
+      footer { grid-template-columns:1fr; padding:2.5rem 1.75rem; }
+      .fl-right { align-items:flex-start; }
+      .fl-quote { align-items:flex-start; text-align:left; }
+      .pricing-trust { grid-template-columns:1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ════ NAV ════ -->
+<nav id="nav">
+  <a class="nav-logo" href="#">
+    <svg width="22" height="22" viewBox="0 0 30 30" fill="none">
+      <path d="M7 5L7 25" stroke="#1a9e72" stroke-width="2.5" stroke-linecap="round"/>
+      <path d="M7 5L18 5C22 5 24 7.5 24 11C24 14.5 22 17 18 17L7 17" stroke="#1a9e72" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M15 17L24 25" stroke="#1a9e72" stroke-width="2.5" stroke-linecap="round"/>
+    </svg>
+    <span class="nav-logo-text">Rena<em>IA</em></span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#como-funciona">Cómo funciona</a></li>
+    <li><a href="#agentes">Reinvención</a></li>
+    <li><a href="#historias">Historias</a></li>
+  </ul>
+  <a href="chat.html" class="nav-cta">Comenzar</a>
+</nav>
+
+<!-- ════ HERO ════ -->
+<section class="hero">
+  <div class="grain"></div>
+  <div class="hero-text">
+    <p class="hero-tag">Reinvención profesional</p>
+    <h1 class="hero-title">
+      Todavía hay un camino.
+      <em>Y no tienes que encontrarlo solo.</em>
+    </h1>
+    <div class="hero-title-line"></div>
+    <p class="hero-sub">Para quienes sienten que su carrera quedó atrás. RenaIA te acompaña a reinventarte, a tu ritmo.</p>
+    <a href="chat.html" class="hero-cta">
+      <span class="hero-cta-icon">✦</span>
+      Comenzar mi reinvención
+      <span>→</span>
+    </a>
+    <div class="hero-social-proof">
+      <div class="hero-sp-icon">🎁</div>
+      <p class="hero-sp-text">Primera conversación gratuita.<br><em>Estamos aquí cuando estés listo.</em></p>
+    </div>
+  </div>
+  <div class="hero-chat">
+    <div class="chat-bubble user">¿Y si este es el comienzo de algo mejor?</div>
+    <div class="chat-ai-row">
+      <div class="chat-bubble ai">Estoy aquí para acompañarte.</div>
+      <div class="chat-avatar">R</div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ IDENTIFICACIÓN ════ -->
+<section class="ident">
+  <div class="si">
+    <div class="ident-header reveal">
+      <p class="stag">Quizás te sientes así</p>
+      <h2 class="ident-title">No estás solo.<em>Y tiene solución.</em></h2>
+      <div class="ident-title-line"></div>
+      <p class="ident-sub">Estas son algunas señales que escuchamos cada día.<br>Si te identificas con alguna, <em>RenaIA</em> puede ayudarte.</p>
+    </div>
+    <div class="ident-cards">
+      <div class="ic reveal d1">
+        <div class="ic-icon-wrap"><span class="ic-icon">💼</span></div>
+        <p class="ic-num">01</p>
+        <p class="ic-text">Perdí mi trabajo y no sé por dónde empezar.</p>
+      </div>
+      <div class="ic reveal d2">
+        <div class="ic-icon-wrap"><span class="ic-icon">📉</span></div>
+        <p class="ic-num">02</p>
+        <p class="ic-text">Siento que me quedé atrás y el mercado ya no me necesita.</p>
+      </div>
+      <div class="ic reveal d3">
+        <div class="ic-icon-wrap"><span class="ic-icon">👤</span></div>
+        <p class="ic-num">03</p>
+        <p class="ic-text">Perdí confianza en mí mismo.</p>
+      </div>
+      <div class="ic reveal d4">
+        <div class="ic-icon-wrap"><span class="ic-icon">🔒</span></div>
+        <p class="ic-num">04</p>
+        <p class="ic-text">Quiero cambiar, pero el miedo me paraliza.</p>
+      </div>
+    </div>
+    <div class="ident-close reveal d2">
+      <span class="ident-close-icon">♡</span>
+      <span>Si algo de esto resuena contigo, <em>estás en el lugar correcto.</em></span>
+    </div>
+  </div>
+</section>
+
+<!-- ════ REENCUADRE ════ -->
+<section class="reenc">
+  <div class="si">
+    <div class="reenc-grid">
+      <div class="reveal-left">
+        <p class="stag">Una nueva perspectiva</p>
+        <h2 class="reenc-title">Esto no es el final.<em>Es una transición.</em></h2>
+        <div class="reenc-title-line"></div>
+        <p class="reenc-body">Lo que sientes no es fracaso.<br>Es el momento justo antes de descubrir la <em>próxima versión</em> de ti.</p>
+        <div class="reenc-belief">
+          <span class="reenc-belief-icon">♡</span>
+          <p class="reenc-belief-text">En RenaIA creemos en tu capacidad de <em>reinventarte</em>, a tu ritmo.</p>
+        </div>
+      </div>
+      <div class="reveal d1">
+        <div class="reenc-quote-mark">"</div>
+        <p class="reenc-quote-text">Las personas que más crecen profesionalmente no son las que nunca se perdieron. Son las que <em>encontraron ayuda</em> cuando más la <em>necesitaban.</em></p>
+        <p class="reenc-quote-attr">— RenaIA</p>
+      </div>
+      <div class="reveal-right d2">
+        <div class="reenc-img-col">
+          <svg viewBox="0 0 220 280" width="150" xmlns="http://www.w3.org/2000/svg" style="position:relative;z-index:1">
+            <defs>
+              <radialGradient id="plantbg" cx="50%" cy="60%" r="55%">
+                <stop offset="0%" stop-color="#1a9e72" stop-opacity=".18"/>
+                <stop offset="100%" stop-color="#1a9e72" stop-opacity="0"/>
+              </radialGradient>
+              <linearGradient id="stem" x1="0" y1="1" x2="0" y2="0">
+                <stop offset="0%" stop-color="#0a3020"/><stop offset="100%" stop-color="#1a9e72"/>
+              </linearGradient>
+              <linearGradient id="leaf" x1="0" y1="1" x2="1" y2="0">
+                <stop offset="0%" stop-color="#0d4028"/><stop offset="100%" stop-color="#1aaf82"/>
+              </linearGradient>
+            </defs>
+            <ellipse cx="110" cy="160" rx="90" ry="100" fill="url(#plantbg)"/>
+            <path d="M110 260 Q108 225 110 190 Q112 160 109 130 Q107 105 110 80" stroke="url(#stem)" stroke-width="2.8" fill="none" stroke-linecap="round"/>
+            <path d="M109 185 Q93 172 78 160" stroke="#0d6040" stroke-width="1.8" fill="none" stroke-linecap="round" opacity=".7"/>
+            <path d="M110 168 Q126 155 140 146" stroke="#0d6040" stroke-width="1.8" fill="none" stroke-linecap="round" opacity=".7"/>
+            <path d="M78 160 Q62 144 68 124 Q84 134 86 156 Q82 162 78 160Z" fill="url(#leaf)" opacity=".75"/>
+            <path d="M140 146 Q156 132 152 112 Q136 122 134 144 Q137 150 140 146Z" fill="url(#leaf)" opacity=".75"/>
+            <path d="M109 140 Q93 125 99 102 Q117 114 117 137 Q114 143 109 140Z" fill="url(#leaf)" opacity=".88"/>
+            <path d="M111 132 Q128 117 122 94 Q104 106 107 129 Q110 135 111 132Z" fill="#1aaf82" opacity=".88"/>
+            <path d="M110 100 Q106 88 108 76 Q112 66 110 54" stroke="#1aaf82" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+            <path d="M110 70 Q99 57 103 42 Q116 51 114 67Z" fill="#1a9e72" opacity=".9"/>
+            <path d="M110 65 Q121 52 117 37 Q104 46 106 62Z" fill="#1aaf82" opacity=".9"/>
+            <circle cx="110" cy="42" r="4.5" fill="#4deaa8" opacity=".85"/>
+            <circle cx="110" cy="42" r="8" fill="#1a9e72" opacity=".15"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+    <div class="reenc-benefits reveal d2">
+      <div class="reenc-benefit">
+        <span class="reenc-benefit-icon">🌱</span>
+        <div><p class="reenc-benefit-title">No estás solo</p><p class="reenc-benefit-text">Miles ya han pasado por aquí.</p></div>
+      </div>
+      <div class="reenc-benefit">
+        <span class="reenc-benefit-icon">✦</span>
+        <div><p class="reenc-benefit-title">Hay salida</p><p class="reenc-benefit-text">Siempre existe una nueva perspectiva.</p></div>
+      </div>
+      <div class="reenc-benefit">
+        <span class="reenc-benefit-icon">👤</span>
+        <div><p class="reenc-benefit-title">Puedes transformarte</p><p class="reenc-benefit-text">Tú tienes el potencial, nosotros te acompañamos.</p></div>
+      </div>
+      <div class="reenc-benefit">
+        <span class="reenc-benefit-icon">♡</span>
+        <div><p class="reenc-benefit-title">A tu ritmo</p><p class="reenc-benefit-text">Sin presiones. Sin juicios.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ QUÉ ES RENAIA + AGENTES ════ -->
+<section class="agentes" id="agentes">
+  <div class="si">
+    <div class="agentes-header">
+      <div class="reveal-left">
+        <p class="stag">Qué es RenaIA</p>
+        <h2 class="agentes-title">Tres presencias.<em>Un solo acompañamiento.</em></h2>
+        <div class="agentes-title-line"></div>
+        <p class="agentes-sub">RenaIA no es solo una IA.<br>Es un sistema diseñado para acompañarte en cada paso de tu reinvención profesional.</p>
+      </div>
+      <div class="agentes-quote-col reveal-right d1">
+        <div class="agentes-quote-mark">"</div>
+        <p class="agentes-quote-text">La claridad no llega sola.<br>Pero sí puede acompañarte<br>alguien que te entienda.</p>
+      </div>
+    </div>
+    <div class="ag-grid">
+      <div class="ag-card ag-core reveal d1">
+        <div class="ag-core-glow"></div>
+        <div class="ag-num">
+          <span>01 · RENA CORE</span>
+          <div class="ag-num-icon">✦</div>
+        </div>
+        <h3 class="ag-title">Te entiendo.</h3>
+        <div class="ag-title-line"></div>
+        <ul class="ag-feats">
+          <li class="ag-feat"><span class="ag-feat-icon">◎</span> Escucha sin juicio</li>
+          <li class="ag-feat"><span class="ag-feat-icon">♡</span> Valida lo que sientes</li>
+          <li class="ag-feat"><span class="ag-feat-icon">◈</span> Acompaña siempre</li>
+        </ul>
+        <p class="ag-desc">La capa emocional permanente. Siempre presente, incluso cuando los otros agentes toman la palabra.</p>
+      </div>
+      <div class="ag-card ag-path reveal d2">
+        <div class="ag-path-glow"></div>
+        <div class="ag-num">
+          <span>02 · RENA PATH</span>
+          <div class="ag-num-icon">◎</div>
+        </div>
+        <h3 class="ag-title">Sí existe un camino.</h3>
+        <div class="ag-title-line"></div>
+        <ul class="ag-feats">
+          <li class="ag-feat"><span class="ag-feat-icon">◎</span> Detecta tus habilidades transferibles</li>
+          <li class="ag-feat"><span class="ag-feat-icon">◎</span> Muestra posibilidades reales</li>
+          <li class="ag-feat"><span class="ag-feat-icon">◎</span> Construye claridad desde tu historia</li>
+        </ul>
+        <p class="ag-desc">Te ayuda a ver lo que ya tienes, y lo que puedes construir.</p>
+      </div>
+      <div class="ag-card ag-career reveal d3">
+        <div class="ag-career-glow"></div>
+        <div class="ag-num">
+          <span>03 · RENA CAREER</span>
+          <div class="ag-num-icon">↗</div>
+        </div>
+        <h3 class="ag-title">Ahora avancemos.</h3>
+        <div class="ag-title-line"></div>
+        <ul class="ag-feats">
+          <li class="ag-feat"><span class="ag-feat-icon">↗</span> Convierte claridad en acción</li>
+          <li class="ag-feat"><span class="ag-feat-icon">↗</span> Te acompaña semana a semana</li>
+          <li class="ag-feat"><span class="ag-feat-icon">↗</span> Te guía hacia tu próximo paso</li>
+        </ul>
+        <p class="ag-desc">De la claridad, al movimiento. De la intención, al impacto.</p>
+      </div>
+    </div>
+    <div class="ag-unifier reveal d2">
+      <span class="ag-unifier-icon">♡</span>
+      <span>Tres agentes. Una misión: acompañarte a <em>reinventarte</em>, a tu ritmo.</span>
+    </div>
+  </div>
+</section>
+
+<!-- ════ CÓMO FUNCIONA ════ -->
+<section class="como" id="como-funciona">
+  <div class="si">
+    <p class="stag reveal" style="justify-content:center">Cómo funciona</p>
+    <h2 class="como-title reveal d1">Una conversación que <em>evoluciona</em> contigo.</h2>
+    <p class="como-subtitle reveal d2">Tres pasos simples. Un cambio profundo.</p>
+    <div class="como-steps reveal d2">
+      <div class="como-step">
+        <div class="como-step-glow"></div>
+        <div class="como-icon-wrap">💬</div>
+        <p class="como-n">01</p>
+        <h3 class="como-h">Cuéntanos cómo te sientes.</h3>
+        <div class="como-h-line"></div>
+        <p class="como-p">No hay formularios.<br><em>Solo escucha.</em></p>
+        <div class="como-badge"><span class="como-badge-icon">♡</span> 100% confidencial</div>
+      </div>
+      <div class="como-arrow">→</div>
+      <div class="como-step">
+        <div class="como-step-glow"></div>
+        <div class="como-icon-wrap">🗺️</div>
+        <p class="como-n">02</p>
+        <h3 class="como-h">Descubrimos tu camino juntos.</h3>
+        <div class="como-h-line"></div>
+        <p class="como-p">Tus habilidades tienen<br>más valor del que crees.</p>
+        <div class="como-badge"><span class="como-badge-icon">✦</span> Claves personalizadas</div>
+      </div>
+      <div class="como-arrow">→</div>
+      <div class="como-step">
+        <div class="como-step-glow"></div>
+        <div class="como-icon-wrap">🚀</div>
+        <p class="como-n">03</p>
+        <h3 class="como-h">Avanzamos, un paso a la vez.</h3>
+        <div class="como-h-line"></div>
+        <p class="como-p">Sin abrumarte.<br><em>Sin perder de vista quién eres.</em></p>
+        <div class="como-badge"><span class="como-badge-icon">↗</span> Acción con claridad</div>
+      </div>
+    </div>
+    <div class="como-close reveal d3">
+      <span class="como-close-icon">✦</span>
+      <p class="como-close-text">No es magia. Es <em>método, empatía y presencia.</em></p>
+    </div>
+  </div>
+</section>
+
+<!-- ════ HISTORIAS ════ -->
+<section class="social" id="historias">
+  <div class="si">
+    <div class="social-header">
+      <div class="reveal-left">
+        <p class="stag">Historias que inspiran</p>
+        <h2 class="social-title">Cada reinvención comienza <em>distinto.</em></h2>
+        <div class="social-title-line"></div>
+        <p class="social-sub">Detrás de cada transición hay una historia única.<br>Estas son algunas de las que queremos <em>acompañar.</em></p>
+      </div>
+      <div class="social-right-card reveal-right d1">
+        <span class="social-right-icon">♡</span>
+        <p class="social-right-text">No necesitas tener todas las respuestas.<br>Solo dar el primer paso.<br><em>RenaIA está para caminar contigo.</em></p>
+      </div>
+    </div>
+    <div class="sc-grid">
+      <div class="sc reveal d1">
+        <div class="sc-img">
+          <span class="sc-img-placeholder">🌆</span>
+          <div class="sc-badge"><span class="sc-badge-dot green"></span>TRANSICIÓN PROFESIONAL</div>
+        </div>
+        <div class="sc-body">
+          <div class="sc-av">M</div>
+          <p class="sc-name">Miguel, 34</p>
+          <p class="sc-role">Contador · Chile</p>
+          <p class="sc-label">Su momento actual</p>
+          <p class="sc-text">Siente que su trabajo ya no refleja todo lo que puede aportar.</p>
+          <p class="sc-label">Lo que busca</p>
+          <p class="sc-text">Descubrir nuevas habilidades y entender cómo puede aportar más valor.</p>
+          <div class="sc-desire"><span class="sc-desire-icon">↗</span> Quiere claridad para dar el siguiente paso.</div>
+        </div>
+      </div>
+      <div class="sc reveal d2">
+        <div class="sc-img">
+          <span class="sc-img-placeholder">🎨</span>
+          <div class="sc-badge"><span class="sc-badge-dot blue"></span>REINVENCIÓN CREATIVA</div>
+        </div>
+        <div class="sc-body">
+          <div class="sc-av" style="background:linear-gradient(135deg,#0a1230,#3050a0)">C</div>
+          <p class="sc-name">Carolina, 29</p>
+          <p class="sc-role">Diseñadora · Colombia</p>
+          <p class="sc-label">Su momento actual</p>
+          <p class="sc-text">Quiere emprender, pero no sabe por dónde empezar ni cómo posicionarse.</p>
+          <p class="sc-label">Lo que busca</p>
+          <p class="sc-text">Claridad para transformar su talento creativo en un proyecto con propósito.</p>
+          <div class="sc-desire"><span class="sc-desire-icon">↗</span> Quiere construir algo propio y auténtico.</div>
+        </div>
+      </div>
+      <div class="sc reveal d3">
+        <div class="sc-img">
+          <span class="sc-img-placeholder">🌄</span>
+          <div class="sc-badge"><span class="sc-badge-dot amber"></span>BÚSQUEDA DE PROPÓSITO</div>
+        </div>
+        <div class="sc-body">
+          <div class="sc-av" style="background:linear-gradient(135deg,#1a1000,#604010)">J</div>
+          <p class="sc-name">Javier, 41</p>
+          <p class="sc-role">Gerente · México</p>
+          <p class="sc-label">Su momento actual</p>
+          <p class="sc-text">Tiene estabilidad, pero siente que algo importante falta en su día a día.</p>
+          <p class="sc-label">Lo que busca</p>
+          <p class="sc-text">Reconectar con lo que le importa y empezar a vivir con más intención.</p>
+          <div class="sc-desire"><span class="sc-desire-icon">↗</span> Quiere alinear su vida con lo que valora.</div>
+        </div>
+      </div>
+    </div>
+    <div class="social-note reveal d3">
+      <span class="social-note-icon">💡</span>
+      No mostramos "resultados". Mostramos <em>posibilidades reales</em> de transformación.
+    </div>
+  </div>
+</section>
+
+<!-- ════ PRICING ════ -->
+<section class="pricing" id="precios">
+  <div class="si">
+    <div class="pricing-tag">
+      <div class="pricing-tag-pill">RenaIA Pro</div>
+    </div>
+    <div class="pricing-grid">
+      <div class="reveal-left">
+        <h2 class="pricing-left-title">Acceso a un acompañamiento<em>diseñado para durar.</em></h2>
+        <div class="pricing-left-line"></div>
+        <p class="pricing-left-sub">Una guía real, basada en conversación,<br>inteligencia y claridad humana.<br><br>No pagas por respuestas.<br>Pagas por <em>claridad.</em></p>
+        <div class="pricing-belief">
+          <span class="pricing-belief-icon">🛡️</span>
+          <p class="pricing-belief-text"><strong>Primera conversación gratuita.</strong><br><em>Sin tarjeta. Sin compromiso.</em></p>
+        </div>
+      </div>
+      <div class="reveal-right d1">
+        <div class="pc">
+          <div class="pc-glow-top"></div>
+          <div class="pc-spark">
+            <div class="pc-spark-line"></div>
+            <span class="pc-spark-icon">✦</span>
+            <div class="pc-spark-line r"></div>
+          </div>
+          <p class="pc-price">$19</p>
+          <p class="pc-period">por mes</p>
+          <div class="pc-divider"></div>
+          <ul class="pc-feats">
+            <li class="pc-feat"><span class="pc-feat-icon">💬</span> Primera conversación completamente gratis</li>
+            <li class="pc-feat"><span class="pc-feat-icon">◈</span> Los 3 agentes: Core, Path y Career</li>
+            <li class="pc-feat"><span class="pc-feat-icon">🧠</span> Memoria real entre sesiones</li>
+            <li class="pc-feat"><span class="pc-feat-icon">📅</span> Seguimiento semana a semana</li>
+            <li class="pc-feat"><span class="pc-feat-icon">🌎</span> Contexto latinoamericano real</li>
+            <li class="pc-feat"><span class="pc-feat-icon">✕</span> Cancela cuando quieras</li>
+          </ul>
+          <a href="chat.html" class="pc-btn">
+            <span>Comenzar gratis</span>
+            <span class="pc-btn-arrow">→</span>
+          </a>
+          <p class="pc-note"><span class="pc-note-icon">🔒</span> Sin tarjeta de crédito para empezar.</p>
+        </div>
+        <div class="pricing-trust">
+          <div class="pricing-trust-item"><span class="pricing-trust-icon">✦</span> A tu ritmo</div>
+          <div class="pricing-trust-item"><span class="pricing-trust-icon">🔒</span> Pago seguro y encriptado</div>
+          <div class="pricing-trust-item"><span class="pricing-trust-icon">♡</span> Hecho para acompañarte</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ CTA FINAL ════ -->
+<section class="ctafinal">
+  <div class="grain"></div>
+  <div class="ctafinal-text">
+    <h2 class="ctafinal-title">Tu próximo capítulo<em>todavía no está escrito.</em></h2>
+    <div class="ctafinal-line"></div>
+    <p class="ctafinal-sub">No necesitas tener todas las respuestas hoy.<br>Solo necesitas dar el primer paso.</p>
+    <a href="chat.html" class="ctafinal-cta">
+      <span>✦</span>
+      Comenzar mi reinvención
+      <span>→</span>
+    </a>
+    <div class="ctafinal-proof">
+      <div class="ctafinal-proof-icon">🎁</div>
+      <p class="ctafinal-proof-text">Primera conversación gratuita.<br><em>Estamos aquí cuando estés listo.</em></p>
+    </div>
+  </div>
+  <div class="ctafinal-divider">
+    <div class="ctafinal-div-line"></div>
+    <span class="ctafinal-div-icon">✦</span>
+    <div class="ctafinal-div-line r"></div>
+  </div>
+</section>
+
+<!-- ════ FOOTER ════ -->
+<footer>
+  <div>
+    <p class="fl-logo">Rena<em>IA</em></p>
+    <p class="fl-tag">Acompañamiento profesional para personas reales en tiempos de cambio.</p>
+    <div class="fl-social">
+      <a class="fl-social-btn" href="#">📷</a>
+      <a class="fl-social-btn" href="#">💼</a>
+      <a class="fl-social-btn" href="#">✉</a>
+    </div>
+  </div>
+  <div class="fl-quote">
+    <div class="fl-quote-mark">"</div>
+    <p class="fl-quote-text">Cada transformación comienza<br>con una <em>conversación real.</em></p>
+  </div>
+  <div class="fl-right">
+    <div class="fl-links">
+      <a href="#">Privacidad</a>
+      <a href="#">Términos</a>
+      <a href="#">Contacto</a>
+    </div>
+    <p class="fl-copy">© 2026 RenaIA · Hecho en Latinoamérica</p>
+  </div>
+</footer>
+
+<script>
+  // Scrolled nav
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 50);
+  });
+  // Reveal on scroll
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
+    });
+  }, { threshold: 0.06 });
+  document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach(el => obs.observe(el));
+</script>
+</body>
+</html>
