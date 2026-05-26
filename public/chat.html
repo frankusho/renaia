@@ -27,9 +27,6 @@
       overflow:hidden;
     }
 
-    /* ══════════════════════
-       AUTH MODAL — aparece después de 2 mensajes
-    ══════════════════════ */
     #auth-modal {
       position:fixed; inset:0; z-index:1000;
       display:flex; align-items:center; justify-content:center;
@@ -87,7 +84,6 @@
       opacity:.35; margin:0 auto 2rem;
     }
 
-    /* Google button */
     .auth-btn-google {
       display:flex; align-items:center; justify-content:center; gap:12px;
       width:100%; padding:13px 20px;
@@ -113,7 +109,6 @@
       content:''; flex:1; height:.5px; background:rgba(255,255,255,.05);
     }
 
-    /* Magic link */
     .auth-magic-input {
       width:100%; padding:13px 18px;
       background:rgba(8,18,12,.9);
@@ -135,12 +130,8 @@
       transition:all .3s;
       box-shadow:0 6px 28px rgba(15,122,85,.28);
     }
-    .auth-btn-magic:hover {
-      background:var(--green);
-      transform:translateY(-1px);
-    }
+    .auth-btn-magic:hover { background:var(--green); transform:translateY(-1px); }
 
-    /* sent state */
     .auth-sent { display:none; }
     .auth-sent-icon { font-size:28px; display:block; margin-bottom:1rem; }
     .auth-sent-title {
@@ -157,9 +148,6 @@
     }
     .auth-skip:hover { color:#3a5548; }
 
-    /* ══════════════════════
-       ONBOARDING — solo primera vez
-    ══════════════════════ */
     #onboarding-modal {
       position:fixed; inset:0; z-index:999;
       display:flex; align-items:center; justify-content:center;
@@ -248,9 +236,6 @@
     .ob-btn.ready { opacity:1; pointer-events:all; }
     .ob-btn.ready:hover { background:var(--green); transform:translateY(-1px); }
 
-    /* ══════════════════════
-       HEADER
-    ══════════════════════ */
     .header {
       padding:1rem 1.5rem;
       border-bottom:.5px solid rgba(255,255,255,.04);
@@ -292,9 +277,6 @@
     }
     .user-name-text { font-size:12px; color:#4a6858; font-weight:300; }
 
-    /* ══════════════════════
-       CHAT
-    ══════════════════════ */
     .chat {
       flex:1; overflow-y:auto; padding:1.5rem;
       display:flex; flex-direction:column; gap:1.25rem;
@@ -302,7 +284,6 @@
     }
     .chat::-webkit-scrollbar { width:0; }
 
-    /* welcome state */
     .welcome {
       flex:1; display:flex; flex-direction:column;
       align-items:center; justify-content:center;
@@ -346,7 +327,6 @@
     .welcome-input-inner input::placeholder { color:#2d3748; }
     .welcome-note { margin-top:.75rem; font-size:11px; color:#1e2d26; }
 
-    /* messages */
     .msg { display:flex; gap:10px; align-items:flex-start; animation:fadeIn .4s ease; }
     @keyframes fadeIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
     .msg.user { flex-direction:row-reverse; }
@@ -381,7 +361,6 @@
     .typing span:nth-child(3){animation-delay:.4s}
     @keyframes bounce { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-5px)} }
 
-    /* bottom input */
     .input-area {
       padding:1rem 1.5rem;
       border-top:.5px solid rgba(255,255,255,.04);
@@ -407,7 +386,6 @@
     .send-btn:hover { transform:scale(1.05); }
     .send-btn svg { width:16px; height:16px; fill:white; }
 
-    /* returning user greeting */
     .returning-greeting {
       text-align:center; padding:2rem 1rem; animation:fadeIn .6s ease;
     }
@@ -468,7 +446,6 @@
         <div class="ob-dot" id="dot-3"></div>
       </div>
 
-      <!-- Step 1 -->
       <div class="ob-step active" id="ob-step-1">
         <p class="ob-tag">Un momento</p>
         <h2 class="ob-title">¿Qué te trajo <em>hasta aquí?</em></h2>
@@ -483,7 +460,6 @@
         <button class="ob-btn" id="ob-next-1">Continuar →</button>
       </div>
 
-      <!-- Step 2 -->
       <div class="ob-step" id="ob-step-2">
         <p class="ob-tag">Casi listo</p>
         <h2 class="ob-title">¿Cómo te sientes con <em>tu futuro?</em></h2>
@@ -497,7 +473,6 @@
         <button class="ob-btn" id="ob-next-2">Continuar →</button>
       </div>
 
-      <!-- Step 3 -->
       <div class="ob-step" id="ob-step-3">
         <p class="ob-tag">Último paso</p>
         <h2 class="ob-title">¿Cómo quieres que <em>te llame RenaIA?</em></h2>
@@ -555,36 +530,31 @@
   </div>
 
   <script>
-    // ══════════════════════════════════
-    // SUPABASE — reemplaza con tus keys
-    // ══════════════════════════════════
     const SUPABASE_URL      = 'https://lmfgfpawtlrbneleodcn.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxtZmdmcGF3dGxyYm5lbGVvZGNuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkzMjQzNzgsImV4cCI6MjA5NDkwMDM3OH0.IqZpjeL1c2nHG1zrB3WgbQyP6Ll_TDcGS0Iu6CRBM1c';
     const { createClient } = supabase;
     const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    // ── STATE ──
-    let messageCount  = 0;   // mensajes enviados en sesión anónima
-    let authShown     = false;
-    let currentUser   = null;
-    let obStep        = 1;
-    let obAnswers     = {};
-    let iniciado      = false;
+    let messageCount = 0;
+    let authShown    = false;
+    let currentUser  = null;
+    let obStep       = 1;
+    let obAnswers    = {};
+    let iniciado     = false;
 
-    const AUTH_TRIGGER = 2; // mostrar auth después de N mensajes
+    const AUTH_TRIGGER = 2;
 
-    // ── DOM ──
-    const authModal    = document.getElementById('auth-modal');
-    const obModal      = document.getElementById('onboarding-modal');
-    const chatEl       = document.getElementById('chat');
-    const inputEl      = document.getElementById('input');
+    const authModal   = document.getElementById('auth-modal');
+    const obModal     = document.getElementById('onboarding-modal');
+    const chatEl      = document.getElementById('chat');
+    const inputEl     = document.getElementById('input');
     const welcomeInput = document.getElementById('welcomeInput');
-    const inputArea    = document.getElementById('inputArea');
-    const welcomeEl    = document.getElementById('welcome');
-    const agentBadge   = document.getElementById('agentBadge');
-    const userPill     = document.getElementById('user-pill');
-    const userAvatar   = document.getElementById('user-avatar');
-    const userNameEl   = document.getElementById('user-name-display');
+    const inputArea   = document.getElementById('inputArea');
+    const welcomeEl   = document.getElementById('welcome');
+    const agentBadge  = document.getElementById('agentBadge');
+    const userPill    = document.getElementById('user-pill');
+    const userAvatar  = document.getElementById('user-avatar');
+    const userNameEl  = document.getElementById('user-name-display');
 
     const agentLabels = {
       core:   '✦ Rena Core',
@@ -592,24 +562,16 @@
       career: '↗ Rena Career'
     };
 
-    // ══════════════════════════════════
-    // SESSION ID (anónimo)
-    // ══════════════════════════════════
     const anonSession = localStorage.getItem('renaiaSession') || crypto.randomUUID();
     localStorage.setItem('renaiaSession', anonSession);
 
-    // ══════════════════════════════════
-    // AUTH INIT
-    // ══════════════════════════════════
     async function init() {
       const { data: { session } } = await sb.auth.getSession();
       if (session?.user) {
-        await onAuthSuccess(session.user, false); // returning user
+        await onAuthSuccess(session.user, false);
       }
-      // else: let user chat freely first
     }
 
-    // ── Show auth modal (after N messages) ──
     function showAuthModal() {
       if (authShown) return;
       authShown = true;
@@ -621,7 +583,6 @@
       authModal.style.pointerEvents = 'none';
     }
 
-    // ── On auth success ──
     async function onAuthSuccess(user, isNew = true) {
       currentUser = user;
       hideAuthModal();
@@ -630,13 +591,11 @@
                   || user.email?.split('@')[0]
                   || 'tú';
 
-      // update header
       userAvatar.textContent = nombre[0].toUpperCase();
       userNameEl.textContent  = nombre;
       userPill.style.display  = 'flex';
 
       if (!isNew) {
-        // returning user — check onboarding
         const { data } = await sb
           .from('usuarios')
           .select('onboarding_completed, nombre')
@@ -644,18 +603,17 @@
           .maybeSingle();
 
         if (data?.onboarding_completed) {
-          // show personalized greeting
-          showReturningGreeting(data.nombre || nombre);
+          // usuario que regresa → ir al dashboard
+          window.location.href = '/app.html';
         } else {
           showOnboarding();
         }
       } else {
-        // brand new — show onboarding
+        // nuevo usuario → onboarding primero
         showOnboarding();
       }
     }
 
-    // ── Returning user greeting ──
     function showReturningGreeting(nombre) {
       welcomeEl.innerHTML = `
         <div class="welcome-glow"></div>
@@ -672,31 +630,24 @@
           </div>
         </div>
       `;
-      // re-bind enter key
       document.getElementById('welcomeInput')
         .addEventListener('keypress', e => { if(e.key==='Enter') enviarDesdeWelcome(); });
     }
 
-    // ══════════════════════════════════
-    // GOOGLE AUTH
-    // ══════════════════════════════════
     document.getElementById('btn-google').addEventListener('click', async (e) => {
       e.preventDefault();
       await sb.auth.signInWithOAuth({
         provider: 'google',
-        options: { redirectTo: window.location.href }
+        options: { redirectTo: window.location.origin + '/app.html' }
       });
     });
 
-    // ══════════════════════════════════
-    // MAGIC LINK
-    // ══════════════════════════════════
     document.getElementById('btn-magic').addEventListener('click', async () => {
       const email = document.getElementById('magic-email').value.trim();
       if (!email) return;
       const { error } = await sb.auth.signInWithOtp({
         email,
-        options: { emailRedirectTo: window.location.href }
+        options: { emailRedirectTo: window.location.origin + '/app.html' }
       });
       if (!error) {
         document.getElementById('auth-forms').style.display = 'none';
@@ -704,21 +655,11 @@
       }
     });
 
-    // ── Skip auth ──
     document.getElementById('auth-skip').addEventListener('click', hideAuthModal);
 
-    // ══════════════════════════════════
-    // ONBOARDING
-    // ══════════════════════════════════
-    function showOnboarding() {
-      obModal.classList.add('visible');
-    }
+    function showOnboarding() { obModal.classList.add('visible'); }
+    function hideOnboarding() { obModal.classList.remove('visible'); }
 
-    function hideOnboarding() {
-      obModal.classList.remove('visible');
-    }
-
-    // options
     document.querySelectorAll('.ob-option').forEach(opt => {
       opt.addEventListener('click', () => {
         opt.closest('.ob-step').querySelectorAll('.ob-option')
@@ -743,7 +684,6 @@
     document.getElementById('ob-next-1').addEventListener('click', () => goStep(2));
     document.getElementById('ob-next-2').addEventListener('click', () => goStep(3));
 
-    // name input
     document.getElementById('ob-name').addEventListener('input', e => {
       document.getElementById('ob-finish')
         .classList.toggle('ready', e.target.value.trim().length > 0);
@@ -753,7 +693,6 @@
       const nombre = document.getElementById('ob-name').value.trim();
       if (!nombre || !currentUser) return;
 
-      // save to supabase
       await sb.from('usuarios').upsert({
         id: currentUser.id,
         email: currentUser.email,
@@ -764,15 +703,10 @@
         created_at: new Date().toISOString()
       });
 
-      userAvatar.textContent = nombre[0].toUpperCase();
-      userNameEl.textContent  = nombre;
-
-      hideOnboarding();
+      // onboarding completo → ir al dashboard
+      window.location.href = '/app.html';
     });
 
-    // ══════════════════════════════════
-    // CHAT LOGIC
-    // ══════════════════════════════════
     welcomeInput.addEventListener('keypress', e => { if(e.key==='Enter') enviarDesdeWelcome(); });
     inputEl.addEventListener('keypress', e => { if(e.key==='Enter') enviar(); });
 
@@ -818,8 +752,7 @@
     }
 
     function quitarTyping() {
-      const t = document.getElementById('typing');
-      if (t) t.remove();
+      document.getElementById('typing')?.remove();
     }
 
     function actualizarAgente(agente) {
@@ -831,11 +764,6 @@
       agregarMensaje(mensaje, 'user');
       mostrarTyping();
       messageCount++;
-
-      // trigger auth after N messages (solo si no está logueado)
-      if (messageCount >= AUTH_TRIGGER && !currentUser && !authShown) {
-        setTimeout(showAuthModal, 800);
-      }
 
       try {
         const sesionId = currentUser?.id || anonSession;
@@ -849,7 +777,11 @@
         agregarMensaje(data.respuesta, 'ai');
         if (data.agente) actualizarAgente(data.agente);
 
-        // save to supabase if logged in
+        // mostrar auth DESPUÉS de que RenaIA responde
+        if (messageCount >= AUTH_TRIGGER && !currentUser && !authShown) {
+          setTimeout(showAuthModal, 1500);
+        }
+
         if (currentUser) {
           await sb.from('conversaciones').insert([
             { user_id: currentUser.id, role: 'user',      content: mensaje,        created_at: new Date().toISOString() },
@@ -862,14 +794,12 @@
       }
     }
 
-    // ── Auth state listener (handles magic link redirect) ──
     sb.auth.onAuthStateChange(async (event, session) => {
       if (event === 'SIGNED_IN' && session?.user && !currentUser) {
         await onAuthSuccess(session.user, true);
       }
     });
 
-    // ── Start ──
     init();
   </script>
 </body>
