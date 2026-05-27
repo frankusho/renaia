@@ -359,8 +359,8 @@
     .flags-track{display:flex;gap:1.5rem;align-items:center;width:max-content;animation:flagScroll 30s linear infinite}
     .flags-track:hover{animation-play-state:paused}
     @keyframes flagScroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-    .flag-item{font-size:28px;filter:grayscale(20%);opacity:.85;transition:all .3s;flex-shrink:0}
-    .flag-item:hover{opacity:1;filter:grayscale(0);transform:scale(1.15)}
+    .flag-item{width:44px;height:30px;object-fit:cover;border-radius:6px;opacity:.85;transition:all .3s;flex-shrink:0;box-shadow:0 2px 8px rgba(0,0,0,.4)}
+    .flag-item:hover{opacity:1;transform:scale(1.18);box-shadow:0 4px 14px rgba(26,158,114,.3)}
     .flags-label{text-align:center;font-size:12px;color:var(--text-muted);margin-top:1.25rem;letter-spacing:.5px}
     .flags-label em{color:var(--green);font-style:normal}
 
@@ -646,21 +646,46 @@
 <!-- FLAGS CAROUSEL -->
 <div class="flags-strip">
   <div class="flags-track">
-    <span class="flag-item">🇲🇽</span><span class="flag-item">🇦🇷</span><span class="flag-item">🇨🇴</span>
-    <span class="flag-item">🇨🇱</span><span class="flag-item">🇵🇪</span><span class="flag-item">🇧🇷</span>
-    <span class="flag-item">🇪🇨</span><span class="flag-item">🇺🇾</span><span class="flag-item">🇻🇪</span>
-    <span class="flag-item">🇵🇦</span><span class="flag-item">🇨🇷</span><span class="flag-item">🇵🇾</span>
-    <span class="flag-item">🇧🇴</span><span class="flag-item">🇩🇴</span><span class="flag-item">🇬🇹</span>
-    <span class="flag-item">🇭🇳</span><span class="flag-item">🇸🇻</span><span class="flag-item">🇳🇮</span>
-    <span class="flag-item">🇨🇺</span><span class="flag-item">🇵🇷</span>
-    <!-- duplicado para loop infinito -->
-    <span class="flag-item">🇲🇽</span><span class="flag-item">🇦🇷</span><span class="flag-item">🇨🇴</span>
-    <span class="flag-item">🇨🇱</span><span class="flag-item">🇵🇪</span><span class="flag-item">🇧🇷</span>
-    <span class="flag-item">🇪🇨</span><span class="flag-item">🇺🇾</span><span class="flag-item">🇻🇪</span>
-    <span class="flag-item">🇵🇦</span><span class="flag-item">🇨🇷</span><span class="flag-item">🇵🇾</span>
-    <span class="flag-item">🇧🇴</span><span class="flag-item">🇩🇴</span><span class="flag-item">🇬🇹</span>
-    <span class="flag-item">🇭🇳</span><span class="flag-item">🇸🇻</span><span class="flag-item">🇳🇮</span>
-    <span class="flag-item">🇨🇺</span><span class="flag-item">🇵🇷</span>
+    <img class="flag-item" src="https://flagcdn.com/w40/mx.png" alt="México" title="México">
+    <img class="flag-item" src="https://flagcdn.com/w40/ar.png" alt="Argentina" title="Argentina">
+    <img class="flag-item" src="https://flagcdn.com/w40/co.png" alt="Colombia" title="Colombia">
+    <img class="flag-item" src="https://flagcdn.com/w40/cl.png" alt="Chile" title="Chile">
+    <img class="flag-item" src="https://flagcdn.com/w40/pe.png" alt="Perú" title="Perú">
+    <img class="flag-item" src="https://flagcdn.com/w40/br.png" alt="Brasil" title="Brasil">
+    <img class="flag-item" src="https://flagcdn.com/w40/ec.png" alt="Ecuador" title="Ecuador">
+    <img class="flag-item" src="https://flagcdn.com/w40/uy.png" alt="Uruguay" title="Uruguay">
+    <img class="flag-item" src="https://flagcdn.com/w40/ve.png" alt="Venezuela" title="Venezuela">
+    <img class="flag-item" src="https://flagcdn.com/w40/pa.png" alt="Panamá" title="Panamá">
+    <img class="flag-item" src="https://flagcdn.com/w40/cr.png" alt="Costa Rica" title="Costa Rica">
+    <img class="flag-item" src="https://flagcdn.com/w40/py.png" alt="Paraguay" title="Paraguay">
+    <img class="flag-item" src="https://flagcdn.com/w40/bo.png" alt="Bolivia" title="Bolivia">
+    <img class="flag-item" src="https://flagcdn.com/w40/do.png" alt="Rep. Dominicana" title="Rep. Dominicana">
+    <img class="flag-item" src="https://flagcdn.com/w40/gt.png" alt="Guatemala" title="Guatemala">
+    <img class="flag-item" src="https://flagcdn.com/w40/hn.png" alt="Honduras" title="Honduras">
+    <img class="flag-item" src="https://flagcdn.com/w40/sv.png" alt="El Salvador" title="El Salvador">
+    <img class="flag-item" src="https://flagcdn.com/w40/ni.png" alt="Nicaragua" title="Nicaragua">
+    <img class="flag-item" src="https://flagcdn.com/w40/cu.png" alt="Cuba" title="Cuba">
+    <img class="flag-item" src="https://flagcdn.com/w40/pr.png" alt="Puerto Rico" title="Puerto Rico">
+    <img class="flag-item" src="https://flagcdn.com/w40/mx.png" alt="México">
+    <img class="flag-item" src="https://flagcdn.com/w40/ar.png" alt="Argentina">
+    <img class="flag-item" src="https://flagcdn.com/w40/co.png" alt="Colombia">
+    <img class="flag-item" src="https://flagcdn.com/w40/cl.png" alt="Chile">
+    <img class="flag-item" src="https://flagcdn.com/w40/pe.png" alt="Perú">
+    <img class="flag-item" src="https://flagcdn.com/w40/br.png" alt="Brasil">
+    <img class="flag-item" src="https://flagcdn.com/w40/ec.png" alt="Ecuador">
+    <img class="flag-item" src="https://flagcdn.com/w40/uy.png" alt="Uruguay">
+    <img class="flag-item" src="https://flagcdn.com/w40/ve.png" alt="Venezuela">
+    <img class="flag-item" src="https://flagcdn.com/w40/pa.png" alt="Panamá">
+    <img class="flag-item" src="https://flagcdn.com/w40/cr.png" alt="Costa Rica">
+    <img class="flag-item" src="https://flagcdn.com/w40/py.png" alt="Paraguay">
+    <img class="flag-item" src="https://flagcdn.com/w40/bo.png" alt="Bolivia">
+    <img class="flag-item" src="https://flagcdn.com/w40/do.png" alt="Rep. Dominicana">
+    <img class="flag-item" src="https://flagcdn.com/w40/gt.png" alt="Guatemala">
+    <img class="flag-item" src="https://flagcdn.com/w40/hn.png" alt="Honduras">
+    <img class="flag-item" src="https://flagcdn.com/w40/sv.png" alt="El Salvador">
+    <img class="flag-item" src="https://flagcdn.com/w40/ni.png" alt="Nicaragua">
+    <img class="flag-item" src="https://flagcdn.com/w40/cu.png" alt="Cuba">
+    <img class="flag-item" src="https://flagcdn.com/w40/pr.png" alt="Puerto Rico">
   </div>
   <p class="flags-label">Construido para acompañarte en toda <em>Latinoamérica.</em></p>
 </div>
