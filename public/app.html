@@ -572,12 +572,17 @@
     // INIT
     // ══════════════════════════════
     async function init() {
-      const { data: { session } } = await sb.auth.getSession();
-      if (!session?.user) { window.location.href = '/'; return; }
-      currentUser = session.user;
-      await loadUser();
-      await checkUserState();
-      renderDashboard();
+  document.body.style.opacity = '0';
+  document.body.style.transition = 'opacity .3s ease';
+  
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session?.user) { window.location.href = '/'; return; }
+  currentUser = session.user;
+  await loadUser();
+  document.body.style.opacity = '1';
+  await checkUserState();
+  renderDashboard();
+
     }
 
     // ── Load user from DB ──
