@@ -898,8 +898,8 @@
       messageCount++;
       if (currentUser) {
         await sb.from('conversaciones').insert([
-          { user_id:currentUser.id, role:'user', content:mensaje, created_at:new Date().toISOString() },
-          { user_id:currentUser.id, role:'assistant', content:data.respuesta, created_at:new Date().toISOString() }
+          { usuario_id:currentUser.id, rol:'user', mensaje:mensaje, agente:'core', created_at:new Date().toISOString() },
+          { usuario_id:currentUser.id, rol:'assistant', mensaje:data.respuesta, agente:data.agente||'core', created_at:new Date().toISOString() }
         ]);
       }
       if (messageCount >= AUTH_TRIGGER && !currentUser && !authShown) {
