@@ -573,7 +573,7 @@
     // ══════════════════════════════
     async function init() {
       const { data: { session } } = await sb.auth.getSession();
-      if (!session?.user) { window.location.href = '/chat.html'; return; }
+      if (!session?.user) { window.location.href = '/'; return; }
       currentUser = session.user;
       await loadUser();
       await checkUserState();
