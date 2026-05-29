@@ -258,21 +258,21 @@
     <a class="sb-item" id="nav-prog" onclick="navClick(event,this)">
       <span class="sb-icon">↗</span> Mi progreso
     </a>
-    <a class="sb-item locked">
+    <a class="sb-item locked" id="nav-road">
       <span class="sb-icon">◎</span> Roadmap
-      <span class="sb-item-end"><span class="sb-pro">PRO</span><span class="sb-lockico">🔒</span></span>
+      <span class="sb-item-end" id="lock-road"><span class="sb-pro">PRO</span><span class="sb-lockico">🔒</span></span>
     </a>
-    <a class="sb-item locked">
+    <a class="sb-item locked" id="nav-seg">
       <span class="sb-icon">📅</span> Seguimiento
-      <span class="sb-item-end"><span class="sb-pro">PRO</span><span class="sb-lockico">🔒</span></span>
+      <span class="sb-item-end" id="lock-seg"><span class="sb-pro">PRO</span><span class="sb-lockico">🔒</span></span>
     </a>
-    <a class="sb-item locked">
+    <a class="sb-item locked" id="nav-cal">
       <span class="sb-icon">🗓</span> Calendario
-      <span class="sb-item-end"><span class="sb-pro">PRO</span><span class="sb-lockico">🔒</span></span>
+      <span class="sb-item-end" id="lock-cal"><span class="sb-pro">PRO</span><span class="sb-lockico">🔒</span></span>
     </a>
-    <a class="sb-item locked">
+    <a class="sb-item locked" id="nav-ins">
       <span class="sb-icon">✦</span> Insights
-      <span class="sb-item-end"><span class="sb-pro">PRO</span><span class="sb-lockico">🔒</span></span>
+      <span class="sb-item-end" id="lock-ins"><span class="sb-pro">PRO</span><span class="sb-lockico">🔒</span></span>
     </a>
 
     <div class="sb-section">Herramientas</div>
@@ -516,22 +516,22 @@
     document.getElementById('tb-title').innerHTML = `Hola, <span>${uname}</span>. 👋`;
     document.getElementById('tb-sub').textContent = 'Este es tu espacio de reinvención. RenaIA te acompaña de cerca.';
 
-    // Sidebar pro
-    document.getElementById('sb-prog').style.display = 'block';
+    // Sidebar pro — solo quote, sin barra de progreso
+    document.getElementById('sb-prog').style.display = 'none';
     document.getElementById('sb-quote').style.display = 'block';
     document.getElementById('sb-plan').textContent = '✦ Plan Pro';
-    const wk = Math.min(ud.count, 5);
-    document.getElementById('sb-prog-label').textContent = `${wk}/5 conversaciones esta semana`;
-    document.getElementById('sb-prog-fill').style.width = (wk/5*100)+'%';
     if (ud.aiMsgs?.length) {
       document.getElementById('sb-quote-txt').textContent = '"' + trunc(clean(ud.aiMsgs[0].mensaje), 80) + '"';
     }
 
-    // Desbloquear nav Pro
-    document.querySelectorAll('.sb-item.locked').forEach(el => {
-      el.classList.remove('locked');
-      el.style.opacity = '1';
-      el.style.pointerEvents = 'auto';
+    // Desbloquear nav Pro — quitar locked y candados
+    ['nav-road','nav-seg','nav-cal','nav-ins'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) { el.classList.remove('locked'); el.style.opacity='1'; el.style.pointerEvents='auto'; }
+    });
+    ['lock-road','lock-seg','lock-cal','lock-ins'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.innerHTML = '';
     });
 
     // Detectar fase del roadmap
