@@ -72,9 +72,9 @@
     .sb-prog-bar{height:3px;background:rgba(255,255,255,.07);border-radius:99px;overflow:hidden}
     .sb-prog-fill{height:100%;background:linear-gradient(90deg,var(--green-dim),var(--green));border-radius:99px;transition:width 1s ease}
 
-    .sb-quote{background:rgba(26,158,114,.06);border:.5px solid rgba(26,158,114,.14);border-radius:11px;padding:12px 13px}
-    .sb-quote-icon{color:var(--green);font-size:13px;display:block;margin-bottom:6px}
-    .sb-quote-txt{font-size:11.5px;color:var(--text-2);font-weight:300;line-height:1.65;font-style:italic}
+    .sb-quote{background:rgba(4,10,6,.95);border:.5px solid rgba(26,158,114,.18);border-radius:11px;padding:14px 15px}
+    .sb-quote-icon{color:var(--green);font-size:14px;display:block;margin-bottom:7px}
+    .sb-quote-txt{font-size:11.5px;color:#7a9888;font-weight:300;line-height:1.7;font-style:italic}
 
     .sb-btns{display:flex;gap:5px;padding:0 4px}
     .sb-btn{width:28px;height:28px;border-radius:7px;background:transparent;border:.5px solid var(--border-faint);display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--text-3);cursor:pointer;transition:all .18s}
@@ -108,8 +108,8 @@
     .c-title-dot{color:var(--green);font-size:14px}
 
     /* PROCESO CARD */
-    .proc-grid{display:grid;grid-template-columns:1fr 1px 1fr 1px 1fr;gap:0}
-    .proc-divider{background:rgba(26,158,114,.15);width:1px;min-height:100px}
+    .proc-grid{display:grid;grid-template-columns:1fr 1px 1fr 1px 1fr;gap:0;min-height:160px}
+    .proc-divider{background:rgba(26,158,114,.16);align-self:stretch;width:1px}
     .proc-col{padding:0 20px;display:flex;flex-direction:column;gap:10px}
     .proc-col:first-child{padding-left:0}
     .proc-col:last-child{padding-right:0}
@@ -143,9 +143,9 @@
 
     /* REFLEXIONES */
     .refl-cols{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-    .refl-card{background:rgba(4,9,6,.75);border:.5px solid var(--border-faint);border-radius:11px;padding:16px;display:flex;flex-direction:column;gap:8px;transition:border-color .2s}
+    .refl-card{background:rgba(4,9,6,.75);border:.5px solid var(--border-faint);border-radius:11px;padding:18px;display:flex;flex-direction:column;gap:10px;transition:border-color .2s}
     .refl-card:hover{border-color:rgba(26,158,114,.2)}
-    .refl-qmark{font-family:'Playfair Display',serif;font-size:28px;color:var(--green);opacity:.35;line-height:.7}
+    .refl-qmark{font-family:'Playfair Display',serif;font-size:38px;color:var(--green);opacity:.5;line-height:.6;margin-bottom:2px}
     .refl-txt{font-size:12.5px;color:var(--text-2);font-weight:300;line-height:1.7;font-style:italic;flex:1}
     .refl-date{font-size:10.5px;color:var(--text-3)}
     .refl-empty{padding:14px 16px;background:rgba(4,9,6,.5);border:.5px solid var(--border-faint);border-radius:10px;font-size:13px;color:var(--text-3);font-weight:300;display:flex;align-items:center;gap:10px}
@@ -188,8 +188,8 @@
     .rp-pro{font-size:9px;font-weight:600;color:var(--green);background:rgba(26,158,114,.12);border:.5px solid rgba(26,158,114,.22);border-radius:4px;padding:1px 5px}
     .rp-lock{font-size:12px;color:var(--text-3)}
 
-    .rp-illus{width:52px;height:52px;border-radius:12px;background:rgba(255,255,255,.03);border:.5px solid var(--border-faint);display:flex;align-items:center;justify-content:center;margin:0 auto;opacity:.4}
-    .rp-illus svg{width:26px;height:26px;stroke:var(--green);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+    .rp-illus{width:72px;height:72px;border-radius:50%;background:rgba(26,158,114,.04);border:1.5px solid rgba(26,158,114,.14);display:flex;align-items:center;justify-content:center;margin:4px auto 8px;opacity:.75}
+    .rp-illus svg{width:34px;height:34px;stroke:var(--green);fill:none;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round}
 
     .rp-locked-t{font-size:13px;font-weight:500;color:var(--text-1);text-align:center;line-height:1.3}
     .rp-locked-s{font-size:12px;color:var(--text-2);font-weight:300;line-height:1.6;text-align:center}
@@ -336,7 +336,7 @@
   let cu = null, state = null, uname = '', ud = {};
   const agents = { core:'✦ Rena Core', path:'◎ Rena Path', career:'↗ Rena Career' };
 
-  const clean = t => t ? t.replace(/\*\*(.*?)\*\*/g,'$1').replace(/\*(.*?)\*/g,'$1').replace(/#{1,6}\s/g,'').replace(/`(.*?)`/g,'$1').replace(/^\*\s/gm,'').replace(/^-\s/gm,'').replace(/\*/g,'').replace(/\n/g,' ').trim() : '';
+  const clean = t => t ? t.replace(/\*\*(.*?)\*\*/g,'$1').replace(/\*(.*?)\*/g,'$1').replace(/#{1,6}\s/g,'').replace(/`(.*?)`/g,'$1').trim() : '';
   const fdate = d => { try { return new Date(d).toLocaleDateString('es-CL',{weekday:'short',hour:'2-digit',minute:'2-digit'}); } catch{ return ''; } };
   const trunc = (t,n) => t.length > n ? t.slice(0,n)+'...' : t;
 
@@ -428,8 +428,8 @@
       ? ud.userMsgs.slice(0,4).map((m,i) => `
           <div class="conv-row fi d${i+1}" onclick="retomar()">
             <div class="conv-dot"></div>
-            <span class="conv-name">${trunc(clean(m.mensaje),28)}</span>
-<span class="conv-prev">Hablamos sobre esto en tu proceso de reinvención...</span>
+            <span class="conv-name">${trunc(clean(m.mensaje),30)}</span>
+            <span class="conv-prev">${trunc(clean(m.mensaje),55)}</span>
             <span class="conv-date">${fdate(m.created_at)}</span>
             <span class="conv-arr">›</span>
           </div>`).join('')
@@ -506,7 +506,7 @@
           <span class="rp-lock">🔒</span>
         </div>
         <div class="rp-illus">
-          <svg viewBox="0 0 24 24"><rect x="3" y="11" width="4" height="9" rx="1"/><rect x="10" y="6" width="4" height="14" rx="1"/><rect x="17" y="2" width="4" height="18" rx="1"/></svg>
+          <svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
         </div>
         <p class="rp-locked-t">Desbloquea tu visión completa</p>
         <p class="rp-locked-s">Con RenaIA Pro puedes ver tu roadmap personal, hitos y progreso detallado.</p>
@@ -519,7 +519,7 @@
           <span class="rp-lock">🔒</span>
         </div>
         <div class="rp-illus">
-          <svg viewBox="0 0 24 24"><path d="M3 12h18M3 12l4-4M3 12l4 4M21 12l-4-4M21 12l-4 4"/></svg>
+          <svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="6" r="2"/><circle cx="19" cy="12" r="2"/><circle cx="12" cy="18" r="2"/><path d="M7 12h3M14 12h3M12 8v3M12 15v1" stroke-dasharray="2 1"/></svg>
         </div>
         <p class="rp-locked-t">Tu plan paso a paso</p>
         <p class="rp-locked-s">Crea tu roadmap personalizado y transforma tus objetivos en acciones claras.</p>
@@ -532,7 +532,7 @@
           <span class="rp-lock">🔒</span>
         </div>
         <div class="rp-illus">
-          <svg viewBox="0 0 24 24"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg>
+          <svg viewBox="0 0 24 24"><rect x="3" y="12" width="4" height="8" rx="1"/><rect x="10" y="7" width="4" height="13" rx="1"/><rect x="17" y="4" width="4" height="16" rx="1"/><path d="M2 20h20"/></svg>
         </div>
         <p class="rp-locked-t">Patrones de tu proceso</p>
         <p class="rp-locked-s">Patrones, aprendizajes y oportunidades basados en tu proceso.</p>
