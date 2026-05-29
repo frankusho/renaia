@@ -2,8 +2,43 @@ require("dotenv").config();
 const express = require("express");
 const { createClient } = require("@supabase/supabase-js");
 const { CORE_PROMPT, PATH_PROMPT, CAREER_PROMPT, ORCHESTRATOR_PROMPT } = require("./agents");
+const Stripe = require("stripe");
 
 const app = express();
+const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
+
+// Webhook necesita raw body — va ANTES de express.json()
+app.post("/webhook", express.raw({ type: "application/json" }), async (req, res) => {
+  const sig = req.headers["stripe-signature"];
+  let event;
+  try {
+    event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET);
+  } catch (err) {
+    console.error("Webhook error:", err.message);
+    return res.status(400).send(`Webhook Error: ${err.message}`);
+  }
+
+  if (event.type === "checkout.session.completed") {
+    const session = event.data.object;
+    const userId = session.metadata?.userId;
+    if (userId) {
+      await supabase.from("usuarios").update({ is_pro: true }).eq("id", userId);
+      console.log(`✦ Usuario ${userId} activado como Pro`);
+    }
+  }
+
+  if (event.type === "customer.subscription.deleted") {
+    const subscription = event.data.object;
+    const userId = subscription.metadata?.userId;
+    if (userId) {
+      await supabase.from("usuarios").update({ is_pro: false }).eq("id", userId);
+      console.log(`✦ Usuario ${userId} desactivado de Pro`);
+    }
+  }
+
+  res.json({ received: true });
+});
+
 app.use(express.json());
 app.use(express.static("public"));
 
@@ -56,6 +91,30 @@ app.get("/health", (req, res) => {
   res.json({ ok: true });
 });
 
+// ── STRIPE CHECKOUT ──
+app.post("/crear-checkout", async (req, res) => {
+  const { userId, email } = req.body;
+  if (!userId) return res.status(400).json({ error: "Falta userId" });
+
+  try {
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ["card"],
+      mode: "subscription",
+      line_items: [{ price: process.env.STRIPE_PRICE_ID, quantity: 1 }],
+      success_url: `${process.env.APP_URL || "https://renaia.lat"}/app.html?upgraded=true`,
+      cancel_url: `${process.env.APP_URL || "https://renaia.lat"}/app.html`,
+      customer_email: email || undefined,
+      metadata: { userId },
+      subscription_data: { metadata: { userId } }
+    });
+    res.json({ url: session.url });
+  } catch (err) {
+    console.error("Stripe error:", err);
+    res.status(500).json({ error: "Error creando checkout" });
+  }
+});
+
+// ── CHAT ──
 app.post("/chat", async (req, res) => {
   const { mensaje, sesionId } = req.body;
   if (!mensaje || !sesionId) return res.status(400).json({ error: "Faltan datos" });
