@@ -105,16 +105,30 @@
     .conv-preview-time{font-size:11px;color:var(--text-3);margin-top:.5rem}
     .conv-btn{display:flex;align-items:center;justify-content:space-between;background:var(--green-dim);color:white;padding:11px 18px;border-radius:10px;font-size:13px;font-weight:500;cursor:pointer;border:none;font-family:'DM Sans',sans-serif;transition:all .3s;box-shadow:0 4px 20px rgba(15,122,85,.22);width:100%}
     .conv-btn:hover{background:var(--green);transform:translateY(-1px)}
+
+    /* HISTORIAL */
+    .hist-list{display:flex;flex-direction:column;gap:.6rem}
+    .hist-item{display:flex;align-items:center;gap:12px;padding:.85rem 1rem;background:rgba(4,10,7,.7);border:.5px solid var(--border-faint);border-radius:10px;cursor:pointer;transition:all .25s}
+    .hist-item:hover{border-color:var(--border);background:rgba(6,14,10,.85)}
+    .hist-dot{width:8px;height:8px;border-radius:50%;background:var(--green);flex-shrink:0;opacity:.6}
+    .hist-msg{font-size:13px;color:var(--text-2);font-weight:300;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .hist-time{font-size:11px;color:var(--text-3);flex-shrink:0}
+
+    /* SUGGESTIONS */
     .suggestions-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.75rem}
     .suggestion{background:rgba(4,10,7,.8);border:.5px solid var(--border-faint);border-radius:12px;padding:1rem;cursor:pointer;transition:all .3s;position:relative;overflow:hidden}
     .suggestion:hover{border-color:var(--border);transform:translateY(-2px)}
     .suggestion-icon{font-size:16px;margin-bottom:.6rem;display:block}
     .suggestion-text{font-size:12px;color:var(--text-2);font-weight:300;line-height:1.6;margin-bottom:.4rem}
     .suggestion-tag{font-size:10px;color:var(--text-3)}
+
+    /* LOCKED */
     .locked-module{background:rgba(4,9,6,.7);border:.5px solid rgba(255,255,255,.04);border-radius:14px;padding:1.25rem 1.5rem;display:flex;align-items:center;gap:14px;opacity:.6}
     .locked-icon{font-size:18px;color:var(--text-3);flex-shrink:0}
     .locked-text{font-size:13px;color:var(--text-3);font-weight:300}
     .locked-badge{margin-left:auto;font-size:10px;color:var(--text-3);background:rgba(255,255,255,.04);border:.5px solid rgba(255,255,255,.06);border-radius:100px;padding:3px 10px;white-space:nowrap;flex-shrink:0}
+
+    /* MEMORY */
     .memory-grid{display:grid;grid-template-columns:1fr auto;gap:1rem;align-items:start}
     .memory-list{display:flex;flex-direction:column;gap:.6rem}
     .memory-item{display:flex;align-items:flex-start;gap:8px;font-size:13px;color:var(--text-2);font-weight:300;line-height:1.5}
@@ -156,14 +170,6 @@
     .rp-placeholder{background:rgba(5,12,8,.7);border:.5px solid rgba(255,255,255,.04);border-radius:12px;padding:1.25rem;text-align:center}
     .rp-placeholder-icon{font-size:20px;margin-bottom:.6rem;display:block;opacity:.3}
     .rp-placeholder-text{font-size:12px;color:var(--text-3);font-weight:300;line-height:1.6}
-    .steps-list{display:flex;flex-direction:column;gap:.6rem}
-    .step-item{display:flex;align-items:flex-start;gap:10px;padding:.75rem;background:rgba(6,14,10,.7);border:.5px solid var(--border-faint);border-radius:10px;transition:all .25s;cursor:pointer}
-    .step-item:hover{border-color:var(--border)}
-    .step-icon{width:28px;height:28px;border-radius:8px;background:rgba(26,158,114,.08);border:.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
-    .step-icon.amber{background:rgba(180,140,50,.08);border-color:rgba(180,140,50,.18)}
-    .step-name{font-size:12.5px;color:var(--text-1);font-weight:400;margin-bottom:2px}
-    .step-date{font-size:11px;color:var(--text-3);font-weight:300}
-    .step-eta{font-size:11px;color:var(--text-2);margin-left:auto;white-space:nowrap;flex-shrink:0}
     .reflection-card{background:rgba(6,14,10,.7);border:.5px solid var(--border-faint);border-radius:12px;padding:1rem}
     .reflection-text{font-size:13px;color:var(--text-2);font-weight:300;line-height:1.7;font-style:italic}
     .reflection-time{font-size:11px;color:var(--text-3);margin-top:.6rem}
@@ -195,13 +201,13 @@
     .typing span:nth-child(2){animation-delay:.2s}.typing span:nth-child(3){animation-delay:.4s}
   </style>
   <!-- Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-QFV6SRFDKL"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-QFV6SRFDKL');
-</script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QFV6SRFDKL"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-QFV6SRFDKL');
+  </script>
 </head>
 <body>
 
@@ -221,8 +227,8 @@
     <nav class="sb-nav">
       <div class="sb-section-label">Principal</div>
       <a class="sb-item active" id="nav-inicio" onclick="showHome(event)"><span class="sb-item-icon">⌂</span> Inicio</a>
-      <a class="sb-item" id="nav-conv" onclick="showChat(event)"><span class="sb-item-icon">💬</span> Conversaciones</a>
-      <a class="sb-item" id="nav-refl" onclick="navClick(event,this)"><span class="sb-item-icon">📖</span> Reflexiones</a>
+      <a class="sb-item" id="nav-conv" onclick="showConversaciones(event)"><span class="sb-item-icon">💬</span> Conversaciones</a>
+      <a class="sb-item" id="nav-refl" onclick="showReflexiones(event)"><span class="sb-item-icon">📖</span> Reflexiones</a>
       <div class="sb-section-label">Mi proceso</div>
       <a class="sb-item" id="nav-prog" onclick="navClick(event,this)"><span class="sb-item-icon">↗</span> Mi progreso</a>
       <a class="sb-item locked" id="nav-road"><span class="sb-item-icon">◎</span> Roadmap<span class="sb-lock">🔒</span></a>
@@ -267,6 +273,8 @@
       <div class="hero-banner-glow"></div>
       <div class="hero-banner-grid"></div>
     </div>
+
+    <!-- HOME VIEW -->
     <div id="home-view">
       <div class="feed" id="feed"></div>
       <div class="chat-input-wrap">
@@ -278,6 +286,8 @@
         </div>
       </div>
     </div>
+
+    <!-- CHAT VIEW -->
     <div id="chat-view">
       <div class="chat-messages" id="chat-messages"></div>
       <div class="chat-input-wrap">
@@ -304,6 +314,17 @@
     let userName    = '';
     let userData    = {};
     const agentLabels = { core:'✦ Rena Core', path:'◎ Rena Path', career:'↗ Rena Career' };
+
+    // ── Limpiar markdown básico ──
+    function cleanText(text) {
+      if (!text) return '';
+      return text
+        .replace(/\*\*(.*?)\*\*/g, '$1')
+        .replace(/\*(.*?)\*/g, '$1')
+        .replace(/#{1,6}\s/g, '')
+        .replace(/`(.*?)`/g, '$1')
+        .trim();
+    }
 
     // ── INIT ──
     async function init() {
@@ -335,7 +356,6 @@
       if (userData.isPro) document.getElementById('sb-plan').classList.add('pro');
     }
 
-    // ── CHECK USER STATE — usa columnas correctas: usuario_id, rol, mensaje ──
     async function checkUserState() {
       const { count } = await sb
         .from('conversaciones')
@@ -346,6 +366,7 @@
       userData.hasConversations = userData.convCount > 0;
 
       if (userData.hasConversations) {
+        // Última conversación del usuario
         const { data: lastConvs } = await sb
           .from('conversaciones')
           .select('mensaje, created_at, rol')
@@ -355,14 +376,25 @@
           .limit(1);
         userData.lastConv = lastConvs?.[0] || null;
 
+        // Últimas respuestas de RenaIA para reflexiones y sugerencias
         const { data: aiMsgs } = await sb
           .from('conversaciones')
           .select('mensaje, created_at')
           .eq('usuario_id', currentUser.id)
           .eq('rol', 'assistant')
           .order('created_at', { ascending:false })
-          .limit(3);
+          .limit(5);
         userData.recentAI = aiMsgs || [];
+
+        // Historial de mensajes del usuario (para mostrar en conversaciones)
+        const { data: userMsgs } = await sb
+          .from('conversaciones')
+          .select('mensaje, created_at')
+          .eq('usuario_id', currentUser.id)
+          .eq('rol', 'user')
+          .order('created_at', { ascending:false })
+          .limit(5);
+        userData.recentUser = userMsgs || [];
       }
 
       const { data: mem } = await sb
@@ -384,6 +416,7 @@
       renderRightPanel();
     }
 
+    // ── EMPTY STATE ──
     function renderEmptyState() {
       document.getElementById('topbar-title').innerHTML =
         `Hola, <em style="font-style:normal;color:var(--green)">${userName}</em>. 🌙`;
@@ -404,24 +437,63 @@
       document.getElementById('nav-cal').classList.add('locked');
     }
 
+    // ── FREE STATE ──
     function renderFreeState() {
       document.getElementById('topbar-title').innerHTML =
         `Hola, <em style="font-style:normal;color:var(--green)">${userName}</em>. 🌙`;
       document.getElementById('topbar-sub').textContent = 'Retoma donde lo dejaste. RenaIA recuerda lo que importa.';
+
       document.getElementById('sb-progress-wrap').style.display = 'block';
       const pct = Math.min(userData.convCount * 5, 40);
       document.getElementById('sb-pct').textContent = pct + '%';
       document.getElementById('sb-bar').style.width = pct + '%';
       document.getElementById('sb-progress-note').textContent = 'Sigue conversando para avanzar.';
-      const lastMsg  = userData.lastConv?.mensaje || '...';
+
+      const lastMsg  = cleanText(userData.lastConv?.mensaje || '...');
       const lastTime = userData.lastConv
-        ? new Date(userData.lastConv.created_at).toLocaleDateString('es-CL',{weekday:'short',hour:'2-digit',minute:'2-digit'})
+        ? formatDate(userData.lastConv.created_at)
         : '';
+
+      // Historial reciente
+      const histHTML = userData.recentUser?.length > 1 ? `
+        <div class="card fade-in-up d2">
+          <div class="card-header">
+            <div><div class="card-title">Conversaciones recientes</div><div class="card-sub">Tu historial de reinvención</div></div>
+          </div>
+          <div class="hist-list">
+            ${userData.recentUser.slice(0,4).map(m => `
+              <div class="hist-item" onclick="retornarConversacion()">
+                <div class="hist-dot"></div>
+                <span class="hist-msg">${cleanText(m.mensaje)}</span>
+                <span class="hist-time">${formatDate(m.created_at)}</span>
+              </div>`).join('')}
+          </div>
+        </div>` : '';
+
+      // Sugerencias dinámicas
+      const suggestions = buildSuggestions();
+
+      // Memoria ligera
       let memoryHTML = '';
       if (userData.memory?.summary) {
         const items = userData.memory.summary.split('\n').filter(Boolean).slice(0,4);
-        memoryHTML = `<div class="card fade-in-up d3"><div class="card-header"><div class="card-title">Lo que he entendido de ti</div><a href="#" class="card-link">Ver memoria completa</a></div><div class="memory-grid"><div class="memory-list">${items.map(i=>`<div class="memory-item"><span class="memory-check">✓</span> ${i}</div>`).join('')}</div><div class="memory-ai-card"><span class="memory-ai-icon">🧠</span><p class="memory-ai-text">Cuanto más hablamos, mejor puedo <em>acompañarte.</em></p></div></div></div>`;
+        memoryHTML = `
+          <div class="card fade-in-up d3">
+            <div class="card-header">
+              <div class="card-title">Lo que he entendido de ti</div>
+            </div>
+            <div class="memory-grid">
+              <div class="memory-list">
+                ${items.map(i=>`<div class="memory-item"><span class="memory-check">✓</span> ${cleanText(i)}</div>`).join('')}
+              </div>
+              <div class="memory-ai-card">
+                <span class="memory-ai-icon">🧠</span>
+                <p class="memory-ai-text">Cuanto más hablamos, mejor puedo <em>acompañarte.</em></p>
+              </div>
+            </div>
+          </div>`;
       }
+
       document.getElementById('feed').innerHTML = `
         <div class="card fade-in-up">
           <div class="card-header"><div class="card-title">Continuar conversación</div></div>
@@ -431,30 +503,59 @@
             <div class="conv-preview-msg">${lastMsg}</div>
             <p class="conv-preview-time">${lastTime}</p>
           </div>
-          <button class="conv-btn" onclick="showChat(null)"><span>Retomar conversación</span><span>→</span></button>
+          <button class="conv-btn" onclick="retornarConversacion()"><span>Retomar conversación</span><span>→</span></button>
         </div>
-        ${buildSuggestions()}
+
+        ${histHTML}
+        ${suggestions}
         ${memoryHTML}
+
         <div class="card fade-in-up d4">
-          <div class="card-header"><div class="card-title">Funciones Pro</div></div>
+          <div class="card-header"><div class="card-title">Disponible en Pro</div></div>
           <div style="display:flex;flex-direction:column;gap:.6rem">
-            <div class="locked-module"><span class="locked-icon">◎</span><span class="locked-text">Roadmap personal dinámico</span><span class="locked-badge">RenaIA Pro</span></div>
-            <div class="locked-module"><span class="locked-icon">📅</span><span class="locked-text">Calendario de reinvención</span><span class="locked-badge">RenaIA Pro</span></div>
-            <div class="locked-module"><span class="locked-icon">↗</span><span class="locked-text">Seguimiento semanal con RenaIA</span><span class="locked-badge">RenaIA Pro</span></div>
+            <div class="locked-module"><span class="locked-icon">🧠</span><span class="locked-text">Memoria profunda — patrones, miedos, objetivos</span><span class="locked-badge">Pro</span></div>
+            <div class="locked-module"><span class="locked-icon">◎</span><span class="locked-text">Roadmap personal de reinvención</span><span class="locked-badge">Pro</span></div>
+            <div class="locked-module"><span class="locked-icon">↗</span><span class="locked-text">Seguimiento semanal continuo</span><span class="locked-badge">Pro</span></div>
           </div>
         </div>`;
     }
 
+    // ── SUGERENCIAS DINÁMICAS ──
     function buildSuggestions() {
-      const defaults = [
-        { icon:'◈', text:'Sigamos explorando tus opciones profesionales', tag:'Basado en tu proceso' },
-        { icon:'💬', text:'Retomemos lo que hablamos en tu última conversación', tag:'Para profundizar' },
-        { icon:'◎', text:'¿Quieres organizar tus próximos pasos?', tag:'Construyendo tu plan' },
+      // Basadas en las últimas respuestas de RenaIA
+      const base = [
+        { icon:'💬', text:'Retomemos lo que hablamos en tu última sesión', tag:'Continuidad' },
+        { icon:'◈', text:'Sigamos explorando tus opciones profesionales', tag:'Tu proceso' },
+        { icon:'◎', text:'¿Quieres organizar tus próximos pasos?', tag:'Claridad' },
         { icon:'✦', text:'Exploremos lo que más te importa ahora mismo', tag:'Tu dirección' },
       ];
-      return `<div class="card fade-in-up d2"><div class="card-header"><div><div class="card-title">Sugerencias para ti</div><div class="card-sub">Basadas en tus conversaciones</div></div></div><div class="suggestions-grid">${defaults.map(s=>`<div class="suggestion" onclick="comenzarSugerencia('${s.text}')"><span class="suggestion-icon">${s.icon}</span><p class="suggestion-text">${s.text}</p><p class="suggestion-tag">${s.tag}</p></div>`).join('')}</div></div>`;
+
+      // Si hay respuestas recientes de RenaIA, construir sugerencias contextuales
+      let suggestions = [...base];
+      if (userData.recentAI?.length) {
+        const lastAI = cleanText(userData.recentAI[0]?.mensaje || '');
+        if (lastAI.length > 20) {
+          suggestions[0] = { icon:'💬', text:'Continúa desde donde lo dejamos', tag:'Basado en tu última sesión' };
+        }
+      }
+
+      return `
+        <div class="card fade-in-up d2">
+          <div class="card-header">
+            <div><div class="card-title">Sugerencias para ti</div><div class="card-sub">Basadas en tus conversaciones</div></div>
+          </div>
+          <div class="suggestions-grid">
+            ${suggestions.map(s=>`
+              <div class="suggestion" onclick="comenzarSugerencia('${s.text}')">
+                <span class="suggestion-icon">${s.icon}</span>
+                <p class="suggestion-text">${s.text}</p>
+                <p class="suggestion-tag">${s.tag}</p>
+              </div>`).join('')}
+          </div>
+        </div>`;
     }
 
+    // ── PRO STATE ──
     function renderProState() {
       document.getElementById('topbar-title').innerHTML =
         `Hola, <em style="font-style:normal;color:var(--green)">${userName}</em>. 🌙`;
@@ -466,15 +567,28 @@
       document.getElementById('sb-pct').textContent = pct + '%';
       document.getElementById('sb-bar').style.width = pct + '%';
       document.getElementById('sb-progress-note').textContent = 'Vas muy bien. Sigue así.';
-      const lastMsg  = userData.lastConv?.mensaje || '...';
-      const lastTime = userData.lastConv
-        ? new Date(userData.lastConv.created_at).toLocaleDateString('es-CL',{weekday:'short',hour:'2-digit',minute:'2-digit'})
-        : '';
+
+      const lastMsg = cleanText(userData.lastConv?.mensaje || '...');
+      const lastTime = userData.lastConv ? formatDate(userData.lastConv.created_at) : '';
+
       let memoryHTML = '';
       if (userData.memory?.summary) {
         const items = userData.memory.summary.split('\n').filter(Boolean).slice(0,5);
-        memoryHTML = `<div class="card fade-in-up d3"><div class="card-header"><div class="card-title">Lo que he entendido de ti</div><a href="#" class="card-link">Ver memoria completa</a></div><div class="memory-grid"><div class="memory-list">${items.map(i=>`<div class="memory-item"><span class="memory-check">✓</span> ${i}</div>`).join('')}</div><div class="memory-ai-card"><span class="memory-ai-icon">🧠</span><p class="memory-ai-text">Cuanto más hablamos, mejor puedo <em>acompañarte.</em></p></div></div></div>`;
+        memoryHTML = `
+          <div class="card fade-in-up d3">
+            <div class="card-header"><div class="card-title">Lo que he entendido de ti</div></div>
+            <div class="memory-grid">
+              <div class="memory-list">
+                ${items.map(i=>`<div class="memory-item"><span class="memory-check">✓</span> ${cleanText(i)}</div>`).join('')}
+              </div>
+              <div class="memory-ai-card">
+                <span class="memory-ai-icon">🧠</span>
+                <p class="memory-ai-text">Cuanto más hablamos, mejor puedo <em>acompañarte.</em></p>
+              </div>
+            </div>
+          </div>`;
       }
+
       document.getElementById('feed').innerHTML = `
         <div class="card fade-in-up">
           <div class="card-header"><div class="card-title">Continuar conversación</div></div>
@@ -484,29 +598,56 @@
             <div class="conv-preview-msg">${lastMsg}</div>
             <p class="conv-preview-time">${lastTime}</p>
           </div>
-          <button class="conv-btn" onclick="showChat(null)"><span>Retomar conversación</span><span>→</span></button>
+          <button class="conv-btn" onclick="retornarConversacion()"><span>Retomar conversación</span><span>→</span></button>
         </div>
         ${buildSuggestions()}
         ${memoryHTML}`;
     }
 
+    // ── RIGHT PANEL ──
     function renderRightPanel() {
       const rp = document.getElementById('right-panel');
+
       if (userState === 'empty') {
-        rp.innerHTML = `<div><div class="rp-title">Tu espacio</div><div style="display:flex;flex-direction:column;gap:.75rem"><div class="rp-placeholder"><span class="rp-placeholder-icon">↗</span><p class="rp-placeholder-text">Tu progreso aparecerá aquí después de tu primera conversación</p></div><div class="rp-placeholder"><span class="rp-placeholder-icon">◎</span><p class="rp-placeholder-text">Tu roadmap se construirá contigo</p></div><div class="rp-placeholder"><span class="rp-placeholder-icon">📖</span><p class="rp-placeholder-text">Tus reflexiones quedarán guardadas aquí</p></div></div></div>`;
+        rp.innerHTML = `
+          <div>
+            <div class="rp-title">Tu espacio</div>
+            <div style="display:flex;flex-direction:column;gap:.75rem">
+              <div class="rp-placeholder"><span class="rp-placeholder-icon">↗</span><p class="rp-placeholder-text">Tu progreso aparecerá después de tu primera conversación</p></div>
+              <div class="rp-placeholder"><span class="rp-placeholder-icon">◎</span><p class="rp-placeholder-text">Tu roadmap se construirá contigo</p></div>
+              <div class="rp-placeholder"><span class="rp-placeholder-icon">📖</span><p class="rp-placeholder-text">Tus reflexiones quedarán guardadas aquí</p></div>
+            </div>
+          </div>`;
         return;
       }
+
       const pct = userState === 'pro' ? Math.min(userData.convCount * 3, 95) : Math.min(userData.convCount * 5, 40);
       const offset = 220 - (220 * pct / 100);
-      const stepsHTML = userState === 'pro'
-        ? `<div><div class="rp-title">Próximos pasos <a href="#">Ver agenda</a></div><div class="steps-list"><div class="step-item"><div class="step-icon">✓</div><div style="flex:1"><div class="step-name">Reflexión semanal</div><div class="step-date">Esta semana</div></div></div><div class="step-item"><div class="step-icon amber">◎</div><div style="flex:1"><div class="step-name">Explorar opciones de carrera</div><div class="step-date">Próxima semana</div></div></div></div></div>`
-        : `<div><div class="rp-title">Próximos pasos</div><div class="upgrade-banner"><p class="upgrade-banner-title">Desbloquea tu roadmap completo</p><p class="upgrade-banner-sub">Con RenaIA Pro tendrás seguimiento semanal, pasos personalizados y memoria profunda.</p><button class="upgrade-btn"><span>Activar RenaIA Pro</span><span>→</span></button></div></div>`;
-      const reflHTML = userData.recentAI?.length
-        ? `<div><div class="rp-title">Reflexión reciente <a href="#">Ver todas</a></div><div class="reflection-card"><p class="reflection-text">${userData.recentAI[0]?.mensaje?.slice(0,160)}...</p><p class="reflection-time">${new Date(userData.recentAI[0]?.created_at).toLocaleDateString('es-CL',{weekday:'short',hour:'2-digit',minute:'2-digit'})}</p></div></div>`
-        : '';
+
+      // Reflexión reciente — limpia markdown
+      const reflHTML = userData.recentAI?.length ? `
+        <div>
+          <div class="rp-title">Reflexión reciente</div>
+          <div class="reflection-card">
+            <p class="reflection-text">${cleanText(userData.recentAI[0]?.mensaje || '').slice(0,180)}...</p>
+            <p class="reflection-time">${formatDate(userData.recentAI[0]?.created_at)}</p>
+          </div>
+        </div>` : '';
+
+      // Upgrade banner solo para free
+      const upgradeHTML = userState === 'free' ? `
+        <div>
+          <div class="rp-title">RenaIA Pro</div>
+          <div class="upgrade-banner">
+            <p class="upgrade-banner-title">Profundiza tu proceso</p>
+            <p class="upgrade-banner-sub">Memoria profunda, roadmap personal y seguimiento semanal continuo.</p>
+            <button class="upgrade-btn"><span>Activar RenaIA Pro</span><span>→</span></button>
+          </div>
+        </div>` : '';
+
       rp.innerHTML = `
         <div>
-          <div class="rp-title">Tu progreso <a href="#">Esta semana ▾</a></div>
+          <div class="rp-title">Tu progreso</div>
           <div class="donut-wrap">
             <div class="donut-chart">
               <svg width="88" height="88" viewBox="0 0 88 88">
@@ -523,23 +664,36 @@
             </div>
           </div>
         </div>
-        ${stepsHTML}
-        ${reflHTML}`;
+        ${reflHTML}
+        ${upgradeHTML}`;
     }
 
-    // ── NAVIGATION ──
+    // ── FORMATO FECHA ──
+    function formatDate(dateStr) {
+      if (!dateStr) return '';
+      try {
+        return new Date(dateStr).toLocaleDateString('es-CL', { weekday:'short', hour:'2-digit', minute:'2-digit' });
+      } catch { return ''; }
+    }
+
+    // ── NAVEGACIÓN ──
     function navClick(e, el) {
       e?.preventDefault();
       document.querySelectorAll('.sb-item').forEach(i => i.classList.remove('active'));
       el?.classList.add('active');
     }
+
     function showHome(e) {
       e?.preventDefault();
       document.getElementById('home-view').classList.remove('hidden');
       document.getElementById('chat-view').classList.remove('active');
       document.querySelectorAll('.sb-item').forEach(i => i.classList.remove('active'));
       document.getElementById('nav-inicio').classList.add('active');
+      document.getElementById('topbar-title').innerHTML =
+        `Hola, <em style="font-style:normal;color:var(--green)">${userName}</em>. 🌙`;
+      document.getElementById('topbar-sub').textContent = 'Retoma donde lo dejaste. RenaIA recuerda lo que importa.';
     }
+
     function showChat(e) {
       e?.preventDefault();
       document.getElementById('home-view').classList.add('hidden');
@@ -548,13 +702,89 @@
       document.getElementById('nav-conv').classList.add('active');
       document.getElementById('topbar-title').textContent = 'Conversación';
       document.getElementById('topbar-sub').textContent   = 'RenaIA está aquí para acompañarte.';
-      document.getElementById('chat-input').focus();
+      setTimeout(() => document.getElementById('chat-input').focus(), 100);
     }
-    function nuevaConversacion() { showChat(null); document.getElementById('chat-messages').innerHTML = ''; }
+
+    // Cargar historial real al retomar
+    async function retornarConversacion() {
+      showChat(null);
+      const msgs = document.getElementById('chat-messages');
+      msgs.innerHTML = '';
+
+      // Mostrar loading
+      msgs.innerHTML = `<div style="text-align:center;padding:2rem;color:var(--text-3);font-size:13px">Cargando conversación...</div>`;
+
+      const { data: historial } = await sb
+        .from('conversaciones')
+        .select('rol, mensaje, created_at')
+        .eq('usuario_id', currentUser.id)
+        .order('created_at', { ascending:true })
+        .limit(40);
+
+      msgs.innerHTML = '';
+
+      if (!historial?.length) {
+        msgs.innerHTML = `<div style="text-align:center;padding:2rem;color:var(--text-3);font-size:13px">No hay mensajes aún.</div>`;
+        return;
+      }
+
+      historial.forEach(m => {
+        const tipo = m.rol === 'user' ? 'user' : 'ai';
+        addMsg(cleanText(m.mensaje), tipo);
+      });
+
+      // Mensaje de continuidad de RenaIA
+      setTimeout(() => {
+        addMsg('Aquí estoy. ¿Continuamos desde donde lo dejamos?', 'ai');
+      }, 400);
+    }
+
+    async function showConversaciones(e) {
+      e?.preventDefault();
+      showChat(null);
+      await retornarConversacion();
+    }
+
+    function showReflexiones(e) {
+      e?.preventDefault();
+      document.querySelectorAll('.sb-item').forEach(i => i.classList.remove('active'));
+      document.getElementById('nav-refl').classList.add('active');
+      document.getElementById('home-view').classList.remove('hidden');
+      document.getElementById('chat-view').classList.remove('active');
+      document.getElementById('topbar-title').textContent = 'Reflexiones';
+      document.getElementById('topbar-sub').textContent = 'Lo que RenaIA ha entendido de tu proceso.';
+
+      if (!userData.recentAI?.length) {
+        document.getElementById('feed').innerHTML = `
+          <div class="empty-hero fade-in-up" style="padding:2rem">
+            <span class="empty-star" style="font-size:24px">📖</span>
+            <h2 class="empty-title" style="font-size:24px">Todavía no hay reflexiones.</h2>
+            <p class="empty-sub">A medida que conversemos, RenaIA guardará aquí los momentos más importantes de tu proceso.</p>
+            <a href="#" class="empty-cta" onclick="comenzarConversacion(event)" style="padding:12px 24px;font-size:13px"><span>✦</span> Comenzar conversación <span>→</span></a>
+          </div>`;
+        return;
+      }
+
+      const reflsHTML = userData.recentAI.map(m => `
+        <div class="card fade-in-up">
+          <div class="reflection-card" style="border:none;padding:0;background:transparent">
+            <p class="reflection-text">${cleanText(m.mensaje).slice(0, 300)}${m.mensaje.length > 300 ? '...' : ''}</p>
+            <p class="reflection-time">${formatDate(m.created_at)}</p>
+          </div>
+        </div>`).join('');
+
+      document.getElementById('feed').innerHTML = reflsHTML;
+    }
+
+    function nuevaConversacion() {
+      showChat(null);
+      document.getElementById('chat-messages').innerHTML = '';
+    }
+
     function comenzarConversacion(e) { e?.preventDefault(); showChat(null); }
     function comenzarSugerencia(texto) { showChat(null); setTimeout(() => sendMessage(texto), 300); }
 
-    // ── CHAT — usa columnas correctas: usuario_id, rol, mensaje, agente ──
+    // ── CHAT ──
     function addMsg(text, type) {
       const el = document.getElementById('chat-messages');
       const div = document.createElement('div');
@@ -562,6 +792,7 @@
       div.innerHTML = `<div class="msg-avatar ${type}">${type==='ai'?'✦':'Tú'}</div><div class="bubble">${text}</div>`;
       el.appendChild(div); el.scrollTop = el.scrollHeight;
     }
+
     function showTyping() {
       const el = document.getElementById('chat-messages');
       const div = document.createElement('div');
@@ -569,6 +800,7 @@
       div.innerHTML = `<div class="msg-avatar ai">✦</div><div class="typing"><span></span><span></span><span></span></div>`;
       el.appendChild(div); el.scrollTop = el.scrollHeight;
     }
+
     function hideTyping() { document.getElementById('typing')?.remove(); }
     function updateAgent(agente) { document.getElementById('agent-name').textContent = agentLabels[agente] || agentLabels.core; }
 
@@ -585,15 +817,23 @@
         addMsg(data.respuesta, 'ai');
         if (data.agente) updateAgent(data.agente);
 
-        // ✅ columnas correctas
         await sb.from('conversaciones').insert([
           { usuario_id:currentUser.id, rol:'user',      mensaje:msg,           agente:'core',              created_at:new Date().toISOString() },
           { usuario_id:currentUser.id, rol:'assistant', mensaje:data.respuesta, agente:data.agente||'core', created_at:new Date().toISOString() }
         ]);
 
-        if (!userData.hasConversations) {
+        // Actualizar estado y datos en background
+        userData.convCount++;
+        userData.hasConversations = true;
+        if (userState === 'empty') {
+          userState = 'free';
           await checkUserState();
           renderDashboard();
+        } else {
+          // Actualizar último mensaje sin re-render completo
+          userData.lastConv = { mensaje: msg, created_at: new Date().toISOString() };
+          if (!userData.recentAI) userData.recentAI = [];
+          userData.recentAI.unshift({ mensaje: data.respuesta, created_at: new Date().toISOString() });
         }
       } catch {
         hideTyping();
@@ -609,6 +849,7 @@
       showChat(null);
       sendMessage(msg);
     }
+
     function enviarChat() {
       const input = document.getElementById('chat-input');
       const msg = input.value.trim();
