@@ -6,666 +6,647 @@
   <title>RenaIA — Tu espacio de reinvención</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=Playfair+Display:ital,wght@0,500;1,500&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,500;0,600;1,500&display=swap');
     *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
     html,body{height:100%;overflow:hidden}
     :root{
-      --green:#1a9e72;--green-dim:#0f7a55;
-      --border:rgba(26,158,114,.14);--border-faint:rgba(255,255,255,.055);
-      --bg:#050807;--text-1:#e4eeea;--text-2:#6a8878;--text-3:#2a3d34;
+      --green:#1a9e72;--green-dim:#0f7a55;--green-hover:#15b882;
+      --border:rgba(26,158,114,.16);--border-faint:rgba(255,255,255,.06);
+      --bg:#060a07;--bg2:rgba(5,11,7,.98);--bg3:rgba(7,14,9,.92);
+      --text-1:#e8f0ea;--text-2:#6b8a78;--text-3:#2e4038;
     }
-    body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text-1);display:grid;grid-template-columns:220px 1fr 280px;grid-template-rows:100vh}
+    body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text-1);display:grid;grid-template-columns:216px 1fr 272px;grid-template-rows:100vh;font-size:14px}
+    @keyframes fadeInUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
     @keyframes fadeIn{from{opacity:0}to{opacity:1}}
-    @keyframes fadeInUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
-    @keyframes starfloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
     @keyframes bounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-4px)}}
-    .fade-in-up{animation:fadeInUp .5s ease forwards;opacity:0}
-    .d1{animation-delay:.08s}.d2{animation-delay:.16s}.d3{animation-delay:.24s}.d4{animation-delay:.32s}
+    .fi{animation:fadeInUp .45s ease forwards;opacity:0}
+    .d1{animation-delay:.07s}.d2{animation-delay:.14s}.d3{animation-delay:.21s}.d4{animation-delay:.28s}
 
-    /* ══ SIDEBAR ══ */
-    .sidebar{background:rgba(3,8,5,.99);border-right:.5px solid var(--border-faint);display:flex;flex-direction:column;padding:1.25rem .875rem;overflow-y:auto}
+    /* ═══════════════ SIDEBAR ═══════════════ */
+    .sidebar{
+      background:var(--bg2);border-right:.5px solid var(--border-faint);
+      display:flex;flex-direction:column;padding:20px 12px;overflow-y:auto;
+    }
     .sidebar::-webkit-scrollbar{width:0}
-    .sb-logo{display:flex;align-items:center;gap:8px;text-decoration:none;margin-bottom:1.5rem;padding:0 .25rem}
-    .sb-logo-text{font-size:18px;font-weight:600;color:var(--text-1);letter-spacing:-.4px}
-    .sb-logo-text em{color:var(--green);font-style:normal}
-    .sb-logo-sub{font-size:10px;color:var(--text-3);font-weight:300;margin-top:1px}
-    .sb-new-btn{display:flex;align-items:center;justify-content:space-between;background:var(--green-dim);color:white;padding:10px 14px;border-radius:10px;font-size:13px;font-weight:500;cursor:pointer;border:none;font-family:'DM Sans',sans-serif;transition:all .3s;margin-bottom:1.5rem;box-shadow:0 4px 18px rgba(15,122,85,.25);width:100%}
-    .sb-new-btn:hover{background:var(--green)}
-    .sb-new-btn-left{display:flex;align-items:center;gap:7px}
-    .sb-nav{display:flex;flex-direction:column;gap:1px;flex:1}
-    .sb-section-label{font-size:9px;font-weight:500;letter-spacing:2.5px;text-transform:uppercase;color:var(--text-3);padding:.875rem .625rem .35rem;opacity:.8}
-    .sb-item{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:9px;cursor:pointer;font-size:13px;color:var(--text-2);font-weight:300;transition:all .2s;text-decoration:none;border:.5px solid transparent}
-    .sb-item:hover{background:rgba(26,158,114,.06);color:#a0c8b4}
-    .sb-item.active{background:rgba(26,158,114,.12);border-color:var(--border);color:var(--text-1)}
-    .sb-item.locked{opacity:.4;cursor:default;pointer-events:none}
-    .sb-item-icon{font-size:14px;flex-shrink:0;width:16px;text-align:center;opacity:.8}
-    .sb-item-right{display:flex;align-items:center;gap:5px;margin-left:auto}
-    .sb-pro-badge{font-size:9px;background:rgba(26,158,114,.15);color:var(--green);border:.5px solid rgba(26,158,114,.25);border-radius:4px;padding:1px 5px;font-weight:500}
-    .sb-lock{font-size:10px;color:var(--text-3);opacity:.7}
 
-    /* sidebar bottom */
-    .sb-user{margin-top:auto;padding-top:.875rem;border-top:.5px solid var(--border-faint);display:flex;flex-direction:column;gap:.75rem}
-    .sb-user-row{display:flex;align-items:center;gap:9px;padding:.5rem .375rem;border-radius:9px;cursor:pointer;transition:all .2s}
-    .sb-user-row:hover{background:rgba(255,255,255,.03)}
-    .sb-avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#082818,var(--green));display:flex;align-items:center;justify-content:center;font-size:12px;color:white;font-weight:600;flex-shrink:0}
-    .sb-user-name{font-size:13px;font-weight:500;color:var(--text-1)}
-    .sb-user-plan{font-size:10px;color:var(--text-3);font-weight:300;margin-top:1px}
-    .sb-progress-wrap{padding:0 .375rem}
-    .sb-progress-top{display:flex;justify-content:space-between;font-size:11px;color:var(--text-3);margin-bottom:.35rem}
-    .sb-progress-bar{height:3px;background:rgba(255,255,255,.06);border-radius:100px;overflow:hidden}
-    .sb-progress-fill{height:100%;background:linear-gradient(90deg,var(--green-dim),var(--green));border-radius:100px;transition:width 1.2s ease}
-    .sb-quote-card{background:rgba(26,158,114,.05);border:.5px solid var(--border);border-radius:12px;padding:1rem;position:relative}
-    .sb-quote-icon{color:var(--green);font-size:14px;margin-bottom:.5rem;display:block}
-    .sb-quote-text{font-size:11.5px;color:var(--text-2);font-weight:300;line-height:1.7;font-style:italic}
-    .sb-settings{display:flex;gap:.4rem;padding:0 .375rem}
-    .sb-settings-btn{width:28px;height:28px;border-radius:7px;background:transparent;border:.5px solid var(--border-faint);display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--text-3);cursor:pointer;transition:all .2s}
-    .sb-settings-btn:hover{border-color:var(--border);color:var(--text-2)}
+    .sb-brand{display:flex;align-items:center;gap:9px;text-decoration:none;margin-bottom:20px;padding:0 4px}
+    .sb-brand-name{font-size:19px;font-weight:600;color:var(--text-1);letter-spacing:-.5px;line-height:1}
+    .sb-brand-name span{color:var(--green)}
+    .sb-brand-tagline{font-size:10px;color:var(--text-3);font-weight:300;margin-top:2px}
 
-    /* ══ MAIN ══ */
-    .main{display:flex;flex-direction:column;overflow:hidden}
-    .topbar{padding:1.25rem 1.75rem;display:flex;align-items:flex-start;justify-content:space-between;border-bottom:.5px solid var(--border-faint);flex-shrink:0;background:rgba(4,8,5,.97);backdrop-filter:blur(10px)}
-    .topbar-title{font-family:'Playfair Display',serif;font-size:32px;font-weight:500;color:var(--text-1);letter-spacing:-.6px}
-    .topbar-sub{font-size:13px;color:var(--text-2);font-weight:300;margin-top:.3rem;line-height:1.55;max-width:460px}
-    .agent-btn{display:flex;align-items:center;gap:8px;background:rgba(8,16,11,.9);border:.5px solid var(--border);border-radius:10px;padding:9px 14px;cursor:pointer;font-size:13px;color:var(--text-1);transition:all .3s;flex-shrink:0}
-    .agent-btn:hover{border-color:rgba(26,158,114,.35)}
-    .agent-btn-icon{color:var(--green);font-size:13px}
+    .sb-new{
+      display:flex;align-items:center;justify-content:space-between;
+      background:var(--green-dim);color:#fff;padding:10px 14px;border-radius:10px;
+      font-size:13px;font-weight:500;cursor:pointer;border:none;
+      font-family:'DM Sans',sans-serif;width:100%;margin-bottom:18px;
+      box-shadow:0 4px 16px rgba(15,122,85,.28);transition:background .2s;
+    }
+    .sb-new:hover{background:var(--green-hover)}
+    .sb-new-left{display:flex;align-items:center;gap:7px}
 
-    /* FEED */
+    .sb-section{font-size:9px;font-weight:600;letter-spacing:2.8px;text-transform:uppercase;color:var(--text-3);padding:14px 8px 5px;opacity:.9}
+
+    .sb-item{
+      display:flex;align-items:center;gap:9px;padding:8px 10px;
+      border-radius:9px;cursor:pointer;font-size:13px;color:var(--text-2);
+      font-weight:400;transition:all .18s;text-decoration:none;
+      border:.5px solid transparent;margin-bottom:1px;
+    }
+    .sb-item:hover{background:rgba(26,158,114,.07);color:#a8c8b8}
+    .sb-item.active{background:rgba(26,158,114,.14);border-color:rgba(26,158,114,.2);color:var(--text-1);font-weight:500}
+    .sb-item.locked{opacity:.38;pointer-events:none}
+    .sb-icon{font-size:14px;width:17px;text-align:center;flex-shrink:0}
+    .sb-item-end{display:flex;align-items:center;gap:4px;margin-left:auto}
+    .sb-pro{font-size:9px;font-weight:600;color:var(--green);background:rgba(26,158,114,.12);border:.5px solid rgba(26,158,114,.22);border-radius:4px;padding:1px 5px;letter-spacing:.3px}
+    .sb-lockico{font-size:10px;color:var(--text-3)}
+
+    .sb-footer{margin-top:auto;padding-top:14px;border-top:.5px solid var(--border-faint);display:flex;flex-direction:column;gap:10px}
+    .sb-user{display:flex;align-items:center;gap:9px;padding:6px 4px;border-radius:9px;cursor:pointer;transition:background .2s}
+    .sb-user:hover{background:rgba(255,255,255,.03)}
+    .sb-av{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#061a0e,var(--green));display:flex;align-items:center;justify-content:center;font-size:13px;color:#fff;font-weight:600;flex-shrink:0}
+    .sb-uname{font-size:13px;font-weight:500;color:var(--text-1)}
+    .sb-uplan{font-size:10px;color:var(--text-3);font-weight:300}
+
+    .sb-prog{padding:0 4px}
+    .sb-prog-top{display:flex;justify-content:space-between;font-size:11px;color:var(--text-3);margin-bottom:5px}
+    .sb-prog-bar{height:3px;background:rgba(255,255,255,.07);border-radius:99px;overflow:hidden}
+    .sb-prog-fill{height:100%;background:linear-gradient(90deg,var(--green-dim),var(--green));border-radius:99px;transition:width 1s ease}
+
+    .sb-quote{background:rgba(26,158,114,.06);border:.5px solid rgba(26,158,114,.14);border-radius:11px;padding:12px 13px}
+    .sb-quote-icon{color:var(--green);font-size:13px;display:block;margin-bottom:6px}
+    .sb-quote-txt{font-size:11.5px;color:var(--text-2);font-weight:300;line-height:1.65;font-style:italic}
+
+    .sb-btns{display:flex;gap:5px;padding:0 4px}
+    .sb-btn{width:28px;height:28px;border-radius:7px;background:transparent;border:.5px solid var(--border-faint);display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--text-3);cursor:pointer;transition:all .18s}
+    .sb-btn:hover{border-color:var(--border);color:var(--text-2)}
+
+    /* ═══════════════ MAIN ═══════════════ */
+    .main{display:flex;flex-direction:column;overflow:hidden;background:var(--bg)}
+
+    .topbar{
+      padding:20px 28px;display:flex;align-items:flex-start;justify-content:space-between;
+      border-bottom:.5px solid var(--border-faint);flex-shrink:0;
+      background:rgba(5,9,6,.96);backdrop-filter:blur(12px);
+    }
+    .tb-title{font-family:'Playfair Display',serif;font-size:33px;font-weight:500;color:var(--text-1);letter-spacing:-.7px;line-height:1.1}
+    .tb-title span{color:var(--green)}
+    .tb-sub{font-size:13px;color:var(--text-2);font-weight:300;margin-top:5px;line-height:1.55;max-width:440px}
+    .agent-pill{display:flex;align-items:center;gap:8px;background:rgba(7,16,10,.9);border:.5px solid var(--border);border-radius:10px;padding:9px 14px;cursor:pointer;font-size:13px;color:var(--text-1);transition:all .25s;flex-shrink:0;font-weight:400}
+    .agent-pill:hover{border-color:rgba(26,158,114,.32)}
+    .agent-pill-dot{color:var(--green);font-size:13px}
+
+    /* HOME */
     #home-view{display:flex;flex-direction:column;flex:1;overflow:hidden}
     #home-view.hidden{display:none}
-    .feed{flex:1;overflow-y:auto;padding:1.5rem 1.75rem;display:flex;flex-direction:column;gap:1.25rem}
+    .feed{flex:1;overflow-y:auto;padding:22px 28px;display:flex;flex-direction:column;gap:16px}
     .feed::-webkit-scrollbar{width:0}
 
-    /* CARDS */
-    .card{background:rgba(6,13,9,.9);border:.5px solid var(--border-faint);border-radius:16px;padding:1.5rem;transition:border-color .3s}
-    .card:hover{border-color:rgba(26,158,114,.18)}
-    .card-title{font-size:15px;font-weight:500;color:var(--text-1);margin-bottom:1.25rem;display:flex;align-items:center;gap:8px}
-    .card-title-icon{color:var(--green);font-size:14px}
+    /* CARD BASE */
+    .card{background:var(--bg3);border:.5px solid var(--border-faint);border-radius:14px;padding:22px 24px;transition:border-color .25s}
+    .card:hover{border-color:rgba(26,158,114,.2)}
+    .c-title{font-size:15px;font-weight:500;color:var(--text-1);margin-bottom:18px;display:flex;align-items:center;gap:8px}
+    .c-title-dot{color:var(--green);font-size:14px}
 
-    /* PROCESO ACTUAL */
-    .proceso-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.25rem}
-    .proceso-col{display:flex;flex-direction:column;gap:.75rem}
-    .proceso-label{font-size:11px;font-weight:500;color:var(--text-2);letter-spacing:.3px;margin-bottom:.25rem}
-    .proceso-text{font-size:13px;color:var(--text-2);font-weight:300;line-height:1.7;flex:1}
-    .proceso-text.accent{color:var(--green)}
-    .proceso-btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:8px;font-size:12px;font-weight:500;cursor:pointer;border:.5px solid var(--border-faint);background:rgba(255,255,255,.04);color:var(--text-2);font-family:'DM Sans',sans-serif;transition:all .25s;margin-top:auto}
-    .proceso-btn:hover{border-color:var(--border);color:var(--text-1)}
-    .proceso-btn.primary{background:var(--green-dim);border-color:transparent;color:white;box-shadow:0 4px 16px rgba(15,122,85,.25)}
-    .proceso-btn.primary:hover{background:var(--green)}
-    .proceso-divider{width:.5px;background:var(--border-faint)}
+    /* PROCESO CARD */
+    .proc-grid{display:grid;grid-template-columns:1fr 1px 1fr 1px 1fr;gap:0}
+    .proc-divider{background:var(--border-faint)}
+    .proc-col{padding:0 20px;display:flex;flex-direction:column;gap:10px}
+    .proc-col:first-child{padding-left:0}
+    .proc-col:last-child{padding-right:0}
+    .proc-label{font-size:11px;font-weight:500;color:var(--text-2);letter-spacing:.4px;text-transform:uppercase;font-size:10.5px}
+    .proc-text{font-size:13px;color:var(--text-2);font-weight:300;line-height:1.7;flex:1}
+    .proc-text.green{color:var(--green);font-weight:400}
+    .proc-actions{margin-top:4px}
+    .proc-btn{display:inline-flex;align-items:center;gap:6px;padding:7px 13px;border-radius:8px;font-size:12px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s;border:none}
+    .proc-btn.ghost{background:rgba(255,255,255,.05);color:var(--text-2);border:.5px solid var(--border-faint)}
+    .proc-btn.ghost:hover{background:rgba(255,255,255,.08);color:var(--text-1)}
+    .proc-btn.solid{background:var(--green-dim);color:#fff;box-shadow:0 4px 14px rgba(15,122,85,.24)}
+    .proc-btn.solid:hover{background:var(--green-hover)}
 
-    /* CONVERSACIONES */
-    .conv-list{display:flex;flex-direction:column;gap:.5rem}
-    .conv-item{display:grid;grid-template-columns:auto 1fr 1fr auto auto;align-items:center;gap:.875rem;padding:.875rem 1rem;background:rgba(4,10,7,.7);border:.5px solid var(--border-faint);border-radius:10px;cursor:pointer;transition:all .25s}
-    .conv-item:hover{border-color:var(--border);background:rgba(6,14,10,.9)}
-    .conv-dot{width:7px;height:7px;border-radius:50%;background:var(--green);flex-shrink:0;opacity:.7}
-    .conv-title{font-size:13px;font-weight:400;color:var(--text-1)}
-    .conv-preview{font-size:12px;color:var(--text-2);font-weight:300;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-    .conv-time{font-size:11px;color:var(--text-3);white-space:nowrap}
-    .conv-arrow{font-size:12px;color:var(--text-3)}
-    .card-link{font-size:12px;color:var(--green);text-decoration:none;opacity:.8;display:inline-flex;align-items:center;gap:5px;margin-top:.875rem;transition:opacity .2s}
-    .card-link:hover{opacity:1}
+    /* CONV LIST */
+    .conv-list{display:flex;flex-direction:column;gap:6px}
+    .conv-row{
+      display:grid;grid-template-columns:12px 1fr 1.4fr auto 16px;
+      align-items:center;gap:12px;
+      padding:11px 13px;background:rgba(4,9,6,.75);
+      border:.5px solid var(--border-faint);border-radius:10px;
+      cursor:pointer;transition:all .2s;
+    }
+    .conv-row:hover{border-color:rgba(26,158,114,.22);background:rgba(6,14,9,.9)}
+    .conv-dot{width:7px;height:7px;border-radius:50%;background:var(--green);opacity:.75;flex-shrink:0}
+    .conv-name{font-size:13px;font-weight:500;color:var(--text-1);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .conv-prev{font-size:12px;color:var(--text-2);font-weight:300;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .conv-date{font-size:11px;color:var(--text-3);white-space:nowrap;text-align:right}
+    .conv-arr{font-size:14px;color:var(--text-3);font-weight:300}
+    .see-all{display:inline-flex;align-items:center;gap:5px;margin-top:10px;font-size:12px;color:var(--green);text-decoration:none;opacity:.85;transition:opacity .2s;cursor:pointer;background:none;border:none;font-family:'DM Sans',sans-serif;padding:0}
+    .see-all:hover{opacity:1}
 
     /* REFLEXIONES */
-    .refl-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
-    .refl-card{background:rgba(4,10,7,.7);border:.5px solid var(--border-faint);border-radius:12px;padding:1.25rem;display:flex;flex-direction:column;gap:.75rem;transition:border-color .25s}
-    .refl-card:hover{border-color:var(--border)}
-    .refl-quote{font-size:24px;color:var(--green);opacity:.4;line-height:.8;font-family:'Playfair Display',serif}
-    .refl-text{font-size:13px;color:var(--text-2);font-weight:300;line-height:1.7;font-style:italic;flex:1}
-    .refl-time{font-size:11px;color:var(--text-3)}
+    .refl-cols{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+    .refl-card{background:rgba(4,9,6,.75);border:.5px solid var(--border-faint);border-radius:11px;padding:16px;display:flex;flex-direction:column;gap:8px;transition:border-color .2s}
+    .refl-card:hover{border-color:rgba(26,158,114,.2)}
+    .refl-qmark{font-family:'Playfair Display',serif;font-size:28px;color:var(--green);opacity:.35;line-height:.7}
+    .refl-txt{font-size:12.5px;color:var(--text-2);font-weight:300;line-height:1.7;font-style:italic;flex:1}
+    .refl-date{font-size:10.5px;color:var(--text-3)}
+    .refl-empty{padding:14px 16px;background:rgba(4,9,6,.5);border:.5px solid var(--border-faint);border-radius:10px;font-size:13px;color:var(--text-3);font-weight:300;display:flex;align-items:center;gap:10px}
 
-    /* EMPTY REFLEXIONES */
-    .refl-empty{display:flex;align-items:center;gap:12px;padding:.875rem 1rem;background:rgba(4,10,7,.5);border:.5px solid var(--border-faint);border-radius:10px;font-size:13px;color:var(--text-3);font-weight:300}
+    /* INPUT */
+    .input-bar{padding:14px 28px 18px;border-top:.5px solid var(--border-faint);flex-shrink:0;background:rgba(4,8,5,.97)}
+    .input-inner{display:flex;align-items:center;gap:10px;background:rgba(5,12,7,.9);border:.5px solid var(--border-faint);border-radius:100px;padding:11px 13px 11px 20px;transition:border-color .25s}
+    .input-inner:focus-within{border-color:rgba(26,158,114,.38)}
+    .input-inner input{flex:1;background:transparent;border:none;outline:none;color:var(--text-1);font-size:14px;font-family:'DM Sans',sans-serif;font-weight:300}
+    .input-inner input::placeholder{color:var(--text-3)}
+    .send-btn{width:36px;height:36px;border-radius:50%;background:var(--green);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:transform .18s,background .18s}
+    .send-btn:hover{background:var(--green-hover);transform:scale(1.06)}
+    .send-btn svg{width:14px;height:14px;fill:#fff}
 
-    /* CHAT INPUT */
-    .chat-input-wrap{padding:.875rem 1.75rem 1.125rem;border-top:.5px solid var(--border-faint);flex-shrink:0;background:rgba(3,8,5,.97)}
-    .chat-input-inner{display:flex;align-items:center;gap:10px;background:rgba(6,14,10,.9);border:.5px solid var(--border-faint);border-radius:100px;padding:11px 13px 11px 20px;transition:border-color .3s}
-    .chat-input-inner:focus-within{border-color:rgba(26,158,114,.35)}
-    .chat-input-inner input{flex:1;background:transparent;border:none;outline:none;color:var(--text-1);font-size:14px;font-family:'DM Sans',sans-serif;font-weight:300}
-    .chat-input-inner input::placeholder{color:var(--text-3)}
-    .chat-send-btn{width:36px;height:36px;border-radius:50%;background:var(--green);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:transform .2s}
-    .chat-send-btn:hover{transform:scale(1.06)}
-    .chat-send-btn svg{width:14px;height:14px;fill:white}
-
-    /* CHAT VIEW */
+    /* CHAT */
     #chat-view{display:none;flex-direction:column;flex:1;overflow:hidden}
     #chat-view.active{display:flex}
-    .chat-messages{flex:1;overflow-y:auto;padding:1.5rem 1.75rem;display:flex;flex-direction:column;gap:1.25rem}
-    .chat-messages::-webkit-scrollbar{width:0}
-    .msg{display:flex;gap:10px;align-items:flex-start;animation:fadeIn .35s ease}
+    .chat-msgs{flex:1;overflow-y:auto;padding:22px 28px;display:flex;flex-direction:column;gap:14px}
+    .chat-msgs::-webkit-scrollbar{width:0}
+    .msg{display:flex;gap:10px;align-items:flex-start;animation:fadeIn .3s ease}
     .msg.user{flex-direction:row-reverse}
-    .msg-avatar{width:27px;height:27px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500}
-    .msg-avatar.ai{background:linear-gradient(135deg,#0a4a38,var(--green));color:white;font-size:11px}
-    .msg-avatar.user{background:#0f1623;color:#374151;border:.5px solid #1a2235;font-size:10px}
+    .msg-av{width:27px;height:27px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500}
+    .msg-av.ai{background:linear-gradient(135deg,#083820,var(--green));color:#fff}
+    .msg-av.user{background:#0d1620;color:#374151;border:.5px solid #1a2235;font-size:10px}
     .bubble{max-width:78%;padding:10px 14px;border-radius:14px;font-size:14px;line-height:1.7;font-weight:300}
-    .msg.ai .bubble{background:#0a1a12;border:.5px solid rgba(26,158,114,.12);border-bottom-left-radius:4px;color:#e0e0e0}
-    .msg.user .bubble{background:var(--green);color:white;border-bottom-right-radius:4px}
+    .msg.ai .bubble{background:#091510;border:.5px solid rgba(26,158,114,.14);border-bottom-left-radius:4px;color:#dde8e2}
+    .msg.user .bubble{background:var(--green-dim);color:#fff;border-bottom-right-radius:4px}
     .typing-wrap{display:flex;gap:10px;align-items:flex-start}
-    .typing{display:flex;gap:4px;padding:10px 14px;background:#0a1a12;border:.5px solid rgba(26,158,114,.12);border-radius:14px;border-bottom-left-radius:4px}
+    .typing{display:flex;gap:4px;padding:10px 14px;background:#091510;border:.5px solid rgba(26,158,114,.14);border-radius:14px;border-bottom-left-radius:4px}
     .typing span{width:5px;height:5px;border-radius:50%;background:var(--green);animation:bounce 1.2s infinite}
-    .typing span:nth-child(2){animation-delay:.2s}.typing span:nth-child(3){animation-delay:.4s}
+    .typing span:nth-child(2){animation-delay:.18s}.typing span:nth-child(3){animation-delay:.36s}
 
-    /* ══ RIGHT PANEL ══ */
-    .right-panel{background:rgba(3,8,5,.99);border-left:.5px solid var(--border-faint);display:flex;flex-direction:column;overflow-y:auto;padding:1.5rem 1.125rem;gap:1.25rem}
-    .right-panel::-webkit-scrollbar{width:0}
-    .rp-card{background:rgba(6,13,9,.9);border:.5px solid var(--border-faint);border-radius:14px;padding:1.25rem;display:flex;flex-direction:column;gap:.875rem}
-    .rp-card-header{display:flex;align-items:center;justify-content:space-between}
-    .rp-card-title{font-size:13px;font-weight:500;color:var(--text-1);display:flex;align-items:center;gap:6px}
-    .rp-pro-badge{font-size:9px;background:rgba(26,158,114,.15);color:var(--green);border:.5px solid rgba(26,158,114,.25);border-radius:4px;padding:1px 6px;font-weight:500}
+    /* ═══════════════ RIGHT PANEL ═══════════════ */
+    .rp{background:var(--bg2);border-left:.5px solid var(--border-faint);display:flex;flex-direction:column;overflow-y:auto;padding:20px 16px;gap:14px}
+    .rp::-webkit-scrollbar{width:0}
+
+    .rp-card{background:var(--bg3);border:.5px solid var(--border-faint);border-radius:13px;padding:18px;display:flex;flex-direction:column;gap:12px}
+    .rp-head{display:flex;align-items:center;justify-content:space-between}
+    .rp-htitle{font-size:13px;font-weight:500;color:var(--text-1);display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+    .rp-pro{font-size:9px;font-weight:600;color:var(--green);background:rgba(26,158,114,.12);border:.5px solid rgba(26,158,114,.22);border-radius:4px;padding:1px 5px}
     .rp-lock{font-size:12px;color:var(--text-3)}
-    .rp-icon-wrap{width:52px;height:52px;border-radius:12px;background:rgba(255,255,255,.03);border:.5px solid var(--border-faint);display:flex;align-items:center;justify-content:center;font-size:22px;opacity:.35;margin:0 auto}
-    .rp-locked-title{font-size:13px;font-weight:500;color:var(--text-1);text-align:center}
-    .rp-locked-sub{font-size:12px;color:var(--text-2);font-weight:300;line-height:1.6;text-align:center}
-    .rp-unlock-btn{display:flex;align-items:center;justify-content:center;background:var(--green-dim);color:white;padding:9px;border-radius:9px;font-size:12px;font-weight:500;cursor:pointer;border:none;font-family:'DM Sans',sans-serif;transition:all .3s;width:100%;box-shadow:0 4px 14px rgba(15,122,85,.22)}
-    .rp-unlock-btn:hover{background:var(--green)}
+
+    .rp-illus{width:52px;height:52px;border-radius:12px;background:rgba(255,255,255,.03);border:.5px solid var(--border-faint);display:flex;align-items:center;justify-content:center;margin:0 auto;opacity:.4}
+    .rp-illus svg{width:26px;height:26px;stroke:var(--green);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+
+    .rp-locked-t{font-size:13px;font-weight:500;color:var(--text-1);text-align:center;line-height:1.3}
+    .rp-locked-s{font-size:12px;color:var(--text-2);font-weight:300;line-height:1.6;text-align:center}
+    .rp-cta{display:flex;align-items:center;justify-content:center;background:var(--green-dim);color:#fff;padding:9px;border-radius:9px;font-size:12px;font-weight:500;cursor:pointer;border:none;font-family:'DM Sans',sans-serif;transition:background .2s;width:100%;box-shadow:0 3px 12px rgba(15,122,85,.22)}
+    .rp-cta:hover{background:var(--green-hover)}
   </style>
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-QFV6SRFDKL"></script>
   <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-QFV6SRFDKL');</script>
 </head>
 <body>
 
-  <!-- ════ SIDEBAR ════ -->
-  <aside class="sidebar">
-    <a class="sb-logo" href="index.html">
-      <svg width="22" height="22" viewBox="0 0 30 30" fill="none">
-        <path d="M7 5L7 25" stroke="#1a9e72" stroke-width="2.5" stroke-linecap="round"/>
-        <path d="M7 5L18 5C22 5 24 7.5 24 11C24 14.5 22 17 18 17L7 17" stroke="#1a9e72" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-        <path d="M15 17L24 25" stroke="#1a9e72" stroke-width="2.5" stroke-linecap="round"/>
-      </svg>
-      <div>
-        <div class="sb-logo-text">Rena<em>IA</em></div>
-        <div class="sb-logo-sub">Tu sistema de reinvención.</div>
-      </div>
+<!-- ═══ SIDEBAR ═══ -->
+<aside class="sidebar">
+  <a class="sb-brand" href="index.html">
+    <svg width="22" height="22" viewBox="0 0 30 30" fill="none">
+      <path d="M7 5L7 25" stroke="#1a9e72" stroke-width="2.5" stroke-linecap="round"/>
+      <path d="M7 5L18 5C22 5 24 7.5 24 11C24 14.5 22 17 18 17L7 17" stroke="#1a9e72" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M15 17L24 25" stroke="#1a9e72" stroke-width="2.5" stroke-linecap="round"/>
+    </svg>
+    <div>
+      <div class="sb-brand-name">Rena<span>IA</span></div>
+      <div class="sb-brand-tagline">Tu sistema de reinvención.</div>
+    </div>
+  </a>
+
+  <button class="sb-new" onclick="nuevaConversacion()">
+    <span class="sb-new-left"><span style="font-size:16px;line-height:1">+</span> Nueva conversación</span>
+    <span style="opacity:.55;font-size:12px">→</span>
+  </button>
+
+  <nav style="flex:1;display:flex;flex-direction:column">
+    <a class="sb-item active" id="nav-inicio" onclick="showHome(event)">
+      <span class="sb-icon">⌂</span> Inicio
+    </a>
+    <a class="sb-item" id="nav-conv" onclick="showConversaciones(event)">
+      <span class="sb-icon">💬</span> Conversaciones
+    </a>
+    <a class="sb-item" id="nav-refl" onclick="showReflexiones(event)">
+      <span class="sb-icon">📖</span> Reflexiones
     </a>
 
-    <button class="sb-new-btn" onclick="nuevaConversacion()">
-      <span class="sb-new-btn-left"><span>＋</span> Nueva conversación</span>
-      <span style="opacity:.6">▾</span>
-    </button>
+    <div class="sb-section">Mi proceso</div>
+    <a class="sb-item" id="nav-prog" onclick="navClick(event,this)">
+      <span class="sb-icon">↗</span> Mi progreso
+    </a>
+    <a class="sb-item locked">
+      <span class="sb-icon">◎</span> Roadmap
+      <span class="sb-item-end"><span class="sb-pro">PRO</span><span class="sb-lockico">🔒</span></span>
+    </a>
+    <a class="sb-item locked">
+      <span class="sb-icon">📅</span> Seguimiento
+      <span class="sb-item-end"><span class="sb-pro">PRO</span><span class="sb-lockico">🔒</span></span>
+    </a>
+    <a class="sb-item locked">
+      <span class="sb-icon">🗓</span> Calendario
+      <span class="sb-item-end"><span class="sb-pro">PRO</span><span class="sb-lockico">🔒</span></span>
+    </a>
+    <a class="sb-item locked">
+      <span class="sb-icon">✦</span> Insights
+      <span class="sb-item-end"><span class="sb-pro">PRO</span><span class="sb-lockico">🔒</span></span>
+    </a>
 
-    <nav class="sb-nav">
-      <div class="sb-section-label">Principal</div>
-      <a class="sb-item active" id="nav-inicio" onclick="showHome(event)">
-        <span class="sb-item-icon">⌂</span> Inicio
-      </a>
-      <a class="sb-item" id="nav-conv" onclick="showConversaciones(event)">
-        <span class="sb-item-icon">💬</span> Conversaciones
-      </a>
-      <a class="sb-item" id="nav-refl" onclick="showReflexiones(event)">
-        <span class="sb-item-icon">📖</span> Reflexiones
-      </a>
+    <div class="sb-section">Herramientas</div>
+    <a class="sb-item" onclick="navClick(event,this)"><span class="sb-icon">◈</span> Recursos</a>
+    <a class="sb-item" onclick="navClick(event,this)"><span class="sb-icon">🧠</span> Memoria</a>
+  </nav>
 
-      <div class="sb-section-label">Mi proceso</div>
-      <a class="sb-item" id="nav-prog" onclick="navClick(event,this)">
-        <span class="sb-item-icon">↗</span> Mi progreso
-      </a>
-      <a class="sb-item locked">
-        <span class="sb-item-icon">◎</span> Roadmap
-        <span class="sb-item-right"><span class="sb-pro-badge">PRO</span><span class="sb-lock">🔒</span></span>
-      </a>
-      <a class="sb-item locked">
-        <span class="sb-item-icon">📅</span> Seguimiento
-        <span class="sb-item-right"><span class="sb-pro-badge">PRO</span><span class="sb-lock">🔒</span></span>
-      </a>
-      <a class="sb-item locked">
-        <span class="sb-item-icon">🗓</span> Calendario
-        <span class="sb-item-right"><span class="sb-pro-badge">PRO</span><span class="sb-lock">🔒</span></span>
-      </a>
-      <a class="sb-item locked">
-        <span class="sb-item-icon">✦</span> Insights
-        <span class="sb-item-right"><span class="sb-pro-badge">PRO</span><span class="sb-lock">🔒</span></span>
-      </a>
-
-      <div class="sb-section-label">Herramientas</div>
-      <a class="sb-item" onclick="navClick(event,this)">
-        <span class="sb-item-icon">◈</span> Recursos
-      </a>
-      <a class="sb-item" onclick="navClick(event,this)">
-        <span class="sb-item-icon">🧠</span> Memoria
-      </a>
-    </nav>
-
+  <div class="sb-footer">
     <div class="sb-user">
-      <div class="sb-user-row">
-        <div class="sb-avatar" id="sb-avatar">F</div>
-        <div>
-          <div class="sb-user-name" id="sb-name">—</div>
-          <div class="sb-user-plan" id="sb-plan">Plan Gratis</div>
-        </div>
-      </div>
-      <div class="sb-progress-wrap" id="sb-progress-wrap" style="display:none">
-        <div class="sb-progress-top">
-          <span id="sb-progress-note">Sigue conversando para avanzar</span>
-          <span id="sb-pct-label"></span>
-        </div>
-        <div class="sb-progress-bar"><div class="sb-progress-fill" id="sb-bar" style="width:0%"></div></div>
-      </div>
-      <div class="sb-quote-card" id="sb-quote" style="display:none">
-        <span class="sb-quote-icon">✦</span>
-        <p class="sb-quote-text" id="sb-quote-text">No se trata de tener el plan perfecto, sino de darte permiso para empezar.</p>
-      </div>
-      <div class="sb-settings">
-        <div class="sb-settings-btn" title="Configuración">⚙</div>
-        <div class="sb-settings-btn" onclick="signOut()" title="Cerrar sesión">⎋</div>
-      </div>
-    </div>
-  </aside>
-
-  <!-- ════ MAIN ════ -->
-  <main class="main">
-    <div class="topbar">
+      <div class="sb-av" id="sb-av">F</div>
       <div>
-        <div class="topbar-title" id="topbar-title">Hola 🌙</div>
-        <div class="topbar-sub" id="topbar-sub">Cargando tu espacio...</div>
-      </div>
-      <div class="agent-btn" id="agent-btn">
-        <span class="agent-btn-icon">✦</span>
-        <span id="agent-name">Rena Core</span>
-        <span style="color:var(--text-3);font-size:10px">▾</span>
+        <div class="sb-uname" id="sb-name">—</div>
+        <div class="sb-uplan" id="sb-plan">Plan Gratis</div>
       </div>
     </div>
+    <div class="sb-prog" id="sb-prog" style="display:none">
+      <div class="sb-prog-top">
+        <span>Sigue conversando para avanzar</span>
+        <span id="sb-prog-label">0/5</span>
+      </div>
+      <div class="sb-prog-bar"><div class="sb-prog-fill" id="sb-prog-fill" style="width:0%"></div></div>
+    </div>
+    <div class="sb-quote" id="sb-quote" style="display:none">
+      <span class="sb-quote-icon">✦</span>
+      <p class="sb-quote-txt" id="sb-quote-txt">No se trata de tener el plan perfecto, sino de darte permiso para empezar.</p>
+    </div>
+    <div class="sb-btns">
+      <div class="sb-btn" title="Configuración">⚙</div>
+      <div class="sb-btn" onclick="signOut()" title="Cerrar sesión">⎋</div>
+    </div>
+  </div>
+</aside>
 
-    <!-- HOME VIEW -->
-    <div id="home-view">
-      <div class="feed" id="feed"></div>
-      <div class="chat-input-wrap">
-        <div class="chat-input-inner">
-          <input type="text" id="home-input" placeholder="Escribe lo que quieras contarme..." />
-          <button class="chat-send-btn" onclick="enviarDesdeHome()">
-            <svg viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg>
-          </button>
-        </div>
+<!-- ═══ MAIN ═══ -->
+<main class="main">
+  <div class="topbar">
+    <div>
+      <div class="tb-title" id="tb-title">Hola 🌙</div>
+      <div class="tb-sub" id="tb-sub">Cargando tu espacio...</div>
+    </div>
+    <div class="agent-pill">
+      <span class="agent-pill-dot">✦</span>
+      <span id="agent-name">Rena Core</span>
+      <span style="color:var(--text-3);font-size:11px;margin-left:2px">▾</span>
+    </div>
+  </div>
+
+  <!-- HOME VIEW -->
+  <div id="home-view">
+    <div class="feed" id="feed"></div>
+    <div class="input-bar">
+      <div class="input-inner">
+        <input type="text" id="home-input" placeholder="Escribe lo que quieras contarme..."/>
+        <button class="send-btn" onclick="enviarDesdeHome()">
+          <svg viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg>
+        </button>
       </div>
     </div>
+  </div>
 
-    <!-- CHAT VIEW -->
-    <div id="chat-view">
-      <div class="chat-messages" id="chat-messages"></div>
-      <div class="chat-input-wrap">
-        <div class="chat-input-inner">
-          <input type="text" id="chat-input" placeholder="Escribe aquí..." />
-          <button class="chat-send-btn" onclick="enviarChat()">
-            <svg viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg>
-          </button>
-        </div>
+  <!-- CHAT VIEW -->
+  <div id="chat-view">
+    <div class="chat-msgs" id="chat-msgs"></div>
+    <div class="input-bar">
+      <div class="input-inner">
+        <input type="text" id="chat-input" placeholder="Escribe aquí..."/>
+        <button class="send-btn" onclick="enviarChat()">
+          <svg viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg>
+        </button>
       </div>
     </div>
-  </main>
+  </div>
+</main>
 
-  <!-- ════ RIGHT PANEL ════ -->
-  <aside class="right-panel" id="right-panel"></aside>
+<!-- ═══ RIGHT PANEL ═══ -->
+<aside class="rp" id="rp"></aside>
 
-  <script>
-    const SUPABASE_URL      = 'https://lmfgfpawtlrbneleodcn.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxtZmdmcGF3dGxyYm5lbGVvZGNuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkzMjQzNzgsImV4cCI6MjA5NDkwMDM3OH0.IqZpjeL1c2nHG1zrB3WgbQyP6Ll_TDcGS0Iu6CRBM1c';
-    const { createClient } = supabase;
-    const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+<script>
+  const SB_URL = 'https://lmfgfpawtlrbneleodcn.supabase.co';
+  const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxtZmdmcGF3dGxyYm5lbGVvZGNuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkzMjQzNzgsImV4cCI6MjA5NDkwMDM3OH0.IqZpjeL1c2nHG1zrB3WgbQyP6Ll_TDcGS0Iu6CRBM1c';
+  const { createClient } = supabase;
+  const sb = createClient(SB_URL, SB_KEY);
 
-    let currentUser = null, userState = null, userName = '', userData = {};
-    const agentLabels = { core:'✦ Rena Core', path:'◎ Rena Path', career:'↗ Rena Career' };
+  let cu = null, state = null, uname = '', ud = {};
+  const agents = { core:'✦ Rena Core', path:'◎ Rena Path', career:'↗ Rena Career' };
 
-    function cleanText(t) {
-      if (!t) return '';
-      return t.replace(/\*\*(.*?)\*\*/g,'$1').replace(/\*(.*?)\*/g,'$1').replace(/#{1,6}\s/g,'').replace(/`(.*?)`/g,'$1').trim();
+  const clean = t => t ? t.replace(/\*\*(.*?)\*\*/g,'$1').replace(/\*(.*?)\*/g,'$1').replace(/#{1,6}\s/g,'').replace(/`(.*?)`/g,'$1').trim() : '';
+  const fdate = d => { try { return new Date(d).toLocaleDateString('es-CL',{weekday:'short',hour:'2-digit',minute:'2-digit'}); } catch{ return ''; } };
+  const trunc = (t,n) => t.length > n ? t.slice(0,n)+'...' : t;
+
+  async function init() {
+    document.body.style.opacity = '0';
+    document.body.style.transition = 'opacity .3s ease';
+    const { data: { session } } = await sb.auth.getSession();
+    if (!session?.user) { window.location.href = '/'; return; }
+    cu = session.user;
+    await loadUser();
+    document.body.style.opacity = '1';
+    await loadData();
+    render();
+  }
+
+  async function loadUser() {
+    const { data } = await sb.from('usuarios').select('nombre,is_pro').eq('id',cu.id).maybeSingle();
+    uname = data?.nombre || cu.user_metadata?.full_name?.split(' ')[0] || cu.email?.split('@')[0] || 'tú';
+    ud.isPro = data?.is_pro || false;
+    document.getElementById('sb-name').textContent = uname;
+    document.getElementById('sb-av').textContent = uname[0].toUpperCase();
+    document.getElementById('sb-plan').textContent = ud.isPro ? '✦ Plan Pro' : 'Plan Gratis';
+  }
+
+  async function loadData() {
+    const { count } = await sb.from('conversaciones').select('id',{count:'exact',head:true}).eq('usuario_id',cu.id);
+    ud.count = count || 0;
+    ud.hasMsgs = ud.count > 0;
+
+    if (ud.hasMsgs) {
+      const { data: um } = await sb.from('conversaciones').select('mensaje,created_at').eq('usuario_id',cu.id).eq('rol','user').order('created_at',{ascending:false}).limit(6);
+      ud.userMsgs = um || [];
+      const { data: am } = await sb.from('conversaciones').select('mensaje,created_at').eq('usuario_id',cu.id).eq('rol','assistant').order('created_at',{ascending:false}).limit(5);
+      ud.aiMsgs = am || [];
+    }
+    const { data: mem } = await sb.from('memoria_usuario').select('summary,emotional_state,goals').eq('user_id',cu.id).maybeSingle();
+    ud.mem = mem || null;
+    state = !ud.hasMsgs ? 'empty' : ud.isPro ? 'pro' : 'free';
+  }
+
+  function render() {
+    state === 'empty' ? renderEmpty() : renderFree();
+    renderRP();
+  }
+
+  function renderEmpty() {
+    document.getElementById('tb-title').innerHTML = `Hola, <span>${uname}</span>. 👋`;
+    document.getElementById('tb-sub').textContent = 'Este es tu espacio para pensar, aclararte y avanzar. RenaIA está acá para acompañarte.';
+    document.getElementById('feed').innerHTML = `
+      <div class="card fi" style="text-align:center;padding:40px 32px">
+        <div style="font-size:26px;color:var(--green);margin-bottom:18px;opacity:.9">✦</div>
+        <h2 style="font-family:'Playfair Display',serif;font-size:26px;font-weight:500;color:var(--text-1);letter-spacing:-.5px;margin-bottom:10px;line-height:1.2">Todavía no comenzamos<br><em style="color:var(--green)">tu proceso de reinvención.</em></h2>
+        <p style="font-size:13px;color:var(--text-2);font-weight:300;line-height:1.8;max-width:340px;margin:0 auto 24px">Sin formularios ni pasos forzados.<br>Solo una conversación real cuando estés listo.</p>
+        <button onclick="comenzar()" style="display:inline-flex;align-items:center;gap:8px;background:var(--green-dim);color:#fff;padding:12px 26px;border-radius:9px;font-size:13px;font-weight:500;cursor:pointer;border:none;font-family:'DM Sans',sans-serif;box-shadow:0 4px 18px rgba(15,122,85,.26)">✦ Comenzar primera conversación →</button>
+      </div>`;
+  }
+
+  function renderFree() {
+    document.getElementById('tb-title').innerHTML = `Hola, <span>${uname}</span>. 👋`;
+    document.getElementById('tb-sub').textContent = 'Este es tu espacio para pensar, aclararte y avanzar. RenaIA está acá para acompañarte.';
+
+    // Sidebar progress
+    document.getElementById('sb-prog').style.display = 'block';
+    document.getElementById('sb-quote').style.display = 'block';
+    const wk = Math.min(ud.count, 5);
+    document.getElementById('sb-prog-label').textContent = `${wk}/5 conversaciones esta semana`;
+    document.getElementById('sb-prog-fill').style.width = (wk/5*100)+'%';
+    if (ud.aiMsgs?.length) {
+      document.getElementById('sb-quote-txt').textContent = '"' + trunc(clean(ud.aiMsgs[0].mensaje), 80) + '"';
     }
 
-    function formatDate(d) {
-      if (!d) return '';
-      try { return new Date(d).toLocaleDateString('es-CL',{weekday:'short',hour:'2-digit',minute:'2-digit'}); }
-      catch { return ''; }
+    // Proceso actual
+    const situ = ud.mem?.summary
+      ? trunc(clean(ud.mem.summary.split('\n')[0]), 110)
+      : ud.userMsgs?.length
+        ? 'Estás explorando tu situación profesional y buscando claridad sobre tus próximos pasos.'
+        : 'Inicia una conversación para descubrir tu situación actual.';
+
+    const ultimo = ud.aiMsgs?.length
+      ? trunc(clean(ud.aiMsgs[0].mensaje), 110)
+      : 'Todavía no hemos tenido suficientes conversaciones para identificar patrones.';
+
+    const proximo = ud.mem?.goals
+      ? trunc(clean(ud.mem.goals), 110)
+      : 'Continúa conversando para definir tu próximo paso concreto.';
+
+    // Conv rows
+    const convRows = ud.userMsgs?.length
+      ? ud.userMsgs.slice(0,4).map((m,i) => `
+          <div class="conv-row fi d${i+1}" onclick="retomar()">
+            <div class="conv-dot"></div>
+            <span class="conv-name">${trunc(clean(m.mensaje),30)}</span>
+            <span class="conv-prev">${trunc(clean(m.mensaje),55)}</span>
+            <span class="conv-date">${fdate(m.created_at)}</span>
+            <span class="conv-arr">›</span>
+          </div>`).join('')
+      : `<div style="padding:12px;font-size:13px;color:var(--text-3);text-align:center">No hay conversaciones aún.</div>`;
+
+    // Reflexiones
+    let reflHTML = '';
+    if (ud.aiMsgs?.length) {
+      reflHTML = `<div class="refl-cols">
+        ${ud.aiMsgs.slice(0,3).map((r,i)=>`
+          <div class="refl-card fi d${i+1}">
+            <div class="refl-qmark">"</div>
+            <p class="refl-txt">${trunc(clean(r.mensaje),130)}</p>
+            <p class="refl-date">${fdate(r.created_at)}</p>
+          </div>`).join('')}
+      </div>`;
+    } else {
+      reflHTML = `<div class="refl-empty">📖 Las reflexiones de RenaIA aparecerán aquí después de conversar.</div>`;
     }
 
-    // ── INIT ──
-    async function init() {
-      document.body.style.opacity = '0';
-      document.body.style.transition = 'opacity .3s ease';
-      const { data: { session } } = await sb.auth.getSession();
-      if (!session?.user) { window.location.href = '/'; return; }
-      currentUser = session.user;
-      await loadUser();
-      document.body.style.opacity = '1';
-      await checkUserState();
-      renderDashboard();
-    }
-
-    async function loadUser() {
-      const { data } = await sb.from('usuarios').select('nombre,onboarding_completed,is_pro').eq('id',currentUser.id).maybeSingle();
-      userName = data?.nombre || currentUser.user_metadata?.full_name?.split(' ')[0] || currentUser.email?.split('@')[0] || 'tú';
-      userData.isPro = data?.is_pro || false;
-      document.getElementById('sb-name').textContent = userName;
-      document.getElementById('sb-avatar').textContent = userName[0].toUpperCase();
-      document.getElementById('sb-plan').textContent = userData.isPro ? '✦ Plan Pro' : 'Plan Gratis';
-    }
-
-    async function checkUserState() {
-      const { count } = await sb.from('conversaciones').select('id',{count:'exact',head:true}).eq('usuario_id',currentUser.id);
-      userData.convCount = count || 0;
-      userData.hasConversations = userData.convCount > 0;
-
-      if (userData.hasConversations) {
-        const { data: userMsgs } = await sb.from('conversaciones').select('mensaje,created_at').eq('usuario_id',currentUser.id).eq('rol','user').order('created_at',{ascending:false}).limit(6);
-        userData.recentUser = userMsgs || [];
-        userData.lastConv = userMsgs?.[0] || null;
-
-        const { data: aiMsgs } = await sb.from('conversaciones').select('mensaje,created_at').eq('usuario_id',currentUser.id).eq('rol','assistant').order('created_at',{ascending:false}).limit(5);
-        userData.recentAI = aiMsgs || [];
-      }
-
-      const { data: mem } = await sb.from('memoria_usuario').select('summary,emotional_state,goals').eq('user_id',currentUser.id).maybeSingle();
-      userData.memory = mem || null;
-
-      userState = !userData.hasConversations ? 'empty' : userData.isPro ? 'pro' : 'free';
-    }
-
-    function renderDashboard() {
-      if (userState === 'empty') renderEmptyState();
-      else renderFreeState();
-      renderRightPanel();
-    }
-
-    // ── EMPTY STATE ──
-    function renderEmptyState() {
-      document.getElementById('topbar-title').innerHTML = `Hola, <em style="font-style:normal;color:var(--green)">${userName}</em>. 👋`;
-      document.getElementById('topbar-sub').textContent = 'Este es tu espacio para pensar, aclararte y avanzar. RenaIA está acá para acompañarte.';
-      document.getElementById('feed').innerHTML = `
-        <div class="card fade-in-up" style="text-align:center;padding:3rem 2rem">
-          <span style="font-size:28px;color:var(--green);display:block;margin-bottom:1.25rem;animation:starfloat 3s ease-in-out infinite">✦</span>
-          <h2 style="font-family:'Playfair Display',serif;font-size:28px;font-weight:500;color:var(--text-1);margin-bottom:.75rem;letter-spacing:-.5px">Todavía no comenzamos<br><em style="color:var(--green);font-style:italic">tu proceso de reinvención.</em></h2>
-          <p style="font-size:14px;color:var(--text-2);font-weight:300;line-height:1.8;max-width:380px;margin:0 auto 2rem">Este es tu espacio. Aquí no hay formularios ni pasos forzados.<br>Solo una conversación real cuando estés listo.</p>
-          <button onclick="comenzarConversacion()" style="display:inline-flex;align-items:center;gap:9px;background:var(--green-dim);color:white;padding:13px 28px;border-radius:10px;font-size:14px;font-weight:500;cursor:pointer;border:none;font-family:'DM Sans',sans-serif;box-shadow:0 6px 24px rgba(15,122,85,.28)"><span>✦</span> Comenzar primera conversación <span>→</span></button>
-        </div>`;
-    }
-
-    // ── FREE STATE ──
-    function renderFreeState() {
-      document.getElementById('topbar-title').innerHTML = `Hola, <em style="font-style:normal;color:var(--green)">${userName}</em>. 👋`;
-      document.getElementById('topbar-sub').textContent = 'Este es tu espacio para pensar, aclararte y avanzar. RenaIA está acá para acompañarte.';
-
-      // Sidebar progress
-      document.getElementById('sb-progress-wrap').style.display = 'block';
-      document.getElementById('sb-quote').style.display = 'block';
-      const weekCount = Math.min(userData.convCount, 5);
-      document.getElementById('sb-pct-label').textContent = `${weekCount}/5 conversaciones`;
-      document.getElementById('sb-bar').style.width = (weekCount / 5 * 100) + '%';
-
-      // Sidebar quote from recent AI
-      if (userData.recentAI?.length) {
-        const q = cleanText(userData.recentAI[0].mensaje).slice(0, 90);
-        document.getElementById('sb-quote-text').textContent = `"${q}..."`;
-      }
-
-      // Proceso actual
-      const situacion = userData.memory?.summary
-        ? cleanText(userData.memory.summary.split('\n')[0]).slice(0, 100)
-        : userData.lastConv ? `Explorando: "${cleanText(userData.lastConv.mensaje).slice(0,60)}..."` : 'Inicia una conversación para descubrir tu situación actual.';
-
-      const ultimoDesc = userData.recentAI?.length
-        ? cleanText(userData.recentAI[0].mensaje).slice(0, 100) + '...'
-        : 'Todavía no hemos tenido suficientes conversaciones para identificar patrones.';
-
-      const proximoPaso = userData.memory?.goals
-        ? cleanText(userData.memory.goals).slice(0, 100)
-        : 'Continúa la conversación para definir tu próximo paso concreto.';
-
-      // Conversaciones recientes
-      const convItems = userData.recentUser?.length
-        ? userData.recentUser.slice(0,4).map((m,i) => `
-            <div class="conv-item fade-in-up d${i+1}" onclick="retornarConversacion()">
-              <div class="conv-dot"></div>
-              <span class="conv-title">${cleanText(m.mensaje).slice(0,32)}${m.mensaje.length>32?'...':''}</span>
-              <span class="conv-preview">${cleanText(m.mensaje).slice(0,55)}${m.mensaje.length>55?'...':''}</span>
-              <span class="conv-time">${formatDate(m.created_at)}</span>
-              <span class="conv-arrow">›</span>
-            </div>`).join('')
-        : `<div style="padding:1rem;text-align:center;font-size:13px;color:var(--text-3)">No hay conversaciones aún.</div>`;
-
-      // Reflexiones recientes
-      let reflHTML = '';
-      if (userData.recentAI?.length >= 1) {
-        const refls = userData.recentAI.slice(0,3);
-        reflHTML = `
-          <div class="refl-grid">
-            ${refls.map((r,i) => `
-              <div class="refl-card fade-in-up d${i+1}">
-                <div class="refl-quote">"</div>
-                <p class="refl-text">${cleanText(r.mensaje).slice(0,140)}${r.mensaje.length>140?'...':''}</p>
-                <p class="refl-time">${formatDate(r.created_at)}</p>
-              </div>`).join('')}
-          </div>`;
-      } else {
-        reflHTML = `<div class="refl-empty"><span style="color:var(--green)">📖</span> Las reflexiones de RenaIA aparecerán aquí después de conversar.</div>`;
-      }
-
-      document.getElementById('feed').innerHTML = `
-        <div class="card fade-in-up">
-          <div class="card-title"><span class="card-title-icon">✦</span> Tu proceso actual</div>
-          <div class="proceso-grid">
-            <div class="proceso-col">
-              <p class="proceso-label">Situación actual</p>
-              <p class="proceso-text">${situacion}</p>
-              <button class="proceso-btn" onclick="showChat(null)">Editar</button>
-            </div>
-            <div class="proceso-divider"></div>
-            <div class="proceso-col">
-              <p class="proceso-label">Lo último que descubrimos</p>
-              <p class="proceso-text">${ultimoDesc}</p>
-              <button class="proceso-btn" onclick="retornarConversacion()">Ver detalles</button>
-            </div>
-            <div class="proceso-divider"></div>
-            <div class="proceso-col">
-              <p class="proceso-label">Próximo paso sugerido</p>
-              <p class="proceso-text accent">${proximoPaso}</p>
-              <button class="proceso-btn primary" onclick="retornarConversacion()">Continuar conversación →</button>
-            </div>
+    document.getElementById('feed').innerHTML = `
+      <div class="card fi">
+        <div class="c-title"><span class="c-title-dot">✦</span> Tu proceso actual</div>
+        <div class="proc-grid">
+          <div class="proc-col">
+            <p class="proc-label">Situación actual</p>
+            <p class="proc-text">${situ}</p>
+            <div class="proc-actions"><button class="proc-btn ghost" onclick="showChat(null)">Editar</button></div>
+          </div>
+          <div class="proc-divider"></div>
+          <div class="proc-col">
+            <p class="proc-label">Lo último que descubrimos</p>
+            <p class="proc-text">${ultimo}</p>
+            <div class="proc-actions"><button class="proc-btn ghost" onclick="retomar()">Ver detalles</button></div>
+          </div>
+          <div class="proc-divider"></div>
+          <div class="proc-col">
+            <p class="proc-label">Próximo paso sugerido</p>
+            <p class="proc-text green">${proximo}</p>
+            <div class="proc-actions"><button class="proc-btn solid" onclick="retomar()">Continuar conversación →</button></div>
           </div>
         </div>
+      </div>
 
-        <div class="card fade-in-up d2">
-          <div class="card-title">Conversaciones recientes</div>
-          <div class="conv-list">${convItems}</div>
-          <a href="#" class="card-link" onclick="showConversaciones(event)">Ver todas las conversaciones →</a>
-        </div>
+      <div class="card fi d2">
+        <div class="c-title">Conversaciones recientes</div>
+        <div class="conv-list">${convRows}</div>
+        <button class="see-all" onclick="showConversaciones(event)">Ver todas las conversaciones →</button>
+      </div>
 
-        <div class="card fade-in-up d3">
-          <div class="card-title">Reflexiones recientes</div>
-          ${reflHTML}
-          <a href="#" class="card-link" onclick="showReflexiones(event)">Ver todas mis reflexiones →</a>
-        </div>`;
-    }
+      <div class="card fi d3">
+        <div class="c-title">Reflexiones recientes</div>
+        ${reflHTML}
+        <button class="see-all" onclick="showReflexiones(event)">Ver todas mis reflexiones →</button>
+      </div>`;
+  }
 
-    // ── RIGHT PANEL ──
-    function renderRightPanel() {
-      const rp = document.getElementById('right-panel');
-
-      if (userState === 'empty') {
-        rp.innerHTML = `
-          <div class="rp-card">
-            <div class="rp-card-header"><span class="rp-card-title">Tu espacio</span></div>
-            <div class="rp-icon-wrap">◎</div>
-            <p class="rp-locked-title">Tu proceso</p>
-            <p class="rp-locked-sub">Empieza a conversar para ver tu progreso aquí.</p>
-          </div>`;
-        return;
-      }
-
+  function renderRP() {
+    const rp = document.getElementById('rp');
+    if (state === 'empty') {
       rp.innerHTML = `
-        <div class="rp-card fade-in-up">
-          <div class="rp-card-header">
-            <span class="rp-card-title">Tu progreso <span style="font-size:10px;color:var(--text-3);font-weight:300">(vista general)</span></span>
-            <span class="rp-lock">🔒</span>
-          </div>
-          <div class="rp-icon-wrap">📊</div>
-          <p class="rp-locked-title">Desbloquea tu visión completa</p>
-          <p class="rp-locked-sub">Con RenaIA Pro puedes ver tu roadmap personal, hitos y progreso detallado.</p>
-          <button class="rp-unlock-btn">Desbloquear Pro</button>
-        </div>
-
-        <div class="rp-card fade-in-up d1">
-          <div class="rp-card-header">
-            <span class="rp-card-title">Roadmap <span class="rp-pro-badge">PRO</span></span>
-            <span class="rp-lock">🔒</span>
-          </div>
-          <div class="rp-icon-wrap">◎</div>
-          <p class="rp-locked-title">Tu plan paso a paso</p>
-          <p class="rp-locked-sub">Crea tu roadmap personalizado y transforma tus objetivos en acciones claras.</p>
-          <button class="rp-unlock-btn">Desbloquear Pro</button>
-        </div>
-
-        <div class="rp-card fade-in-up d2">
-          <div class="rp-card-header">
-            <span class="rp-card-title">Insights personalizados <span class="rp-pro-badge">PRO</span></span>
-            <span class="rp-lock">🔒</span>
-          </div>
-          <div class="rp-icon-wrap">✦</div>
-          <p class="rp-locked-title">Patrones de tu proceso</p>
-          <p class="rp-locked-sub">Patrones, aprendizajes y oportunidades basados en tu proceso.</p>
-          <button class="rp-unlock-btn">Desbloquear Pro</button>
+        <div class="rp-card fi">
+          <div class="rp-head"><span class="rp-htitle">Tu espacio</span></div>
+          <div class="rp-illus"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></div>
+          <p class="rp-locked-t">Empieza a conversar</p>
+          <p class="rp-locked-s">Tu progreso aparecerá aquí después de tu primera conversación.</p>
         </div>`;
+      return;
     }
+    rp.innerHTML = `
+      <div class="rp-card fi">
+        <div class="rp-head">
+          <span class="rp-htitle">Tu progreso <span style="font-size:10px;color:var(--text-3);font-weight:300">(vista general)</span></span>
+          <span class="rp-lock">🔒</span>
+        </div>
+        <div class="rp-illus">
+          <svg viewBox="0 0 24 24"><rect x="3" y="11" width="4" height="9" rx="1"/><rect x="10" y="6" width="4" height="14" rx="1"/><rect x="17" y="2" width="4" height="18" rx="1"/></svg>
+        </div>
+        <p class="rp-locked-t">Desbloquea tu visión completa</p>
+        <p class="rp-locked-s">Con RenaIA Pro puedes ver tu roadmap personal, hitos y progreso detallado.</p>
+        <button class="rp-cta">Desbloquear Pro</button>
+      </div>
 
-    // ── NAVEGACIÓN ──
-    function navClick(e, el) {
-      e?.preventDefault();
-      document.querySelectorAll('.sb-item').forEach(i => i.classList.remove('active'));
-      el?.classList.add('active');
+      <div class="rp-card fi d1">
+        <div class="rp-head">
+          <span class="rp-htitle">Roadmap <span class="rp-pro">PRO</span></span>
+          <span class="rp-lock">🔒</span>
+        </div>
+        <div class="rp-illus">
+          <svg viewBox="0 0 24 24"><path d="M3 12h18M3 12l4-4M3 12l4 4M21 12l-4-4M21 12l-4 4"/></svg>
+        </div>
+        <p class="rp-locked-t">Tu plan paso a paso</p>
+        <p class="rp-locked-s">Crea tu roadmap personalizado y transforma tus objetivos en acciones claras.</p>
+        <button class="rp-cta">Desbloquear Pro</button>
+      </div>
+
+      <div class="rp-card fi d2">
+        <div class="rp-head">
+          <span class="rp-htitle">Insights personalizados <span class="rp-pro">PRO</span></span>
+          <span class="rp-lock">🔒</span>
+        </div>
+        <div class="rp-illus">
+          <svg viewBox="0 0 24 24"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg>
+        </div>
+        <p class="rp-locked-t">Patrones de tu proceso</p>
+        <p class="rp-locked-s">Patrones, aprendizajes y oportunidades basados en tu proceso.</p>
+        <button class="rp-cta">Desbloquear Pro</button>
+      </div>`;
+  }
+
+  // ── NAV ──
+  function setActive(id) { document.querySelectorAll('.sb-item').forEach(i=>i.classList.remove('active')); document.getElementById(id)?.classList.add('active'); }
+  function navClick(e,el) { e?.preventDefault(); document.querySelectorAll('.sb-item').forEach(i=>i.classList.remove('active')); el?.classList.add('active'); }
+
+  function showHome(e) {
+    e?.preventDefault();
+    document.getElementById('home-view').classList.remove('hidden');
+    document.getElementById('chat-view').classList.remove('active');
+    setActive('nav-inicio');
+    document.getElementById('tb-title').innerHTML = `Hola, <span>${uname}</span>. 👋`;
+    document.getElementById('tb-sub').textContent = 'Este es tu espacio para pensar, aclararte y avanzar. RenaIA está acá para acompañarte.';
+  }
+
+  function showChat(e) {
+    e?.preventDefault();
+    document.getElementById('home-view').classList.add('hidden');
+    document.getElementById('chat-view').classList.add('active');
+    setActive('nav-conv');
+    document.getElementById('tb-title').textContent = 'Conversación';
+    document.getElementById('tb-sub').textContent = 'RenaIA está aquí para acompañarte.';
+    setTimeout(()=>document.getElementById('chat-input').focus(),80);
+  }
+
+  async function retomar() {
+    showChat(null);
+    const el = document.getElementById('chat-msgs');
+    el.innerHTML = `<div style="text-align:center;padding:24px;font-size:13px;color:var(--text-3)">Cargando conversación...</div>`;
+    const { data } = await sb.from('conversaciones').select('rol,mensaje,created_at').eq('usuario_id',cu.id).order('created_at',{ascending:true}).limit(40);
+    el.innerHTML = '';
+    if (!data?.length) { el.innerHTML = `<div style="text-align:center;padding:24px;font-size:13px;color:var(--text-3)">No hay mensajes aún.</div>`; return; }
+    data.forEach(m => addMsg(clean(m.mensaje), m.rol==='user'?'user':'ai'));
+    setTimeout(()=>addMsg('Aquí estoy. ¿Continuamos desde donde lo dejamos?','ai'), 350);
+  }
+
+  async function showConversaciones(e) { e?.preventDefault(); await retomar(); }
+
+  function showReflexiones(e) {
+    e?.preventDefault(); setActive('nav-refl');
+    document.getElementById('home-view').classList.remove('hidden');
+    document.getElementById('chat-view').classList.remove('active');
+    document.getElementById('tb-title').textContent = 'Reflexiones';
+    document.getElementById('tb-sub').textContent = 'Lo que RenaIA ha entendido de tu proceso.';
+    if (!ud.aiMsgs?.length) {
+      document.getElementById('feed').innerHTML = `<div class="card" style="text-align:center;padding:32px"><p style="font-size:13px;color:var(--text-2);font-weight:300;line-height:1.8">Las reflexiones aparecerán aquí después de conversar.</p><button onclick="comenzar()" style="margin-top:16px;display:inline-flex;align-items:center;gap:7px;background:var(--green-dim);color:#fff;padding:10px 20px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;border:none;font-family:'DM Sans',sans-serif">✦ Comenzar →</button></div>`;
+      return;
     }
+    document.getElementById('feed').innerHTML = `
+      <div class="refl-cols">
+        ${ud.aiMsgs.map((r,i)=>`
+          <div class="refl-card fi d${i%4+1}">
+            <div class="refl-qmark">"</div>
+            <p class="refl-txt">${trunc(clean(r.mensaje),200)}</p>
+            <p class="refl-date">${fdate(r.created_at)}</p>
+          </div>`).join('')}
+      </div>`;
+  }
 
-    function setNav(id) {
-      document.querySelectorAll('.sb-item').forEach(i => i.classList.remove('active'));
-      document.getElementById(id)?.classList.add('active');
-    }
+  function nuevaConversacion() { showChat(null); document.getElementById('chat-msgs').innerHTML = ''; }
+  function comenzar() { showChat(null); }
 
-    function showHome(e) {
-      e?.preventDefault();
-      document.getElementById('home-view').classList.remove('hidden');
-      document.getElementById('chat-view').classList.remove('active');
-      setNav('nav-inicio');
-      document.getElementById('topbar-title').innerHTML = `Hola, <em style="font-style:normal;color:var(--green)">${userName}</em>. 👋`;
-      document.getElementById('topbar-sub').textContent = 'Este es tu espacio para pensar, aclararte y avanzar. RenaIA está acá para acompañarte.';
-    }
+  // ── CHAT ──
+  function addMsg(text, type) {
+    const el = document.getElementById('chat-msgs');
+    const d = document.createElement('div');
+    d.className = `msg ${type}`;
+    d.innerHTML = `<div class="msg-av ${type}">${type==='ai'?'✦':'Tú'}</div><div class="bubble">${text}</div>`;
+    el.appendChild(d); el.scrollTop = el.scrollHeight;
+  }
+  function showTyping() {
+    const el = document.getElementById('chat-msgs');
+    const d = document.createElement('div'); d.id='typing'; d.className='typing-wrap';
+    d.innerHTML=`<div class="msg-av ai">✦</div><div class="typing"><span></span><span></span><span></span></div>`;
+    el.appendChild(d); el.scrollTop=el.scrollHeight;
+  }
+  function hideTyping() { document.getElementById('typing')?.remove(); }
+  function setAgent(a) { document.getElementById('agent-name').textContent = agents[a]||agents.core; }
 
-    function showChat(e) {
-      e?.preventDefault();
-      document.getElementById('home-view').classList.add('hidden');
-      document.getElementById('chat-view').classList.add('active');
-      setNav('nav-conv');
-      document.getElementById('topbar-title').textContent = 'Conversación';
-      document.getElementById('topbar-sub').textContent = 'RenaIA está aquí para acompañarte.';
-      setTimeout(() => document.getElementById('chat-input').focus(), 100);
-    }
+  async function sendMsg(msg) {
+    addMsg(msg,'user'); showTyping();
+    try {
+      const res = await fetch('/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({mensaje:msg,sesionId:cu.id})});
+      const data = await res.json();
+      hideTyping(); addMsg(data.respuesta,'ai');
+      if (data.agente) setAgent(data.agente);
+      await sb.from('conversaciones').insert([
+        {usuario_id:cu.id,rol:'user',mensaje:msg,agente:'core',created_at:new Date().toISOString()},
+        {usuario_id:cu.id,rol:'assistant',mensaje:data.respuesta,agente:data.agente||'core',created_at:new Date().toISOString()}
+      ]);
+      ud.count++;ud.hasMsgs=true;
+      if(!ud.userMsgs)ud.userMsgs=[];ud.userMsgs.unshift({mensaje:msg,created_at:new Date().toISOString()});
+      if(!ud.aiMsgs)ud.aiMsgs=[];ud.aiMsgs.unshift({mensaje:data.respuesta,created_at:new Date().toISOString()});
+      if(state==='empty'){state='free';render();}
+    } catch { hideTyping(); addMsg('Hubo un error. Intenta de nuevo.','ai'); }
+  }
 
-    async function retornarConversacion() {
-      showChat(null);
-      const msgs = document.getElementById('chat-messages');
-      msgs.innerHTML = `<div style="text-align:center;padding:2rem;color:var(--text-3);font-size:13px">Cargando conversación...</div>`;
-      const { data: historial } = await sb.from('conversaciones').select('rol,mensaje,created_at').eq('usuario_id',currentUser.id).order('created_at',{ascending:true}).limit(40);
-      msgs.innerHTML = '';
-      if (!historial?.length) {
-        msgs.innerHTML = `<div style="text-align:center;padding:2rem;color:var(--text-3);font-size:13px">No hay mensajes aún.</div>`;
-        return;
-      }
-      historial.forEach(m => addMsg(cleanText(m.mensaje), m.rol === 'user' ? 'user' : 'ai'));
-      setTimeout(() => addMsg('Aquí estoy. ¿Continuamos desde donde lo dejamos?', 'ai'), 400);
-    }
-
-    async function showConversaciones(e) {
-      e?.preventDefault();
-      await retornarConversacion();
-    }
-
-    function showReflexiones(e) {
-      e?.preventDefault();
-      setNav('nav-refl');
-      document.getElementById('home-view').classList.remove('hidden');
-      document.getElementById('chat-view').classList.remove('active');
-      document.getElementById('topbar-title').textContent = 'Reflexiones';
-      document.getElementById('topbar-sub').textContent = 'Lo que RenaIA ha entendido de tu proceso.';
-
-      if (!userData.recentAI?.length) {
-        document.getElementById('feed').innerHTML = `
-          <div class="card" style="text-align:center;padding:2.5rem">
-            <span style="font-size:24px;display:block;margin-bottom:1rem;opacity:.3">📖</span>
-            <p style="font-size:14px;color:var(--text-2);font-weight:300;line-height:1.8">A medida que conversemos, RenaIA guardará aquí los momentos más importantes de tu proceso.</p>
-            <button onclick="comenzarConversacion()" style="margin-top:1.5rem;display:inline-flex;align-items:center;gap:8px;background:var(--green-dim);color:white;padding:11px 22px;border-radius:9px;font-size:13px;font-weight:500;cursor:pointer;border:none;font-family:'DM Sans',sans-serif">✦ Comenzar conversación →</button>
-          </div>`;
-        return;
-      }
-
-      document.getElementById('feed').innerHTML = `
-        <div class="refl-grid">
-          ${userData.recentAI.map((r,i) => `
-            <div class="refl-card fade-in-up d${i+1}">
-              <div class="refl-quote">"</div>
-              <p class="refl-text">${cleanText(r.mensaje).slice(0,200)}${r.mensaje.length>200?'...':''}</p>
-              <p class="refl-time">${formatDate(r.created_at)}</p>
-            </div>`).join('')}
-        </div>`;
-    }
-
-    function nuevaConversacion() { showChat(null); document.getElementById('chat-messages').innerHTML = ''; }
-    function comenzarConversacion() { showChat(null); }
-
-    // ── CHAT ──
-    function addMsg(text, type) {
-      const el = document.getElementById('chat-messages');
-      const div = document.createElement('div');
-      div.className = `msg ${type}`;
-      div.innerHTML = `<div class="msg-avatar ${type}">${type==='ai'?'✦':'Tú'}</div><div class="bubble">${text}</div>`;
-      el.appendChild(div); el.scrollTop = el.scrollHeight;
-    }
-    function showTyping() {
-      const el = document.getElementById('chat-messages');
-      const div = document.createElement('div');
-      div.id = 'typing'; div.className = 'typing-wrap';
-      div.innerHTML = `<div class="msg-avatar ai">✦</div><div class="typing"><span></span><span></span><span></span></div>`;
-      el.appendChild(div); el.scrollTop = el.scrollHeight;
-    }
-    function hideTyping() { document.getElementById('typing')?.remove(); }
-    function updateAgent(a) { document.getElementById('agent-name').textContent = agentLabels[a] || agentLabels.core; }
-
-    async function sendMessage(msg) {
-      addMsg(msg, 'user');
-      showTyping();
-      try {
-        const res = await fetch('/chat', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({mensaje:msg,sesionId:currentUser.id}) });
-        const data = await res.json();
-        hideTyping();
-        addMsg(data.respuesta, 'ai');
-        if (data.agente) updateAgent(data.agente);
-        await sb.from('conversaciones').insert([
-          { usuario_id:currentUser.id, rol:'user',      mensaje:msg,            agente:'core',               created_at:new Date().toISOString() },
-          { usuario_id:currentUser.id, rol:'assistant', mensaje:data.respuesta, agente:data.agente||'core',   created_at:new Date().toISOString() }
-        ]);
-        userData.convCount++;
-        userData.hasConversations = true;
-        if (!userData.recentUser) userData.recentUser = [];
-        userData.recentUser.unshift({ mensaje:msg, created_at:new Date().toISOString() });
-        if (!userData.recentAI) userData.recentAI = [];
-        userData.recentAI.unshift({ mensaje:data.respuesta, created_at:new Date().toISOString() });
-        if (userState === 'empty') { userState = 'free'; renderDashboard(); }
-      } catch {
-        hideTyping();
-        addMsg('Hubo un error. Intenta de nuevo.', 'ai');
-      }
-    }
-
-    function enviarDesdeHome() {
-      const input = document.getElementById('home-input');
-      const msg = input.value.trim(); if (!msg) return;
-      input.value = ''; showChat(null); sendMessage(msg);
-    }
-    function enviarChat() {
-      const input = document.getElementById('chat-input');
-      const msg = input.value.trim(); if (!msg) return;
-      input.value = ''; sendMessage(msg);
-    }
-
-    document.getElementById('home-input').addEventListener('keypress', e => { if(e.key==='Enter') enviarDesdeHome(); });
-    document.getElementById('chat-input').addEventListener('keypress', e => { if(e.key==='Enter') enviarChat(); });
-
-    async function signOut() { await sb.auth.signOut(); window.location.href = '/'; }
-
-    init();
-  </script>
+  function enviarDesdeHome() {
+    const i=document.getElementById('home-input'),m=i.value.trim();if(!m)return;
+    i.value='';showChat(null);sendMsg(m);
+  }
+  function enviarChat() {
+    const i=document.getElementById('chat-input'),m=i.value.trim();if(!m)return;
+    i.value='';sendMsg(m);
+  }
+  document.getElementById('home-input').addEventListener('keypress',e=>{if(e.key==='Enter')enviarDesdeHome();});
+  document.getElementById('chat-input').addEventListener('keypress',e=>{if(e.key==='Enter')enviarChat();});
+  async function signOut(){await sb.auth.signOut();window.location.href='/';}
+  init();
+</script>
 </body>
 </html>
