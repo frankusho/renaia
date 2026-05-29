@@ -109,7 +109,7 @@
 
     /* PROCESO CARD */
     .proc-grid{display:grid;grid-template-columns:1fr 1px 1fr 1px 1fr;gap:0}
-    .proc-divider{background:var(--border-faint)}
+    .proc-divider{background:rgba(26,158,114,.12);width:1px}
     .proc-col{padding:0 20px;display:flex;flex-direction:column;gap:10px}
     .proc-col:first-child{padding-left:0}
     .proc-col:last-child{padding-right:0}
@@ -336,7 +336,7 @@
   let cu = null, state = null, uname = '', ud = {};
   const agents = { core:'✦ Rena Core', path:'◎ Rena Path', career:'↗ Rena Career' };
 
-  const clean = t => t ? t.replace(/\*\*(.*?)\*\*/g,'$1').replace(/\*(.*?)\*/g,'$1').replace(/#{1,6}\s/g,'').replace(/`(.*?)`/g,'$1').trim() : '';
+  const clean = t => t ? t.replace(/\*\*(.*?)\*\*/g,'$1').replace(/\*(.*?)\*/g,'$1').replace(/#{1,6}\s/g,'').replace(/`(.*?)`/g,'$1').replace(/^\*\s/gm,'').replace(/^-\s/gm,'').trim() : '';
   const fdate = d => { try { return new Date(d).toLocaleDateString('es-CL',{weekday:'short',hour:'2-digit',minute:'2-digit'}); } catch{ return ''; } };
   const trunc = (t,n) => t.length > n ? t.slice(0,n)+'...' : t;
 
@@ -428,8 +428,8 @@
       ? ud.userMsgs.slice(0,4).map((m,i) => `
           <div class="conv-row fi d${i+1}" onclick="retomar()">
             <div class="conv-dot"></div>
-            <span class="conv-name">${trunc(clean(m.mensaje),30)}</span>
-            <span class="conv-prev">${trunc(clean(m.mensaje),55)}</span>
+            <span class="conv-name">${trunc(clean(m.mensaje),28)}</span>
+<span class="conv-prev">Hablamos sobre ${trunc(clean(m.mensaje).toLowerCase(),45)}</span>
             <span class="conv-date">${fdate(m.created_at)}</span>
             <span class="conv-arr">›</span>
           </div>`).join('')
