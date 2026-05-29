@@ -195,6 +195,29 @@
     .rp-locked-s{font-size:12px;color:var(--text-2);font-weight:300;line-height:1.6;text-align:center}
     .rp-cta{display:flex;align-items:center;justify-content:center;background:var(--green-dim);color:#fff;padding:9px;border-radius:9px;font-size:12px;font-weight:500;cursor:pointer;border:none;font-family:'DM Sans',sans-serif;transition:background .2s;width:100%;box-shadow:0 3px 12px rgba(15,122,85,.22)}
     .rp-cta:hover{background:var(--green-hover)}
+    /* PRO STATE */
+    .roadmap-wrap{display:flex;align-items:center;gap:0;margin-bottom:8px}
+    .rm-phase{display:flex;flex-direction:column;align-items:center;gap:6px;flex:1;cursor:default}
+    .rm-circle{width:36px;height:36px;border-radius:50%;border:2px solid var(--border-faint);display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--text-3);background:rgba(4,9,6,.8);transition:all .3s;flex-shrink:0}
+    .rm-circle.done{border-color:var(--green);background:rgba(26,158,114,.15);color:var(--green)}
+    .rm-circle.active{border-color:var(--green);background:var(--green-dim);color:#fff;box-shadow:0 0 18px rgba(26,158,114,.3)}
+    .rm-label{font-size:11px;color:var(--text-3);font-weight:400;text-align:center}
+    .rm-label.active{color:var(--green);font-weight:500}
+    .rm-line{flex:1;height:2px;background:var(--border-faint);margin-top:-22px;align-self:flex-start;margin-left:-4px;margin-right:-4px}
+    .rm-line.done{background:rgba(26,158,114,.35)}
+    .insight-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+    .insight-card{background:rgba(26,158,114,.05);border:.5px solid rgba(26,158,114,.16);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:8px;transition:border-color .25s}
+    .insight-card:hover{border-color:rgba(26,158,114,.3)}
+    .insight-icon{font-size:18px;color:var(--green);opacity:.8}
+    .insight-txt{font-size:13px;color:var(--text-2);font-weight:300;line-height:1.7;font-style:italic;flex:1}
+    .checkin-banner{background:linear-gradient(135deg,rgba(8,20,14,.95),rgba(5,14,9,.98));border:.5px solid var(--border);border-radius:14px;padding:20px 24px;display:flex;align-items:center;gap:16px}
+    .checkin-icon{font-size:28px;flex-shrink:0}
+    .checkin-text{flex:1}
+    .checkin-title{font-size:14px;font-weight:500;color:var(--text-1);margin-bottom:4px}
+    .checkin-sub{font-size:13px;color:var(--text-2);font-weight:300;line-height:1.6}
+    .checkin-btn{background:var(--green-dim);color:#fff;padding:10px 18px;border-radius:9px;font-size:13px;font-weight:500;cursor:pointer;border:none;font-family:'DM Sans',sans-serif;transition:background .2s;white-space:nowrap;flex-shrink:0}
+    .checkin-btn:hover{background:var(--green-hover)}
+    .pro-badge-inline{font-size:9px;font-weight:600;color:var(--green);background:rgba(26,158,114,.12);border:.5px solid rgba(26,158,114,.22);border-radius:4px;padding:1px 6px;margin-left:6px;vertical-align:middle}
   </style>
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-QFV6SRFDKL"></script>
   <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-QFV6SRFDKL');</script>
@@ -378,7 +401,9 @@
   }
 
   function render() {
-    state === 'empty' ? renderEmpty() : renderFree();
+    if (state === 'empty') renderEmpty();
+    else if (state === 'pro') renderPro();
+    else renderFree();
     renderRP();
   }
 
@@ -487,6 +512,126 @@
       </div>`;
   }
 
+  async function renderPro() {
+    document.getElementById('tb-title').innerHTML = `Hola, <span>${uname}</span>. 👋`;
+    document.getElementById('tb-sub').textContent = 'Este es tu espacio de reinvención. RenaIA te acompaña de cerca.';
+
+    // Sidebar pro
+    document.getElementById('sb-prog').style.display = 'block';
+    document.getElementById('sb-quote').style.display = 'block';
+    document.getElementById('sb-plan').textContent = '✦ Plan Pro';
+    const wk = Math.min(ud.count, 5);
+    document.getElementById('sb-prog-label').textContent = `${wk}/5 conversaciones esta semana`;
+    document.getElementById('sb-prog-fill').style.width = (wk/5*100)+'%';
+    if (ud.aiMsgs?.length) {
+      document.getElementById('sb-quote-txt').textContent = '"' + trunc(clean(ud.aiMsgs[0].mensaje), 80) + '"';
+    }
+
+    // Desbloquear nav Pro
+    document.querySelectorAll('.sb-item.locked').forEach(el => {
+      el.classList.remove('locked');
+      el.style.opacity = '1';
+      el.style.pointerEvents = 'auto';
+    });
+
+    // Detectar fase del roadmap
+    const fase = ud.count <= 5 ? 0 : ud.count <= 12 ? 1 : ud.count <= 20 ? 2 : 3;
+    const fases = ['Claridad', 'Dirección', 'Acción', 'Reinvención'];
+    const faseIcons = ['◎', '↗', '✦', '★'];
+
+    const roadmapHTML = `
+      <div class="roadmap-wrap">
+        ${fases.map((f, i) => `
+          <div class="rm-phase">
+            <div class="rm-circle ${i < fase ? 'done' : i === fase ? 'active' : ''}">${i < fase ? '✓' : faseIcons[i]}</div>
+            <span class="rm-label ${i === fase ? 'active' : ''}">${f}</span>
+          </div>
+          ${i < 3 ? `<div class="rm-line ${i < fase ? 'done' : ''}"></div>` : ''}
+        `).join('')}
+      </div>
+      <p style="font-size:12px;color:var(--text-3);margin-top:8px;font-weight:300">
+        Estás en la fase de <span style="color:var(--green);font-weight:500">${fases[fase]}</span> — ${
+          fase === 0 ? 'entendiendo tu situación actual.' :
+          fase === 1 ? 'descubriendo tu dirección.' :
+          fase === 2 ? 'tomando acción concreta.' :
+          'completando tu reinvención.'
+        }
+      </p>`;
+
+    // Verificar seguimiento semanal
+    let checkinHTML = '';
+    if (ud.userMsgs?.length) {
+      const lastDate = new Date(ud.userMsgs[0].created_at);
+      const diasSinConv = Math.floor((Date.now() - lastDate.getTime()) / (1000 * 60 * 60 * 24));
+      if (diasSinConv >= 7) {
+        checkinHTML = `
+          <div class="checkin-banner fi">
+            <span class="checkin-icon">🌱</span>
+            <div class="checkin-text">
+              <p class="checkin-title">Han pasado ${diasSinConv} días desde tu última conversación</p>
+              <p class="checkin-sub">¿Cómo te sientes respecto a tu proceso? Retomemos desde donde lo dejamos.</p>
+            </div>
+            <button class="checkin-btn" onclick="retomar()">Retomar →</button>
+          </div>`;
+      }
+    }
+
+    // Insights placeholder mientras cargan
+    document.getElementById('feed').innerHTML = `
+      ${checkinHTML}
+      <div class="card fi">
+        <div class="c-title"><span class="c-title-dot">◎</span> Tu roadmap de reinvención</div>
+        ${roadmapHTML}
+      </div>
+      <div class="card fi d1" id="insights-card">
+        <div class="c-title"><span class="c-title-dot">✦</span> Insights personalizados <span class="pro-badge-inline">PRO</span></div>
+        <div class="insight-grid">
+          <div class="insight-card"><div class="insight-icon">◌</div><p class="insight-txt" style="color:var(--text-3)">Generando insights...</p></div>
+          <div class="insight-card"><div class="insight-icon">◌</div><p class="insight-txt" style="color:var(--text-3)">Analizando tus conversaciones...</p></div>
+          <div class="insight-card"><div class="insight-icon">◌</div><p class="insight-txt" style="color:var(--text-3)">Un momento...</p></div>
+        </div>
+      </div>
+      <div class="card fi d2">
+        <div class="c-title">Conversaciones recientes</div>
+        <div class="conv-list">${ud.userMsgs?.length
+          ? ud.userMsgs.slice(0,4).map((m,i) => `
+              <div class="conv-row fi d${i+1}" onclick="retomar()">
+                <div class="conv-dot"></div>
+                <span class="conv-name">${trunc(clean(m.mensaje),30)}</span>
+                <span class="conv-prev">Hablamos sobre esto en tu proceso...</span>
+                <span class="conv-date">${fdate(m.created_at)}</span>
+                <span class="conv-arr">›</span>
+              </div>`).join('')
+          : `<div style="padding:12px;font-size:13px;color:var(--text-3);text-align:center">No hay conversaciones aún.</div>`}
+        </div>
+        <button class="see-all" onclick="showConversaciones(event)">Ver todas las conversaciones →</button>
+      </div>`;
+
+    // Cargar insights en background
+    try {
+      const res = await fetch('/generar-insights', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: cu.id })
+      });
+      const { insights } = await res.json();
+      if (insights?.length) {
+        const icons = ['◎', '✦', '↗'];
+        document.getElementById('insights-card').innerHTML = `
+          <div class="c-title"><span class="c-title-dot">✦</span> Insights personalizados <span class="pro-badge-inline">PRO</span></div>
+          <div class="insight-grid">
+            ${insights.slice(0,3).map((ins, i) => `
+              <div class="insight-card">
+                <div class="insight-icon">${icons[i]}</div>
+                <p class="insight-txt">"${clean(ins)}"</p>
+              </div>`).join('')}
+          </div>`;
+      }
+    } catch(err) {
+      console.error('Insights fetch error:', err);
+    }
+  }
+
   function renderRP() {
     const rp = document.getElementById('rp');
     if (state === 'empty') {
@@ -499,6 +644,58 @@
         </div>`;
       return;
     }
+
+    if (state === 'pro') {
+      const fase = ud.count <= 5 ? 0 : ud.count <= 12 ? 1 : ud.count <= 20 ? 2 : 3;
+      const fases = ['Claridad', 'Dirección', 'Acción', 'Reinvención'];
+      const pct = Math.min(Math.round((ud.count / 25) * 100), 95);
+      const lastConvDate = ud.userMsgs?.length ? `Última sesión: ${fdate(ud.userMsgs[0].created_at)}` : '';
+      rp.innerHTML = `
+        <div class="rp-card fi">
+          <div class="rp-head"><span class="rp-htitle">Tu progreso</span></div>
+          <div style="display:flex;align-items:center;gap:14px;margin:4px 0">
+            <div style="position:relative;width:72px;height:72px;flex-shrink:0">
+              <svg width="72" height="72" viewBox="0 0 72 72" style="transform:rotate(-90deg)">
+                <circle cx="36" cy="36" r="28" fill="none" stroke="rgba(255,255,255,.05)" stroke-width="7"/>
+                <circle cx="36" cy="36" r="28" fill="none" stroke="url(#pg)" stroke-width="7" stroke-linecap="round"
+                  stroke-dasharray="176" stroke-dashoffset="${176 - (176 * pct / 100)}"/>
+                <defs><linearGradient id="pg" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stop-color="#0f7a55"/><stop offset="100%" stop-color="#1a9e72"/>
+                </linearGradient></defs>
+              </svg>
+              <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center">
+                <span style="font-family:'Playfair Display',serif;font-size:16px;font-weight:500;color:var(--text-1)">${pct}%</span>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:5px;flex:1">
+              <div style="font-size:12px;color:var(--text-2);font-weight:300">Fase actual</div>
+              <div style="font-size:13px;font-weight:500;color:var(--green)">${fases[fase]}</div>
+              <div style="font-size:11px;color:var(--text-3)">${lastConvDate}</div>
+            </div>
+          </div>
+        </div>
+        <div class="rp-card fi d1">
+          <div class="rp-head"><span class="rp-htitle">Siguiente paso</span></div>
+          <p style="font-size:13px;color:var(--text-2);font-weight:300;line-height:1.65;margin:4px 0 10px">${
+            fase === 0 ? 'Continúa explorando tu situación actual. Cuanto más hablemos, más claro será tu camino.' :
+            fase === 1 ? 'Ya tienes claridad. Es momento de definir hacia dónde quieres ir.' :
+            fase === 2 ? 'Tienes dirección. Ahora toca convertirla en acciones concretas.' :
+            'Estás en la fase final. Tu reinvención está tomando forma.'
+          }</p>
+          <button class="rp-cta" onclick="retomar()">Continuar conversación →</button>
+        </div>
+        <div class="rp-card fi d2">
+          <div class="rp-head"><span class="rp-htitle">Memoria profunda <span class="rp-pro">PRO</span></span></div>
+          <div style="display:flex;flex-direction:column;gap:7px;margin-top:4px">
+            <div style="display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--text-2);font-weight:300"><span style="color:var(--green);flex-shrink:0">✓</span>RenaIA recuerda tu contexto entre sesiones</div>
+            <div style="display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--text-2);font-weight:300"><span style="color:var(--green);flex-shrink:0">✓</span>Detecta patrones en tus conversaciones</div>
+            <div style="display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--text-2);font-weight:300"><span style="color:var(--green);flex-shrink:0">✓</span>Insights personalizados cada 24h</div>
+          </div>
+        </div>`;
+      return;
+    }
+
+    // FREE state
     rp.innerHTML = `
       <div class="rp-card fi">
         <div class="rp-head">
@@ -510,7 +707,7 @@
         </div>
         <p class="rp-locked-t">Desbloquea tu visión completa</p>
         <p class="rp-locked-s">Con RenaIA Pro puedes ver tu roadmap personal, hitos y progreso detallado.</p>
-        <button class="rp-cta">Desbloquear Pro</button>
+        <button class="rp-cta" onclick="activarPro()">Desbloquear Pro</button>
       </div>
 
       <div class="rp-card fi d1">
@@ -523,7 +720,7 @@
         </div>
         <p class="rp-locked-t">Tu plan paso a paso</p>
         <p class="rp-locked-s">Crea tu roadmap personalizado y transforma tus objetivos en acciones claras.</p>
-        <button class="rp-cta">Desbloquear Pro</button>
+        <button class="rp-cta" onclick="activarPro()">Desbloquear Pro</button>
       </div>
 
       <div class="rp-card fi d2">

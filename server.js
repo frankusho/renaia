@@ -7,7 +7,12 @@ const Stripe = require("stripe");
 const app = express();
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 
-// Webhook necesita raw body — va ANTES de express.json()
+const supabase = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_ANON_KEY
+);
+
+// Webhook — raw body ANTES de express.json()
 app.post("/webhook", express.raw({ type: "application/json" }), async (req, res) => {
   const sig = req.headers["stripe-signature"];
   let event;
@@ -41,11 +46,6 @@ app.post("/webhook", express.raw({ type: "application/json" }), async (req, res)
 
 app.use(express.json());
 app.use(express.static("public"));
-
-const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_ANON_KEY
-);
 
 const sesiones = {};
 
@@ -95,7 +95,6 @@ app.get("/health", (req, res) => {
 app.post("/crear-checkout", async (req, res) => {
   const { userId, email } = req.body;
   if (!userId) return res.status(400).json({ error: "Falta userId" });
-
   try {
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
@@ -111,6 +110,78 @@ app.post("/crear-checkout", async (req, res) => {
   } catch (err) {
     console.error("Stripe error:", err);
     res.status(500).json({ error: "Error creando checkout" });
+  }
+});
+
+// ── GENERAR INSIGHTS PRO ──
+app.post("/generar-insights", async (req, res) => {
+  const { userId } = req.body;
+  if (!userId) return res.status(400).json({ error: "Falta userId" });
+
+  // Verificar cache (24h)
+  const { data: mem } = await supabase
+    .from("memoria_usuario")
+    .select("insights, insights_updated_at")
+    .eq("user_id", userId)
+    .maybeSingle();
+
+  if (mem?.insights && mem?.insights_updated_at) {
+    const age = Date.now() - new Date(mem.insights_updated_at).getTime();
+    if (age < 24 * 60 * 60 * 1000) {
+      try {
+        return res.json({ insights: JSON.parse(mem.insights), cached: true });
+      } catch {}
+    }
+  }
+
+  // Obtener últimas conversaciones
+  const { data: convs } = await supabase
+    .from("conversaciones")
+    .select("rol, mensaje")
+    .eq("usuario_id", userId)
+    .order("created_at", { ascending: false })
+    .limit(20);
+
+  if (!convs?.length) return res.json({ insights: [] });
+
+  const resumen = convs
+    .filter(m => m.mensaje?.length > 5)
+    .map(m => `${m.rol === "user" ? "Usuario" : "RenaIA"}: ${m.mensaje.slice(0, 200)}`)
+    .join("\n");
+
+  const prompt = `Analiza estas conversaciones de reinvención profesional y genera exactamente 3 insights cortos, específicos y personales sobre esta persona.
+
+Cada insight debe ser una observación concreta sobre sus patrones, motivaciones, miedos o situación actual. Escríbelos en segunda persona (dirigidos a la persona). Máximo 20 palabras por insight.
+
+Conversaciones:
+${resumen}
+
+Responde SOLO con un JSON array de exactamente 3 strings. Sin explicaciones, sin markdown, sin texto adicional.
+Ejemplo: ["Has mencionado varias veces que buscas independencia.", "La incertidumbre parece ser tu mayor freno.", "Tienes más claridad de lo que crees."]`;
+
+  try {
+    const respuesta = await llamarGroq(
+      [{ role: "user", content: prompt }],
+      "Eres un coach de reinvención profesional experto en detectar patrones. Generas insights concisos, específicos y humanos basados en conversaciones reales. Solo respondes con JSON."
+    );
+
+    const clean = respuesta.replace(/```json|```/g, "").trim();
+    const insights = JSON.parse(clean);
+
+    // Guardar en cache
+    await supabase.from("memoria_usuario").upsert(
+      { user_id: userId, insights: JSON.stringify(insights), insights_updated_at: new Date().toISOString() },
+      { onConflict: "user_id" }
+    );
+
+    res.json({ insights, cached: false });
+  } catch (err) {
+    console.error("Insights error:", err);
+    res.json({ insights: [
+      "Sigue conversando para que pueda conocerte mejor.",
+      "Cada conversación me ayuda a entenderte más.",
+      "Estás en el camino correcto."
+    ]});
   }
 });
 
