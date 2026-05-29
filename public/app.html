@@ -510,7 +510,7 @@
         </div>
         <p class="rp-locked-t">Desbloquea tu visión completa</p>
         <p class="rp-locked-s">Con RenaIA Pro puedes ver tu roadmap personal, hitos y progreso detallado.</p>
-        <button class="rp-cta" onclick="activarPro()">Desbloquear Pro</button>
+        <button class="rp-cta">Desbloquear Pro</button>
       </div>
 
       <div class="rp-card fi d1">
@@ -523,7 +523,7 @@
         </div>
         <p class="rp-locked-t">Tu plan paso a paso</p>
         <p class="rp-locked-s">Crea tu roadmap personalizado y transforma tus objetivos en acciones claras.</p>
-        <button class="rp-cta" onclick="activarPro()">Desbloquear Pro</button>
+        <button class="rp-cta">Desbloquear Pro</button>
       </div>
 
       <div class="rp-card fi d2">
@@ -536,7 +536,7 @@
         </div>
         <p class="rp-locked-t">Patrones de tu proceso</p>
         <p class="rp-locked-s">Patrones, aprendizajes y oportunidades basados en tu proceso.</p>
-        <button class="rp-cta">Desbloquear Pro</button>
+        <button class="rp-cta" onclick="activarPro()">Desbloquear Pro</button>
       </div>`;
   }
 
@@ -646,16 +646,39 @@
   document.getElementById('home-input').addEventListener('keypress',e=>{if(e.key==='Enter')enviarDesdeHome();});
   document.getElementById('chat-input').addEventListener('keypress',e=>{if(e.key==='Enter')enviarChat();});
   async function signOut(){await sb.auth.signOut();window.location.href='/';}
+
   async function activarPro() {
-  const { data: { session } } = await sb.auth.getSession();
-  const res = await fetch('/crear-checkout', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ userId: cu.id, email: session.user.email })
-  });
-  const data = await res.json();
-  if (data.url) window.location.href = data.url;
-}
+    try {
+      const { data: { session } } = await sb.auth.getSession();
+      const res = await fetch('/crear-checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: cu.id, email: session.user.email })
+      });
+      const data = await res.json();
+      if (data.url) window.location.href = data.url;
+      else console.error('No URL recibida:', data);
+    } catch(err) {
+      console.error('Error activarPro:', err);
+    }
+  }
+
+  async function init() {
+    document.body.style.opacity = '0';
+    document.body.style.transition = 'opacity .3s ease';
+    const { data: { session } } = await sb.auth.getSession();
+    if (!session?.user) { window.location.href = '/'; return; }
+    cu = session.user;
+    await loadUser();
+    document.body.style.opacity = '1';
+    if (new URLSearchParams(window.location.search).get('upgraded') === 'true') {
+      await sb.from('usuarios').update({ is_pro: true }).eq('id', cu.id);
+      window.history.replaceState({}, '', '/app.html');
+    }
+    await loadData();
+    render();
+  }
+
   init();
 </script>
 </body>
