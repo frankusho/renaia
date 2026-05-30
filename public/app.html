@@ -258,19 +258,19 @@
     <a class="sb-item" id="nav-prog" onclick="navClick(event,this)">
       <span class="sb-icon">↗</span> Mi progreso
     </a>
-    <a class="sb-item locked" id="nav-road">
+    <a class="sb-item locked" id="nav-road" onclick="showRoadmap(event)">
       <span class="sb-icon">◎</span> Roadmap
       <span class="sb-item-end" id="lock-road"><span class="sb-pro">PRO</span><span class="sb-lockico">🔒</span></span>
     </a>
-    <a class="sb-item locked" id="nav-seg">
+    <a class="sb-item locked" id="nav-seg" onclick="showSeguimiento(event)">
       <span class="sb-icon">📅</span> Seguimiento
       <span class="sb-item-end" id="lock-seg"><span class="sb-pro">PRO</span><span class="sb-lockico">🔒</span></span>
     </a>
-    <a class="sb-item locked" id="nav-cal">
+    <a class="sb-item locked" id="nav-cal" onclick="showCalendario(event)">
       <span class="sb-icon">🗓</span> Calendario
       <span class="sb-item-end" id="lock-cal"><span class="sb-pro">PRO</span><span class="sb-lockico">🔒</span></span>
     </a>
-    <a class="sb-item locked" id="nav-ins">
+    <a class="sb-item locked" id="nav-ins" onclick="showInsights(event)">
       <span class="sb-icon">✦</span> Insights
       <span class="sb-item-end" id="lock-ins"><span class="sb-pro">PRO</span><span class="sb-lockico">🔒</span></span>
     </a>
@@ -842,9 +842,191 @@
   }
   document.getElementById('home-input').addEventListener('keypress',e=>{if(e.key==='Enter')enviarDesdeHome();});
   document.getElementById('chat-input').addEventListener('keypress',e=>{if(e.key==='Enter')enviarChat();});
-  async function signOut(){await sb.auth.signOut();window.location.href='/';}
+  // ── PRO SECCIONES ──
+  function showSeccion(id, titulo, subtitulo, contenido) {
+    document.getElementById('home-view').classList.remove('hidden');
+    document.getElementById('chat-view').classList.remove('active');
+    setActive(id);
+    document.getElementById('tb-title').textContent = titulo;
+    document.getElementById('tb-sub').textContent = subtitulo;
+    document.getElementById('feed').innerHTML = contenido;
+  }
 
-  async function activarPro() {
+  function showRoadmap(e) {
+    e?.preventDefault();
+    const fase = ud.count <= 5 ? 0 : ud.count <= 12 ? 1 : ud.count <= 20 ? 2 : 3;
+    const fases = ['Claridad', 'Dirección', 'Acción', 'Reinvención'];
+    const faseIcons = ['◎', '↗', '✦', '★'];
+    const descripciones = [
+      'Estás entendiendo tu situación actual, identificando qué te frena y qué te motiva.',
+      'Ya tienes claridad sobre tu punto de partida. Ahora descubres hacia dónde quieres ir.',
+      'Tienes dirección clara. Es momento de convertir esa claridad en acciones concretas.',
+      'Estás ejecutando tu plan de reinvención. Cada conversación te acerca más a tu nueva vida.'
+    ];
+    const siguientes = [
+      'Continúa conversando sobre tu situación actual para obtener más claridad.',
+      'Explora qué tipo de vida profesional quieres construir.',
+      'Define 3 acciones concretas que puedes tomar esta semana.',
+      'Evalúa tu progreso y ajusta el plan según lo que has aprendido.'
+    ];
+
+    showSeccion('nav-road', 'Tu Roadmap', 'Visualiza en qué fase de tu reinvención estás.', `
+      <div class="card fi">
+        <div class="c-title"><span class="c-title-dot">◎</span> Tu camino de reinvención</div>
+        <div class="roadmap-wrap" style="margin-bottom:24px">
+          ${fases.map((f, i) => `
+            <div class="rm-phase">
+              <div class="rm-circle ${i < fase ? 'done' : i === fase ? 'active' : ''}">${i < fase ? '✓' : faseIcons[i]}</div>
+              <span class="rm-label ${i === fase ? 'active' : ''}">${f}</span>
+            </div>
+            ${i < 3 ? `<div class="rm-line ${i < fase ? 'done' : ''}"></div>` : ''}
+          `).join('')}
+        </div>
+        ${fases.map((f, i) => `
+          <div style="display:flex;gap:14px;padding:16px;background:${i === fase ? 'rgba(26,158,114,.08)' : 'rgba(4,9,6,.5)'};border:.5px solid ${i === fase ? 'rgba(26,158,114,.25)' : 'rgba(255,255,255,.05)'};border-radius:11px;margin-bottom:8px;transition:all .2s">
+            <div style="width:32px;height:32px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:13px;background:${i < fase ? 'rgba(26,158,114,.15)' : i === fase ? 'var(--green-dim)' : 'rgba(255,255,255,.04)'};color:${i <= fase ? 'var(--green)' : 'var(--text-3)'}">
+              ${i < fase ? '✓' : faseIcons[i]}
+            </div>
+            <div style="flex:1">
+              <div style="font-size:13px;font-weight:500;color:${i === fase ? 'var(--text-1)' : i < fase ? 'var(--text-2)' : 'var(--text-3)'};margin-bottom:4px">${f} ${i === fase ? '<span style="font-size:10px;color:var(--green);background:rgba(26,158,114,.12);border:.5px solid rgba(26,158,114,.22);border-radius:4px;padding:1px 6px;margin-left:4px">Aquí estás</span>' : ''}</div>
+              <div style="font-size:12px;color:var(--text-3);font-weight:300;line-height:1.6">${descripciones[i]}</div>
+              ${i === fase ? `<div style="margin-top:10px;font-size:12px;color:var(--green);font-weight:400">→ ${siguientes[i]}</div>` : ''}
+            </div>
+          </div>`).join('')}
+      </div>
+      <div class="card fi d1" style="text-align:center;padding:20px">
+        <p style="font-size:13px;color:var(--text-2);font-weight:300;line-height:1.7;margin-bottom:14px">Cada conversación te hace avanzar en tu roadmap.<br>Llevas <strong style="color:var(--text-1)">${ud.count}</strong> mensajes en tu proceso.</p>
+        <button onclick="retomar()" style="display:inline-flex;align-items:center;gap:8px;background:var(--green-dim);color:#fff;padding:10px 22px;border-radius:9px;font-size:13px;font-weight:500;cursor:pointer;border:none;font-family:'DM Sans',sans-serif">✦ Continuar conversación →</button>
+      </div>`);
+  }
+
+  function showSeguimiento(e) {
+    e?.preventDefault();
+    const diasSinConv = ud.userMsgs?.length
+      ? Math.floor((Date.now() - new Date(ud.userMsgs[0].created_at).getTime()) / (1000*60*60*24))
+      : null;
+
+    showSeccion('nav-seg', 'Seguimiento semanal', 'Tu progreso semana a semana.', `
+      <div class="card fi">
+        <div class="c-title"><span class="c-title-dot">📅</span> Estado actual</div>
+        ${diasSinConv === null ? `
+          <p style="font-size:13px;color:var(--text-2);font-weight:300">Aún no hay conversaciones registradas.</p>
+        ` : diasSinConv === 0 ? `
+          <div style="display:flex;align-items:center;gap:12px;padding:16px;background:rgba(26,158,114,.08);border:.5px solid rgba(26,158,114,.2);border-radius:11px">
+            <span style="font-size:24px">🌟</span>
+            <div>
+              <p style="font-size:13px;font-weight:500;color:var(--text-1);margin-bottom:3px">Conversaste hoy</p>
+              <p style="font-size:12px;color:var(--text-2);font-weight:300">Excelente. Mantener el ritmo es clave para tu reinvención.</p>
+            </div>
+          </div>
+        ` : diasSinConv <= 3 ? `
+          <div style="display:flex;align-items:center;gap:12px;padding:16px;background:rgba(26,158,114,.05);border:.5px solid rgba(26,158,114,.15);border-radius:11px">
+            <span style="font-size:24px">🌱</span>
+            <div>
+              <p style="font-size:13px;font-weight:500;color:var(--text-1);margin-bottom:3px">Hace ${diasSinConv} días</p>
+              <p style="font-size:12px;color:var(--text-2);font-weight:300">Vas bien. ¿Hay algo nuevo que quieras explorar hoy?</p>
+            </div>
+          </div>
+        ` : `
+          <div style="display:flex;align-items:center;gap:12px;padding:16px;background:rgba(26,158,114,.04);border:.5px solid var(--border-faint);border-radius:11px">
+            <span style="font-size:24px">💭</span>
+            <div>
+              <p style="font-size:13px;font-weight:500;color:var(--text-1);margin-bottom:3px">Han pasado ${diasSinConv} días</p>
+              <p style="font-size:12px;color:var(--text-2);font-weight:300">¿Cómo te sientes respecto a tu proceso? Retomemos.</p>
+            </div>
+          </div>
+        `}
+        <button onclick="retomar()" style="display:inline-flex;align-items:center;gap:8px;background:var(--green-dim);color:#fff;padding:10px 22px;border-radius:9px;font-size:13px;font-weight:500;cursor:pointer;border:none;font-family:'DM Sans',sans-serif;margin-top:14px">Retomar conversación →</button>
+      </div>
+      <div class="card fi d1">
+        <div class="c-title"><span class="c-title-dot">✦</span> Conversaciones recientes</div>
+        <div class="conv-list">
+          ${ud.userMsgs?.length ? ud.userMsgs.slice(0,6).map((m,i) => `
+            <div class="conv-row fi d${i%4+1}" onclick="retomar()">
+              <div class="conv-dot"></div>
+              <span class="conv-name">${trunc(clean(m.mensaje),30)}</span>
+              <span class="conv-prev">Hablamos sobre esto en tu proceso...</span>
+              <span class="conv-date">${fdate(m.created_at)}</span>
+              <span class="conv-arr">›</span>
+            </div>`).join('') : '<p style="font-size:13px;color:var(--text-3);padding:12px">No hay conversaciones aún.</p>'}
+        </div>
+      </div>`);
+  }
+
+  function showCalendario(e) {
+    e?.preventDefault();
+    const hoy = new Date();
+    const mes = hoy.toLocaleDateString('es-CL', { month: 'long', year: 'numeric' });
+    const diasMes = new Date(hoy.getFullYear(), hoy.getMonth()+1, 0).getDate();
+    const primerDia = new Date(hoy.getFullYear(), hoy.getMonth(), 1).getDay();
+    const diasConConv = new Set(ud.userMsgs?.map(m => new Date(m.created_at).getDate()) || []);
+
+    let calHTML = '<div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-top:8px">';
+    ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'].forEach(d => {
+      calHTML += `<div style="text-align:center;font-size:10px;color:var(--text-3);padding:4px;font-weight:500">${d}</div>`;
+    });
+    for (let i = 0; i < primerDia; i++) calHTML += '<div></div>';
+    for (let d = 1; d <= diasMes; d++) {
+      const esHoy = d === hoy.getDate();
+      const tieneConv = diasConConv.has(d);
+      calHTML += `<div style="text-align:center;padding:7px 4px;border-radius:8px;font-size:12px;font-weight:${esHoy?'600':'300'};
+        background:${esHoy ? 'var(--green-dim)' : tieneConv ? 'rgba(26,158,114,.12)' : 'transparent'};
+        color:${esHoy ? '#fff' : tieneConv ? 'var(--green)' : 'var(--text-2)'};
+        border:.5px solid ${esHoy ? 'transparent' : tieneConv ? 'rgba(26,158,114,.2)' : 'transparent'}">${d}</div>`;
+    }
+    calHTML += '</div>';
+
+    showSeccion('nav-cal', 'Calendario', 'Tus días de conversación este mes.', `
+      <div class="card fi">
+        <div class="c-title"><span class="c-title-dot">🗓</span> ${mes.charAt(0).toUpperCase() + mes.slice(1)}</div>
+        ${calHTML}
+        <div style="display:flex;align-items:center;gap:16px;margin-top:16px;padding-top:14px;border-top:.5px solid var(--border-faint)">
+          <div style="display:flex;align-items:center;gap:7px;font-size:12px;color:var(--text-2)"><div style="width:12px;height:12px;border-radius:3px;background:var(--green-dim)"></div> Hoy</div>
+          <div style="display:flex;align-items:center;gap:7px;font-size:12px;color:var(--text-2)"><div style="width:12px;height:12px;border-radius:3px;background:rgba(26,158,114,.12);border:.5px solid rgba(26,158,114,.2)"></div> Conversaste</div>
+        </div>
+      </div>
+      <div class="card fi d1" style="text-align:center;padding:20px">
+        <p style="font-size:13px;color:var(--text-2);font-weight:300;line-height:1.7;margin-bottom:14px">Llevas <strong style="color:var(--text-1)">${diasConConv.size}</strong> días con conversaciones este mes.</p>
+        <button onclick="retomar()" style="display:inline-flex;align-items:center;gap:8px;background:var(--green-dim);color:#fff;padding:10px 22px;border-radius:9px;font-size:13px;font-weight:500;cursor:pointer;border:none;font-family:'DM Sans',sans-serif">✦ Conversar hoy →</button>
+      </div>`);
+  }
+
+  async function showInsights(e) {
+    e?.preventDefault();
+    showSeccion('nav-ins', 'Insights', 'Lo que RenaIA ha detectado sobre tu proceso.', `
+      <div class="card fi" id="insights-full-card">
+        <div class="c-title"><span class="c-title-dot">✦</span> Insights personalizados</div>
+        <div class="insight-grid">
+          <div class="insight-card"><div class="insight-icon">◌</div><p class="insight-txt" style="color:var(--text-3)">Generando insights...</p></div>
+          <div class="insight-card"><div class="insight-icon">◌</div><p class="insight-txt" style="color:var(--text-3)">Analizando tus conversaciones...</p></div>
+          <div class="insight-card"><div class="insight-icon">◌</div><p class="insight-txt" style="color:var(--text-3)">Un momento...</p></div>
+        </div>
+      </div>`);
+
+    try {
+      const res = await fetch('/generar-insights', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: cu.id })
+      });
+      const { insights } = await res.json();
+      if (insights?.length) {
+        const icons = ['◎', '✦', '↗'];
+        document.getElementById('insights-full-card').innerHTML = `
+          <div class="c-title"><span class="c-title-dot">✦</span> Insights personalizados</div>
+          <p style="font-size:12px;color:var(--text-3);margin-bottom:16px;font-weight:300">Basados en tus conversaciones — se actualizan cada 24h.</p>
+          <div class="insight-grid">
+            ${insights.slice(0,3).map((ins, i) => `
+              <div class="insight-card">
+                <div class="insight-icon">${icons[i]}</div>
+                <p class="insight-txt">"${clean(ins)}"</p>
+              </div>`).join('')}
+          </div>`;
+      }
+    } catch(err) { console.error(err); }
+  }
+
+  async function signOut(){await sb.auth.signOut();window.location.href='/';}
     try {
       const { data: { session } } = await sb.auth.getSession();
       const res = await fetch('/crear-checkout', {
