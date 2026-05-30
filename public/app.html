@@ -419,7 +419,7 @@
       </div>`;
   }
 
-  function renderFree() {
+  async function renderFree() {
     document.getElementById('tb-title').innerHTML = `Hola, <span>${uname}</span>. 👋`;
     document.getElementById('tb-sub').textContent = 'Este es tu espacio para pensar, aclararte y avanzar. RenaIA está acá para acompañarte.';
 
@@ -433,28 +433,13 @@
       document.getElementById('sb-quote-txt').textContent = '"' + trunc(clean(ud.aiMsgs[0].mensaje), 80) + '"';
     }
 
-    // Proceso actual
-    const situ = ud.mem?.summary
-      ? trunc(clean(ud.mem.summary.split('\n')[0]), 110)
-      : ud.userMsgs?.length
-        ? 'Estás explorando tu situación profesional y buscando claridad sobre tus próximos pasos.'
-        : 'Inicia una conversación para descubrir tu situación actual.';
-
-    const ultimo = ud.aiMsgs?.length
-      ? trunc(clean(ud.aiMsgs[0].mensaje), 110)
-      : 'Todavía no hemos tenido suficientes conversaciones para identificar patrones.';
-
-    const proximo = ud.mem?.goals
-      ? trunc(clean(ud.mem.goals), 110)
-      : 'Continúa conversando para definir tu próximo paso concreto.';
-
     // Conv rows
     const convRows = ud.userMsgs?.length
       ? ud.userMsgs.slice(0,4).map((m,i) => `
           <div class="conv-row fi d${i+1}" onclick="retomar()">
             <div class="conv-dot"></div>
             <span class="conv-name">${trunc(clean(m.mensaje),30)}</span>
-            <span class="conv-prev">${trunc(clean(m.mensaje),55)}</span>
+            <span class="conv-prev">Hablamos sobre esto en tu proceso...</span>
             <span class="conv-date">${fdate(m.created_at)}</span>
             <span class="conv-arr">›</span>
           </div>`).join('')
@@ -475,7 +460,46 @@
       reflHTML = `<div class="refl-empty">📖 Las reflexiones de RenaIA aparecerán aquí después de conversar.</div>`;
     }
 
+    // Render con proceso placeholder
     document.getElementById('feed').innerHTML = `
+      <div id="proceso-card"><div class="card fi"><div class="c-title"><span class="c-title-dot">✦</span> Tu proceso actual</div><div style="padding:20px 0;text-align:center;font-size:13px;color:var(--text-3)">Analizando tu proceso...</div></div></div>
+      <div class="card fi d2">
+        <div class="c-title">Conversaciones recientes</div>
+        <div class="conv-list">${convRows}</div>
+        <button class="see-all" onclick="showConversaciones(event)">Ver todas las conversaciones →</button>
+      </div>
+      <div class="card fi d3">
+        <div class="c-title">Reflexiones recientes</div>
+        ${reflHTML}
+        <button class="see-all" onclick="showReflexiones(event)">Ver todas mis reflexiones →</button>
+      </div>`;
+
+    // Cargar proceso en background
+    const proc = await cargarProceso();
+    const procEl = document.getElementById('proceso-card');
+    if (procEl) procEl.innerHTML = renderProceso(proc);
+  }
+
+  async function cargarProceso() {
+    try {
+      const res = await fetch('/generar-proceso', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: cu.id })
+      });
+      const data = await res.json();
+      return data;
+    } catch(err) {
+      console.error('Proceso error:', err);
+      return null;
+    }
+  }
+
+  function renderProceso(proc) {
+    const situ = proc?.situacion_actual || 'Estás explorando tu situación profesional y buscando claridad sobre tus próximos pasos.';
+    const ultimo = proc?.ultimo_descubrimiento || 'Continúa conversando para descubrir más sobre tu proceso.';
+    const proximo = proc?.proximo_paso || 'Continúa conversando para definir tu próximo paso concreto.';
+    return `
       <div class="card fi">
         <div class="c-title"><span class="c-title-dot">✦</span> Tu proceso actual</div>
         <div class="proc-grid">
@@ -497,18 +521,6 @@
             <div class="proc-actions"><button class="proc-btn solid" onclick="retomar()">Continuar conversación →</button></div>
           </div>
         </div>
-      </div>
-
-      <div class="card fi d2">
-        <div class="c-title">Conversaciones recientes</div>
-        <div class="conv-list">${convRows}</div>
-        <button class="see-all" onclick="showConversaciones(event)">Ver todas las conversaciones →</button>
-      </div>
-
-      <div class="card fi d3">
-        <div class="c-title">Reflexiones recientes</div>
-        ${reflHTML}
-        <button class="see-all" onclick="showReflexiones(event)">Ver todas mis reflexiones →</button>
       </div>`;
   }
 
@@ -579,6 +591,7 @@
     // Insights placeholder mientras cargan
     document.getElementById('feed').innerHTML = `
       ${checkinHTML}
+      <div id="proceso-card-pro"><div class="card fi"><div class="c-title"><span class="c-title-dot">✦</span> Tu proceso actual</div><div style="padding:20px 0;text-align:center;font-size:13px;color:var(--text-3)">Analizando tu proceso...</div></div></div>
       <div class="card fi">
         <div class="c-title"><span class="c-title-dot">◎</span> Tu roadmap de reinvención</div>
         ${roadmapHTML}
@@ -607,29 +620,32 @@
         <button class="see-all" onclick="showConversaciones(event)">Ver todas las conversaciones →</button>
       </div>`;
 
-    // Cargar insights en background
-    try {
-      const res = await fetch('/generar-insights', {
+    // Cargar proceso e insights en background (paralelo)
+    Promise.all([
+      cargarProceso().then(proc => {
+        const el = document.getElementById('proceso-card-pro');
+        if (el) el.innerHTML = renderProceso(proc);
+      }),
+      fetch('/generar-insights', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId: cu.id })
-      });
-      const { insights } = await res.json();
-      if (insights?.length) {
-        const icons = ['◎', '✦', '↗'];
-        document.getElementById('insights-card').innerHTML = `
-          <div class="c-title"><span class="c-title-dot">✦</span> Insights personalizados <span class="pro-badge-inline">PRO</span></div>
-          <div class="insight-grid">
-            ${insights.slice(0,3).map((ins, i) => `
-              <div class="insight-card">
-                <div class="insight-icon">${icons[i]}</div>
-                <p class="insight-txt">"${clean(ins)}"</p>
-              </div>`).join('')}
-          </div>`;
-      }
-    } catch(err) {
-      console.error('Insights fetch error:', err);
-    }
+      }).then(r => r.json()).then(({ insights }) => {
+        if (insights?.length) {
+          const icons = ['◎', '✦', '↗'];
+          const el = document.getElementById('insights-card');
+          if (el) el.innerHTML = `
+            <div class="c-title"><span class="c-title-dot">✦</span> Insights personalizados <span class="pro-badge-inline">PRO</span></div>
+            <div class="insight-grid">
+              ${insights.slice(0,3).map((ins, i) => `
+                <div class="insight-card">
+                  <div class="insight-icon">${icons[i]}</div>
+                  <p class="insight-txt">"${clean(ins)}"</p>
+                </div>`).join('')}
+            </div>`;
+        }
+      })
+    ]).catch(err => console.error('Background load error:', err));
   }
 
   function renderRP() {

@@ -113,7 +113,96 @@ app.post("/crear-checkout", async (req, res) => {
   }
 });
 
-// ── GENERAR INSIGHTS PRO ──
+// ── GENERAR PROCESO ACTUAL ──
+app.post("/generar-proceso", async (req, res) => {
+  const { userId } = req.body;
+  if (!userId) return res.status(400).json({ error: "Falta userId" });
+
+  // Verificar cache 24h
+  const { data: mem } = await supabase
+    .from("memoria_usuario")
+    .select("situacion_actual, ultimo_descubrimiento, proximo_paso, proceso_updated_at")
+    .eq("user_id", userId)
+    .maybeSingle();
+
+  if (mem?.situacion_actual && mem?.proceso_updated_at) {
+    const age = Date.now() - new Date(mem.proceso_updated_at).getTime();
+    if (age < 24 * 60 * 60 * 1000) {
+      return res.json({
+        situacion_actual: mem.situacion_actual,
+        ultimo_descubrimiento: mem.ultimo_descubrimiento,
+        proximo_paso: mem.proximo_paso,
+        cached: true
+      });
+    }
+  }
+
+  // Obtener últimas conversaciones
+  const { data: convs } = await supabase
+    .from("conversaciones")
+    .select("rol, mensaje")
+    .eq("usuario_id", userId)
+    .order("created_at", { ascending: false })
+    .limit(30);
+
+  if (!convs?.length) {
+    return res.json({
+      situacion_actual: "Inicia una conversación para descubrir tu situación actual.",
+      ultimo_descubrimiento: "Todavía no hemos tenido suficientes conversaciones.",
+      proximo_paso: "Comienza hablando sobre tu situación profesional actual.",
+      cached: false
+    });
+  }
+
+  const resumen = convs
+    .filter(m => m.mensaje?.length > 5)
+    .map(m => `${m.rol === "user" ? "Usuario" : "RenaIA"}: ${m.mensaje.slice(0, 300)}`)
+    .join("\n");
+
+  const prompt = `Analiza estas conversaciones de reinvención profesional y genera un resumen en 3 partes. Sé específico, personal y conciso. Usa máximo 2 oraciones por campo. Escribe en segunda persona dirigido al usuario.
+
+Conversaciones:
+${resumen}
+
+Responde SOLO con un JSON con exactamente estas 3 claves, sin markdown ni texto adicional:
+{
+  "situacion_actual": "descripción de dónde está la persona hoy profesionalmente",
+  "ultimo_descubrimiento": "qué aprendimos o descubrimos en las conversaciones recientes",
+  "proximo_paso": "acción concreta y específica que debería tomar próximamente"
+}`;
+
+  try {
+    const respuesta = await llamarGroq(
+      [{ role: "user", content: prompt }],
+      "Eres un coach de reinvención profesional experto. Generas resúmenes concisos, específicos y humanos del proceso de una persona basándote en sus conversaciones reales. Solo respondes con JSON válido."
+    );
+
+    const clean = respuesta.replace(/```json|```/g, "").trim();
+    const proceso = JSON.parse(clean);
+
+    // Guardar en cache
+    await supabase.from("memoria_usuario").upsert(
+      {
+        user_id: userId,
+        situacion_actual: proceso.situacion_actual,
+        ultimo_descubrimiento: proceso.ultimo_descubrimiento,
+        proximo_paso: proceso.proximo_paso,
+        proceso_updated_at: new Date().toISOString()
+      },
+      { onConflict: "user_id" }
+    );
+
+    res.json({ ...proceso, cached: false });
+  } catch (err) {
+    console.error("Proceso error:", err);
+    res.json({
+      situacion_actual: "Estás explorando tu situación profesional y buscando claridad.",
+      ultimo_descubrimiento: "Cada conversación nos acerca más a entender tu camino.",
+      proximo_paso: "Continúa conversando para definir tu próximo paso concreto.",
+      cached: false
+    });
+  }
+});
 app.post("/generar-insights", async (req, res) => {
   const { userId } = req.body;
   if (!userId) return res.status(400).json({ error: "Falta userId" });
