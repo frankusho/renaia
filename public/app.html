@@ -991,7 +991,7 @@
       </div>`);
   }
 
-   async function showInsights(e) {
+  async function showInsights(e) {
     e?.preventDefault();
     showSeccion('nav-ins', 'Insights', 'Lo que RenaIA ha detectado sobre tu proceso.', `
       <div class="card fi" id="insights-full-card">
@@ -1027,6 +1027,8 @@
   }
 
   async function signOut(){await sb.auth.signOut();window.location.href='/';}
+
+  async function activarPro() {
     try {
       const { data: { session } } = await sb.auth.getSession();
       const res = await fetch('/crear-checkout', {
