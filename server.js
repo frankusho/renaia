@@ -12,7 +12,6 @@ const supabase = createClient(
   process.env.SUPABASE_ANON_KEY
 );
 
-// Webhook — raw body ANTES de express.json()
 app.post("/webhook", express.raw({ type: "application/json" }), async (req, res) => {
   const sig = req.headers["stripe-signature"];
   let event;
@@ -328,7 +327,6 @@ app.post("/api/cartografo", async (req, res) => {
 
   console.log("CARTOGRAFO: iniciando para userId:", userId);
 
-  // Asegurar que el usuario existe en tabla usuarios antes del upsert
   const { data: usuarioExiste } = await supabase
     .from("usuarios")
     .select("id")
@@ -340,8 +338,7 @@ app.post("/api/cartografo", async (req, res) => {
     await supabase.from("usuarios").insert({ id: userId });
   }
 
-  // Upsert resultado del cartógrafo
-  const { data: upsertData, error: upsertError } = await supabase
+  const { error: upsertError } = await supabase
     .from("cartografo_resultados")
     .upsert(
       {
@@ -365,12 +362,10 @@ app.post("/api/cartografo", async (req, res) => {
 
   if (upsertError) {
     console.error("CARTOGRAFO upsert error:", JSON.stringify(upsertError));
-    // No bloqueamos — intentamos generar el párrafo igual
   } else {
     console.log("CARTOGRAFO: upsert exitoso");
   }
 
-  // Actualizar tabla usuarios
   const { error: updateError } = await supabase
     .from("usuarios")
     .update({ roadmap_fase: 1, cartografo_completado: true })
@@ -380,10 +375,8 @@ app.post("/api/cartografo", async (req, res) => {
     console.error("CARTOGRAFO update usuarios error:", JSON.stringify(updateError));
   }
 
-  // Generar párrafo con Groq
   const parrafo = await generarParrafoCartografo(scores, fase, desafio, answers);
 
-  // Guardar párrafo si existe
   if (parrafo) {
     const { error: parrafoError } = await supabase
       .from("cartografo_resultados")
@@ -429,35 +422,39 @@ async function generarParrafoCartografo(scores, fase, desafio, answers) {
     '95': 'más de 1 año',
   }[String(tiempo)] || null;
 
-  const prompt = `Eres el Cartógrafo de RenaIA. Tu función es diagnosticar dónde se encuentra una persona en su proceso de reinvención profesional.
+  const prompt = `Eres el Cartógrafo de RenaIA. Observas a personas en procesos de reinvención profesional y describes lo que ves, como alguien que genuinamente las ha escuchado.
 
-Datos del diagnóstico:
+Datos de esta persona:
+- Situación: ${situacionTexto}
+${tiempoTexto ? `- Lleva: ${tiempoTexto} en esta situación` : ''}
 - Fase detectada: ${fase}
 - Claridad: ${scores.claridad}/100
 - Confianza: ${scores.confianza}/100
 - Estado emocional: ${scores.emocional}/100
-- Urgencia: ${scores.urgencia}/100
-- Situación: ${situacionTexto}
-${tiempoTexto ? `- Tiempo en esta situación: ${tiempoTexto}` : ''}
-- Principal desafío: ${desafio}
-${scores.flags?.tension_emocional ? '- Tensión emocional: tiene emociones contrapuestas simultáneamente' : ''}
-${scores.flags?.presion_critica ? '- PRESIÓN CRÍTICA: situación económica urgente' : ''}
-${contexto ? `- Lo que la persona agregó: "${contexto}"` : ''}
+- Urgencia financiera: ${scores.urgencia}/100
+- Principal bloqueo: ${desafio}
+${scores.flags?.tension_emocional ? '- Tiene emociones contrapuestas: esperanza y miedo/frustración al mismo tiempo' : ''}
+${scores.flags?.presion_critica ? '- Presión económica crítica: necesita resultados pronto' : ''}
+${contexto ? `- Agregó esto al final: "${contexto}"` : ''}
 
-Escribe UN SOLO PÁRRAFO de 3 a 5 oraciones en segunda persona (tú) que:
-1. Describa con precisión dónde está esta persona hoy, usando sus datos reales
-2. Identifique la tensión central de su momento
-3. Cierre con algo genuinamente positivo que sea verdad, no motivacional vacío
+Escribe UN SOLO PÁRRAFO de 3 a 5 oraciones comenzando con "Lo que más me llama la atención es..." o "Lo que aparece en tu proceso es..." o una frase similar que comunique observación directa, no análisis.
 
-Tono: humano, directo, sin jerga de coach.
-NO uses frases como "estás en el camino correcto" o "todo va a estar bien".
-NO des consejos ni próximos pasos.
-Solo el párrafo. Sin comillas, sin encabezado.`;
+Reglas estrictas:
+- Escribe en segunda persona (tú), como si le hablaras directamente
+- NUNCA menciones porcentajes ni números de scores
+- NUNCA uses frases como "estás en el camino correcto", "todo va a estar bien", "es normal sentirse así"
+- NUNCA des consejos ni próximos pasos
+- NUNCA suenes como terapeuta ni como coach motivacional
+- SÍ puedes nombrar la tensión real que vive esta persona
+- SÍ puedes cerrar con algo genuinamente positivo que sea verdad, no consuelo vacío
+- El tono debe sentirse como alguien que te vio de verdad, no como un reporte
+
+Solo el párrafo. Sin comillas, sin encabezado, sin explicación.`;
 
   try {
     const respuesta = await llamarGroq(
       [{ role: "user", content: prompt }],
-      "Eres el Cartógrafo de RenaIA. Generas diagnósticos precisos y humanos. Escribes solo lo que se te pide."
+      "Eres el Cartógrafo de RenaIA. Observas y describes con precisión humana. Nunca analizas con números. Escribes solo lo que se te pide, nada más."
     );
     return respuesta.trim();
   } catch(e) {

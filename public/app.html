@@ -21,37 +21,17 @@
     @keyframes bounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-4px)}}
     .fi{animation:fadeInUp .45s ease forwards;opacity:0}
     .d1{animation-delay:.07s}.d2{animation-delay:.14s}.d3{animation-delay:.21s}.d4{animation-delay:.28s}
-
-    /* ═══════════════ SIDEBAR ═══════════════ */
-    .sidebar{
-      background:var(--bg2);border-right:.5px solid var(--border-faint);
-      display:flex;flex-direction:column;padding:20px 12px;overflow-y:auto;
-    }
+    .sidebar{background:var(--bg2);border-right:.5px solid var(--border-faint);display:flex;flex-direction:column;padding:20px 12px;overflow-y:auto;}
     .sidebar::-webkit-scrollbar{width:0}
-
     .sb-brand{display:flex;align-items:center;gap:9px;text-decoration:none;margin-bottom:20px;padding:0 4px}
     .sb-brand-name{font-size:19px;font-weight:600;color:var(--text-1);letter-spacing:-.5px;line-height:1}
     .sb-brand-name span{color:var(--green)}
     .sb-brand-tagline{font-size:10px;color:var(--text-3);font-weight:300;margin-top:2px}
-
-    .sb-new{
-      display:flex;align-items:center;justify-content:space-between;
-      background:var(--green-dim);color:#fff;padding:10px 14px;border-radius:10px;
-      font-size:13px;font-weight:500;cursor:pointer;border:none;
-      font-family:'DM Sans',sans-serif;width:100%;margin-bottom:18px;
-      box-shadow:0 4px 16px rgba(15,122,85,.28);transition:background .2s;
-    }
+    .sb-new{display:flex;align-items:center;justify-content:space-between;background:var(--green-dim);color:#fff;padding:10px 14px;border-radius:10px;font-size:13px;font-weight:500;cursor:pointer;border:none;font-family:'DM Sans',sans-serif;width:100%;margin-bottom:18px;box-shadow:0 4px 16px rgba(15,122,85,.28);transition:background .2s;}
     .sb-new:hover{background:var(--green-hover)}
     .sb-new-left{display:flex;align-items:center;gap:7px}
-
     .sb-section{font-size:9px;font-weight:600;letter-spacing:2.8px;text-transform:uppercase;color:var(--text-3);padding:14px 8px 5px;opacity:.9}
-
-    .sb-item{
-      display:flex;align-items:center;gap:9px;padding:8px 10px;
-      border-radius:9px;cursor:pointer;font-size:13px;color:var(--text-2);
-      font-weight:400;transition:all .18s;text-decoration:none;
-      border:.5px solid transparent;margin-bottom:1px;
-    }
+    .sb-item{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:9px;cursor:pointer;font-size:13px;color:var(--text-2);font-weight:400;transition:all .18s;text-decoration:none;border:.5px solid transparent;margin-bottom:1px;}
     .sb-item:hover{background:rgba(26,158,114,.07);color:#a8c8b8}
     .sb-item.active{background:rgba(26,158,114,.14);border-color:rgba(26,158,114,.2);color:var(--text-1);font-weight:500}
     .sb-item.locked{opacity:.38;pointer-events:none}
@@ -59,61 +39,44 @@
     .sb-item-end{display:flex;align-items:center;gap:4px;margin-left:auto}
     .sb-pro{font-size:9px;font-weight:600;color:var(--green);background:rgba(26,158,114,.12);border:.5px solid rgba(26,158,114,.22);border-radius:4px;padding:1px 5px;letter-spacing:.3px}
     .sb-lockico{font-size:10px;color:var(--text-3)}
-
     .sb-footer{margin-top:auto;padding-top:14px;border-top:.5px solid var(--border-faint);display:flex;flex-direction:column;gap:10px}
     .sb-user{display:flex;align-items:center;gap:9px;padding:6px 4px;border-radius:9px;cursor:pointer;transition:background .2s}
     .sb-user:hover{background:rgba(255,255,255,.03)}
     .sb-av{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#061a0e,var(--green));display:flex;align-items:center;justify-content:center;font-size:13px;color:#fff;font-weight:600;flex-shrink:0}
     .sb-uname{font-size:13px;font-weight:500;color:var(--text-1)}
     .sb-uplan{font-size:10px;color:var(--text-3);font-weight:300}
-
     .sb-prog{padding:0 4px}
     .sb-prog-top{display:flex;justify-content:space-between;font-size:11px;color:var(--text-3);margin-bottom:5px}
     .sb-prog-bar{height:3px;background:rgba(255,255,255,.07);border-radius:99px;overflow:hidden}
     .sb-prog-fill{height:100%;background:linear-gradient(90deg,var(--green-dim),var(--green));border-radius:99px;transition:width 1s ease}
-
     .sb-quote{background:rgba(4,10,6,.95);border:.5px solid rgba(26,158,114,.18);border-radius:11px;padding:14px 15px}
     .sb-quote-icon{color:var(--green);font-size:14px;display:block;margin-bottom:7px}
     .sb-quote-txt{font-size:11.5px;color:#7a9888;font-weight:300;line-height:1.7;font-style:italic}
-
     .sb-btns{display:flex;gap:5px;padding:0 4px}
     .sb-btn{width:28px;height:28px;border-radius:7px;background:transparent;border:.5px solid var(--border-faint);display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--text-3);cursor:pointer;transition:all .18s}
     .sb-btn:hover{border-color:var(--border);color:var(--text-2)}
-
-    /* ═══════════════ MAIN ═══════════════ */
     .main{display:flex;flex-direction:column;overflow:hidden;background:var(--bg)}
-
-    .topbar{
-      padding:20px 28px;display:flex;align-items:flex-start;justify-content:space-between;
-      border-bottom:.5px solid var(--border-faint);flex-shrink:0;
-      background:rgba(5,9,6,.96);backdrop-filter:blur(12px);
-    }
+    .topbar{padding:20px 28px;display:flex;align-items:flex-start;justify-content:space-between;border-bottom:.5px solid var(--border-faint);flex-shrink:0;background:rgba(5,9,6,.96);backdrop-filter:blur(12px);}
     .tb-title{font-family:'Playfair Display',serif;font-size:33px;font-weight:500;color:var(--text-1);letter-spacing:-.7px;line-height:1.1}
     .tb-title span{color:var(--green)}
     .tb-sub{font-size:13px;color:var(--text-2);font-weight:300;margin-top:5px;line-height:1.55;max-width:440px}
     .agent-pill{display:flex;align-items:center;gap:8px;background:rgba(7,16,10,.9);border:.5px solid var(--border);border-radius:10px;padding:9px 14px;cursor:pointer;font-size:13px;color:var(--text-1);transition:all .25s;flex-shrink:0;font-weight:400}
     .agent-pill:hover{border-color:rgba(26,158,114,.32)}
     .agent-pill-dot{color:var(--green);font-size:13px}
-
-    /* HOME */
     #home-view{display:flex;flex-direction:column;flex:1;overflow:hidden}
     #home-view.hidden{display:none}
     .feed{flex:1;overflow-y:auto;padding:22px 28px;display:flex;flex-direction:column;gap:16px}
     .feed::-webkit-scrollbar{width:0}
-
-    /* CARD BASE */
     .card{background:var(--bg3);border:.5px solid var(--border-faint);border-radius:14px;padding:22px 24px;transition:border-color .25s}
     .card:hover{border-color:rgba(26,158,114,.2)}
     .c-title{font-size:15px;font-weight:500;color:var(--text-1);margin-bottom:18px;display:flex;align-items:center;gap:8px}
     .c-title-dot{color:var(--green);font-size:14px}
-
-    /* PROCESO CARD */
     .proc-grid{display:grid;grid-template-columns:1fr 1px 1fr 1px 1fr;gap:0;min-height:160px}
     .proc-divider{background:rgba(26,158,114,.16);align-self:stretch;width:1px}
     .proc-col{padding:0 20px;display:flex;flex-direction:column;gap:10px}
     .proc-col:first-child{padding-left:0}
     .proc-col:last-child{padding-right:0}
-    .proc-label{font-size:11px;font-weight:500;color:var(--text-2);letter-spacing:.4px;text-transform:uppercase;font-size:10.5px}
+    .proc-label{font-size:10.5px;font-weight:500;color:var(--text-2);letter-spacing:.4px;text-transform:uppercase}
     .proc-text{font-size:13px;color:var(--text-2);font-weight:300;line-height:1.7;flex:1}
     .proc-text.green{color:var(--green);font-weight:400}
     .proc-actions{margin-top:4px}
@@ -122,16 +85,8 @@
     .proc-btn.ghost:hover{background:rgba(255,255,255,.08);color:var(--text-1)}
     .proc-btn.solid{background:var(--green-dim);color:#fff;box-shadow:0 4px 14px rgba(15,122,85,.24)}
     .proc-btn.solid:hover{background:var(--green-hover)}
-
-    /* CONV LIST */
     .conv-list{display:flex;flex-direction:column;gap:6px}
-    .conv-row{
-      display:grid;grid-template-columns:12px 1fr 1.4fr auto 16px;
-      align-items:center;gap:12px;
-      padding:11px 13px;background:rgba(4,9,6,.75);
-      border:.5px solid var(--border-faint);border-radius:10px;
-      cursor:pointer;transition:all .2s;
-    }
+    .conv-row{display:grid;grid-template-columns:12px 1fr 1.4fr auto 16px;align-items:center;gap:12px;padding:11px 13px;background:rgba(4,9,6,.75);border:.5px solid var(--border-faint);border-radius:10px;cursor:pointer;transition:all .2s;}
     .conv-row:hover{border-color:rgba(26,158,114,.22);background:rgba(6,14,9,.9)}
     .conv-dot{width:7px;height:7px;border-radius:50%;background:var(--green);opacity:.75;flex-shrink:0}
     .conv-name{font-size:13px;font-weight:500;color:var(--text-1);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -140,8 +95,6 @@
     .conv-arr{font-size:14px;color:var(--text-3);font-weight:300}
     .see-all{display:inline-flex;align-items:center;gap:5px;margin-top:10px;font-size:12px;color:var(--green);text-decoration:none;opacity:.85;transition:opacity .2s;cursor:pointer;background:none;border:none;font-family:'DM Sans',sans-serif;padding:0}
     .see-all:hover{opacity:1}
-
-    /* REFLEXIONES */
     .refl-cols{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
     .refl-card{background:rgba(4,9,6,.75);border:.5px solid var(--border-faint);border-radius:11px;padding:18px;display:flex;flex-direction:column;gap:10px;transition:border-color .2s}
     .refl-card:hover{border-color:rgba(26,158,114,.2)}
@@ -149,8 +102,6 @@
     .refl-txt{font-size:12.5px;color:var(--text-2);font-weight:300;line-height:1.7;font-style:italic;flex:1}
     .refl-date{font-size:10.5px;color:var(--text-3)}
     .refl-empty{padding:14px 16px;background:rgba(4,9,6,.5);border:.5px solid var(--border-faint);border-radius:10px;font-size:13px;color:var(--text-3);font-weight:300;display:flex;align-items:center;gap:10px}
-
-    /* INPUT */
     .input-bar{padding:14px 28px 18px;border-top:.5px solid var(--border-faint);flex-shrink:0;background:rgba(4,8,5,.97)}
     .input-inner{display:flex;align-items:center;gap:10px;background:rgba(5,12,7,.9);border:.5px solid var(--border-faint);border-radius:100px;padding:11px 13px 11px 20px;transition:border-color .25s}
     .input-inner:focus-within{border-color:rgba(26,158,114,.38)}
@@ -159,8 +110,6 @@
     .send-btn{width:36px;height:36px;border-radius:50%;background:var(--green);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:transform .18s,background .18s}
     .send-btn:hover{background:var(--green-hover);transform:scale(1.06)}
     .send-btn svg{width:14px;height:14px;fill:#fff}
-
-    /* CHAT */
     #chat-view{display:none;flex-direction:column;flex:1;overflow:hidden}
     #chat-view.active{display:flex}
     .chat-msgs{flex:1;overflow-y:auto;padding:22px 28px;display:flex;flex-direction:column;gap:14px}
@@ -177,25 +126,19 @@
     .typing{display:flex;gap:4px;padding:10px 14px;background:#091510;border:.5px solid rgba(26,158,114,.14);border-radius:14px;border-bottom-left-radius:4px}
     .typing span{width:5px;height:5px;border-radius:50%;background:var(--green);animation:bounce 1.2s infinite}
     .typing span:nth-child(2){animation-delay:.18s}.typing span:nth-child(3){animation-delay:.36s}
-
-    /* ═══════════════ RIGHT PANEL ═══════════════ */
     .rp{background:var(--bg2);border-left:.5px solid var(--border-faint);display:flex;flex-direction:column;overflow-y:auto;padding:20px 16px;gap:14px}
     .rp::-webkit-scrollbar{width:0}
-
     .rp-card{background:var(--bg3);border:.5px solid var(--border-faint);border-radius:13px;padding:18px;display:flex;flex-direction:column;gap:12px}
     .rp-head{display:flex;align-items:center;justify-content:space-between}
     .rp-htitle{font-size:13px;font-weight:500;color:var(--text-1);display:flex;align-items:center;gap:6px;flex-wrap:wrap}
     .rp-pro{font-size:9px;font-weight:600;color:var(--green);background:rgba(26,158,114,.12);border:.5px solid rgba(26,158,114,.22);border-radius:4px;padding:1px 5px}
     .rp-lock{font-size:12px;color:var(--text-3)}
-
     .rp-illus{width:72px;height:72px;border-radius:50%;background:rgba(26,158,114,.04);border:1.5px solid rgba(26,158,114,.14);display:flex;align-items:center;justify-content:center;margin:4px auto 8px;opacity:.75}
     .rp-illus svg{width:34px;height:34px;stroke:var(--green);fill:none;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round}
-
     .rp-locked-t{font-size:13px;font-weight:500;color:var(--text-1);text-align:center;line-height:1.3}
     .rp-locked-s{font-size:12px;color:var(--text-2);font-weight:300;line-height:1.6;text-align:center}
     .rp-cta{display:flex;align-items:center;justify-content:center;background:var(--green-dim);color:#fff;padding:9px;border-radius:9px;font-size:12px;font-weight:500;cursor:pointer;border:none;font-family:'DM Sans',sans-serif;transition:background .2s;width:100%;box-shadow:0 3px 12px rgba(15,122,85,.22)}
     .rp-cta:hover{background:var(--green-hover)}
-    /* PRO STATE */
     .roadmap-wrap{display:flex;align-items:center;gap:0;margin-bottom:8px}
     .rm-phase{display:flex;flex-direction:column;align-items:center;gap:6px;flex:1;cursor:default}
     .rm-circle{width:36px;height:36px;border-radius:50%;border:2px solid var(--border-faint);display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--text-3);background:rgba(4,9,6,.8);transition:all .3s;flex-shrink:0}
@@ -218,13 +161,54 @@
     .checkin-btn{background:var(--green-dim);color:#fff;padding:10px 18px;border-radius:9px;font-size:13px;font-weight:500;cursor:pointer;border:none;font-family:'DM Sans',sans-serif;transition:background .2s;white-space:nowrap;flex-shrink:0}
     .checkin-btn:hover{background:var(--green-hover)}
     .pro-badge-inline{font-size:9px;font-weight:600;color:var(--green);background:rgba(26,158,114,.12);border:.5px solid rgba(26,158,114,.22);border-radius:4px;padding:1px 6px;margin-left:6px;vertical-align:middle}
+
+    /* ── DIAGNÓSTICO CARD ── */
+    .diag-card{background:linear-gradient(135deg,rgba(8,22,14,.98),rgba(4,12,8,.98));border:.5px solid rgba(26,158,114,.22);border-radius:14px;padding:22px 24px;transition:border-color .25s}
+    .diag-card:hover{border-color:rgba(26,158,114,.35)}
+    .diag-fase-row{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+    .diag-fase-icon{font-size:20px;color:var(--green)}
+    .diag-fase-name{font-family:'Playfair Display',serif;font-size:19px;font-weight:500;color:var(--text-1);letter-spacing:-.3px}
+    .diag-desafio{font-size:13px;color:var(--text-2);font-weight:300;line-height:1.6;margin-bottom:14px}
+    .diag-footer{display:flex;align-items:center;justify-content:space-between}
+    .diag-fecha{font-size:11px;color:var(--text-3);font-weight:300}
+    .diag-btn{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--green);background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;transition:opacity .2s;padding:0}
+    .diag-btn:hover{opacity:.75}
+
+    /* ── MODAL DIAGNÓSTICO ── */
+    .diag-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(4px);z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px;animation:fadeIn .2s ease}
+    .diag-modal{background:#060a07;border:.5px solid rgba(26,158,114,.2);border-radius:16px;width:100%;max-width:520px;max-height:88vh;overflow-y:auto;padding:28px;display:flex;flex-direction:column}
+    .diag-modal::-webkit-scrollbar{width:0}
+    .diag-modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px}
+    .diag-modal-title{font-size:11px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:var(--green)}
+    .diag-modal-close{width:28px;height:28px;border-radius:7px;background:rgba(255,255,255,.05);border:.5px solid var(--border-faint);display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--text-3);cursor:pointer;transition:all .18s}
+    .diag-modal-close:hover{color:var(--text-1);border-color:var(--border)}
+    .diag-modal-fase{font-family:'Playfair Display',serif;font-size:26px;font-weight:500;color:var(--text-1);letter-spacing:-.4px;margin-bottom:4px}
+    .diag-modal-sub{font-size:11px;color:var(--green);font-weight:500;letter-spacing:.5px;text-transform:uppercase;margin-bottom:20px}
+    .diag-modal-section{font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--text-3);margin-bottom:10px;margin-top:20px}
+    .diag-modal-bullets{display:flex;flex-direction:column;gap:8px}
+    .diag-modal-bullet{display:flex;align-items:flex-start;gap:9px;font-size:13px;color:var(--text-2);font-weight:300;line-height:1.6}
+    .diag-modal-dot{width:4px;height:4px;border-radius:50%;flex-shrink:0;margin-top:8px}
+    .diag-modal-dot.neg{background:rgba(255,255,255,.2)}
+    .diag-modal-dot.pos{background:var(--green)}
+    .diag-modal-wow{background:rgba(26,158,114,.06);border:.5px solid rgba(26,158,114,.2);border-radius:12px;padding:18px;margin-top:20px}
+    .diag-modal-wow-title{font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--green);margin-bottom:12px;display:flex;align-items:center;gap:7px}
+    .diag-modal-wow-item{font-size:13px;color:var(--text-1);font-weight:300;line-height:1.7;padding-left:12px;border-left:1.5px solid rgba(26,158,114,.3);margin-bottom:10px}
+    .diag-modal-wow-item:last-child{margin-bottom:0}
+    .diag-modal-objetivo{background:rgba(4,9,6,.6);border:.5px solid var(--border-faint);border-radius:10px;padding:14px 16px;font-size:13px;color:var(--text-1);font-weight:400;line-height:1.6;margin-top:8px}
+    .diag-modal-parrafo{font-size:14px;color:var(--text-2);font-weight:300;line-height:1.9;font-style:italic;margin-top:4px}
+    .diag-modal-divider{height:.5px;background:var(--border-faint);margin:20px 0}
+    .diag-modal-bars{display:flex;flex-direction:column;gap:12px}
+    .diag-modal-bar-meta{display:flex;justify-content:space-between;font-size:11px;margin-bottom:5px}
+    .diag-modal-bar-name{color:var(--text-2);font-weight:400}
+    .diag-modal-bar-pct{color:var(--text-3);font-weight:300}
+    .diag-modal-bar-track{height:3px;background:rgba(255,255,255,.06);border-radius:99px;overflow:hidden}
+    .diag-modal-bar-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--green-dim),var(--green));transition:width 1.2s cubic-bezier(.4,0,.2,1)}
   </style>
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-QFV6SRFDKL"></script>
   <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-QFV6SRFDKL');</script>
 </head>
 <body>
 
-<!-- ═══ SIDEBAR ═══ -->
 <aside class="sidebar">
   <a class="sb-brand" href="index.html">
     <svg width="22" height="22" viewBox="0 0 30 30" fill="none">
@@ -237,27 +221,17 @@
       <div class="sb-brand-tagline">Tu sistema de reinvención.</div>
     </div>
   </a>
-
   <button class="sb-new" onclick="nuevaConversacion()">
     <span class="sb-new-left"><span style="font-size:16px;line-height:1">+</span> Nueva conversación</span>
     <span style="opacity:.55;font-size:12px">→</span>
   </button>
-
   <nav style="flex:1;display:flex;flex-direction:column">
-    <a class="sb-item active" id="nav-inicio" onclick="showHome(event)">
-      <span class="sb-icon">⌂</span> Inicio
-    </a>
-    <a class="sb-item" id="nav-conv" onclick="showConversaciones(event)">
-      <span class="sb-icon">💬</span> Conversaciones
-    </a>
-    <a class="sb-item" id="nav-refl" onclick="showReflexiones(event)">
-      <span class="sb-icon">📖</span> Reflexiones
-    </a>
-
+    <a class="sb-item active" id="nav-inicio" onclick="showHome(event)"><span class="sb-icon">⌂</span> Inicio</a>
+    <a class="sb-item" id="nav-conv" onclick="showConversaciones(event)"><span class="sb-icon">💬</span> Conversaciones</a>
+    <a class="sb-item" id="nav-refl" onclick="showReflexiones(event)"><span class="sb-icon">📖</span> Reflexiones</a>
     <div class="sb-section">Mi proceso</div>
-    <a class="sb-item" id="nav-prog" onclick="navClick(event,this)">
-      <span class="sb-icon">↗</span> Mi progreso
-    </a>
+    <a class="sb-item" id="nav-diag" onclick="showDiagnostico(event)"><span class="sb-icon">◎</span> Diagnóstico</a>
+    <a class="sb-item" id="nav-prog" onclick="navClick(event,this)"><span class="sb-icon">↗</span> Mi progreso</a>
     <a class="sb-item locked" id="nav-road" onclick="showRoadmap(event)">
       <span class="sb-icon">◎</span> Roadmap
       <span class="sb-item-end" id="lock-road"><span class="sb-pro">PRO</span><span class="sb-lockico">🔒</span></span>
@@ -274,12 +248,10 @@
       <span class="sb-icon">✦</span> Insights
       <span class="sb-item-end" id="lock-ins"><span class="sb-pro">PRO</span><span class="sb-lockico">🔒</span></span>
     </a>
-
     <div class="sb-section">Herramientas</div>
     <a class="sb-item" onclick="navClick(event,this)"><span class="sb-icon">◈</span> Recursos</a>
     <a class="sb-item" onclick="navClick(event,this)"><span class="sb-icon">🧠</span> Memoria</a>
   </nav>
-
   <div class="sb-footer">
     <div class="sb-user">
       <div class="sb-av" id="sb-av">F</div>
@@ -289,10 +261,7 @@
       </div>
     </div>
     <div class="sb-prog" id="sb-prog" style="display:none">
-      <div class="sb-prog-top">
-        <span>Sigue conversando para avanzar</span>
-        <span id="sb-prog-label">0/5</span>
-      </div>
+      <div class="sb-prog-top"><span>Sigue conversando para avanzar</span><span id="sb-prog-label">0/5</span></div>
       <div class="sb-prog-bar"><div class="sb-prog-fill" id="sb-prog-fill" style="width:0%"></div></div>
     </div>
     <div class="sb-quote" id="sb-quote" style="display:none">
@@ -306,7 +275,6 @@
   </div>
 </aside>
 
-<!-- ═══ MAIN ═══ -->
 <main class="main">
   <div class="topbar">
     <div>
@@ -319,35 +287,26 @@
       <span style="color:var(--text-3);font-size:11px;margin-left:2px">▾</span>
     </div>
   </div>
-
-  <!-- HOME VIEW -->
   <div id="home-view">
     <div class="feed" id="feed"></div>
     <div class="input-bar">
       <div class="input-inner">
         <input type="text" id="home-input" placeholder="Escribe lo que quieras contarme..."/>
-        <button class="send-btn" onclick="enviarDesdeHome()">
-          <svg viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg>
-        </button>
+        <button class="send-btn" onclick="enviarDesdeHome()"><svg viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg></button>
       </div>
     </div>
   </div>
-
-  <!-- CHAT VIEW -->
   <div id="chat-view">
     <div class="chat-msgs" id="chat-msgs"></div>
     <div class="input-bar">
       <div class="input-inner">
         <input type="text" id="chat-input" placeholder="Escribe aquí..."/>
-        <button class="send-btn" onclick="enviarChat()">
-          <svg viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg>
-        </button>
+        <button class="send-btn" onclick="enviarChat()"><svg viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg></button>
       </div>
     </div>
   </div>
 </main>
 
-<!-- ═══ RIGHT PANEL ═══ -->
 <aside class="rp" id="rp"></aside>
 
 <script>
@@ -355,23 +314,154 @@
   const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxtZmdmcGF3dGxyYm5lbGVvZGNuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkzMjQzNzgsImV4cCI6MjA5NDkwMDM3OH0.IqZpjeL1c2nHG1zrB3WgbQyP6Ll_TDcGS0Iu6CRBM1c';
   const { createClient } = supabase;
   const sb = createClient(SB_URL, SB_KEY);
-
-  let cu = null, state = null, uname = '', ud = {};
+  let cu = null, state = null, uname = '', ud = {}, diagData = null;
   const agents = { core:'✦ Rena Core', path:'◎ Rena Path', career:'↗ Rena Career' };
-
   const clean = t => t ? t.replace(/\*\*(.*?)\*\*/g,'$1').replace(/\*(.*?)\*/g,'$1').replace(/#{1,6}\s/g,'').replace(/`(.*?)`/g,'$1').trim() : '';
   const fdate = d => { try { return new Date(d).toLocaleDateString('es-CL',{weekday:'short',hour:'2-digit',minute:'2-digit'}); } catch{ return ''; } };
   const trunc = (t,n) => t.length > n ? t.slice(0,n)+'...' : t;
 
+  // ── FASES CONFIG ──
+  const FASES_CONFIG_APP = {
+    'Recuperando Claridad': { icon:'◎', objetivo:'Recuperar claridad sobre tu situación actual y lo que quieres.',
+      ocurriendo:['Tienes más preguntas que respuestas en este momento.','El camino hacia adelante todavía no está definido.','El estado emocional pesa sobre la capacidad de ver con claridad.'],
+      positivo:['Sigues buscando — eso no es poca cosa.','El primer paso siempre es reconocer dónde estás.'] },
+    'Reconstruyendo Confianza': { icon:'↗', objetivo:'Reconstruir la confianza en tus propias capacidades.',
+      ocurriendo:['Tienes más claridad que confianza en este momento.','Sabes lo que quieres, pero algo frena el movimiento.','La duda sobre ti mismo/a es el obstáculo principal.'],
+      positivo:['Tu claridad es una base sólida para avanzar.','La confianza se reconstruye con pequeños logros concretos.'] },
+    'Explorando Posibilidades': { icon:'✦', objetivo:'Explorar qué caminos encajan con quién eres hoy.',
+      ocurriendo:['Estás en un momento de apertura y búsqueda.','Claridad y confianza están creciendo, pero todavía no están completas.','Es un momento de exploración, no de certezas.'],
+      positivo:['Estás en el lugar correcto para descubrir qué sigue.','Tienes los recursos internos para avanzar.'] },
+    'Diseñando Camino': { icon:'◈', objetivo:'Diseñar con claridad el camino hacia donde quieres ir.',
+      ocurriendo:['Tienes claridad sobre tu dirección.','Tu confianza está en un buen lugar.','El foco ahora es convertir esa claridad en un plan.'],
+      positivo:['Llegas a esta etapa con una base sólida.','Estás listo/a para diseñar el siguiente capítulo.'] },
+    'Acción y Ejecución': { icon:'★', objetivo:'Ejecutar con foco y mantener el momentum.',
+      ocurriendo:['Tienes claridad y confianza para avanzar.','El foco ahora es la ejecución consistente.','Cada semana importa.'],
+      positivo:['Estás en la fase donde ocurren los cambios reales.','Tu trabajo ahora es mantener el ritmo.'] }
+  };
+
+  // ── DIAGNÓSTICO ──
+  async function cargarDiagnostico() {
+    if (!cu) return null;
+    const { data } = await sb.from('cartografo_resultados')
+      .select('fase,principal_desafio,score_claridad,score_confianza,score_emocional,score_urgencia,resumen_ia,respuestas_raw,fecha')
+      .eq('usuario_id', cu.id).maybeSingle();
+    diagData = data || null;
+    return diagData;
+  }
+
+  function renderDiagCard(diag) {
+    if (!diag) return '';
+    const config = FASES_CONFIG_APP[diag.fase] || FASES_CONFIG_APP['Explorando Posibilidades'];
+    const fecha = diag.fecha ? new Date(diag.fecha).toLocaleDateString('es-CL',{day:'numeric',month:'long'}) : 'Hoy';
+    return `
+      <div class="card diag-card fi">
+        <div class="c-title"><span class="c-title-dot">◎</span> Mi diagnóstico actual</div>
+        <div class="diag-fase-row">
+          <span class="diag-fase-icon">${config.icon}</span>
+          <span class="diag-fase-name">${diag.fase}</span>
+        </div>
+        <p class="diag-desafio">Principal desafío: <strong style="color:var(--text-1);font-weight:400">${diag.principal_desafio || 'Encontrar claridad sobre el próximo paso'}</strong></p>
+        <div class="diag-footer">
+          <span class="diag-fecha">Última actualización: ${fecha}</span>
+          <button class="diag-btn" onclick="abrirDiagModal()">Ver diagnóstico completo →</button>
+        </div>
+      </div>`;
+  }
+
+  function generarDeteccionesModal(diag) {
+    const detecciones = [];
+    const answers = diag.respuestas_raw || {};
+    const flags = answers.P3_flags || [];
+    const tienePos = flags.includes('pos'), tieneNeg = flags.includes('neg');
+    const p5 = answers.P5;
+    if (tienePos && tieneNeg) detecciones.push('Aunque existe incertidumbre en este momento, también aparecen señales claras de que todavía crees que el cambio es posible. Esa combinación no es contradicción — es transición.');
+    if (p5 === 'Tengo miedo de elegir mal') detecciones.push('Lo que más te frena no es la falta de opciones. Es el miedo a comprometerte con una dirección y equivocarte. Eso es más común de lo que parece en personas con capacidad real para avanzar.');
+    else if (p5 === 'Sé lo que quiero pero no sé cómo lograrlo') detecciones.push('Tienes algo que muchas personas no tienen en este punto: ya sabes lo que quieres. El obstáculo es el camino, no la dirección. Eso es un punto de partida más sólido de lo que parece.');
+    else if (p5 === 'No sé qué quiero realmente') detecciones.push('Tu principal bloqueo no parece ser la falta de capacidad. Parece ser la dificultad para decidir qué dirección merece realmente tu energía.');
+    if (detecciones.length === 0) detecciones.push('No veo señales de resignación en tu proceso. Lo que aparece repetidamente es una intención de avanzar incluso cuando el camino no está completamente claro todavía.');
+    if (detecciones.length === 1) detecciones.push('Lo más importante es que seguiste buscando respuestas. Muchas personas dejan de buscar cuando no ven claridad. Tú no.');
+    return detecciones.slice(0, 2);
+  }
+
+  function abrirDiagModal() {
+    if (!diagData) return;
+    const diag = diagData;
+    const config = FASES_CONFIG_APP[diag.fase] || FASES_CONFIG_APP['Explorando Posibilidades'];
+    const detecciones = generarDeteccionesModal(diag);
+    const overlay = document.createElement('div');
+    overlay.className = 'diag-modal-overlay';
+    overlay.innerHTML = `
+      <div class="diag-modal">
+        <div class="diag-modal-header">
+          <span class="diag-modal-title">Tu diagnóstico completo</span>
+          <div class="diag-modal-close" onclick="this.closest('.diag-modal-overlay').remove()">✕</div>
+        </div>
+        <span style="font-size:24px;color:var(--green);display:block;margin-bottom:8px">${config.icon}</span>
+        <div class="diag-modal-fase">${diag.fase}</div>
+        <div class="diag-modal-sub">Fase actual</div>
+        <div class="diag-modal-section" style="margin-top:0">Lo que está ocurriendo</div>
+        <div class="diag-modal-bullets">
+          ${config.ocurriendo.map(b=>`<div class="diag-modal-bullet"><div class="diag-modal-dot neg"></div><span>${b}</span></div>`).join('')}
+        </div>
+        <div class="diag-modal-wow">
+          <div class="diag-modal-wow-title">✦ Lo que detecté</div>
+          ${detecciones.map(d=>`<div class="diag-modal-wow-item">${d}</div>`).join('')}
+        </div>
+        <div class="diag-modal-section">Lo que ya tienes</div>
+        <div class="diag-modal-bullets">
+          ${config.positivo.map(b=>`<div class="diag-modal-bullet"><div class="diag-modal-dot pos"></div><span>${b}</span></div>`).join('')}
+        </div>
+        <div class="diag-modal-section">Tu siguiente objetivo</div>
+        <div class="diag-modal-objetivo">${config.objetivo}</div>
+        ${diag.resumen_ia ? `<div class="diag-modal-divider"></div><div class="diag-modal-section">Observación</div><p class="diag-modal-parrafo">${diag.resumen_ia}</p>` : ''}
+        <div class="diag-modal-divider"></div>
+        <div class="diag-modal-section">Tu mapa de hoy</div>
+        <div class="diag-modal-bars">
+          ${[{n:'Claridad',v:diag.score_claridad||0},{n:'Confianza',v:diag.score_confianza||0},{n:'Energía emocional',v:diag.score_emocional||0}].map(b=>`
+            <div>
+              <div class="diag-modal-bar-meta"><span class="diag-modal-bar-name">${b.n}</span><span class="diag-modal-bar-pct">${b.v}%</span></div>
+              <div class="diag-modal-bar-track"><div class="diag-modal-bar-fill" style="width:0%" data-target="${b.v}"></div></div>
+            </div>`).join('')}
+        </div>
+      </div>`;
+    document.body.appendChild(overlay);
+    overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
+    setTimeout(() => { overlay.querySelectorAll('.diag-modal-bar-fill').forEach(el => { el.style.width = el.dataset.target + '%'; }); }, 200);
+  }
+
+  async function showDiagnostico(e) {
+    e?.preventDefault();
+    setActive('nav-diag');
+    document.getElementById('home-view').classList.remove('hidden');
+    document.getElementById('chat-view').classList.remove('active');
+    document.getElementById('tb-title').innerHTML = `Tu <span>Diagnóstico</span>`;
+    document.getElementById('tb-sub').textContent = 'El mapa de tu momento actual en el proceso de reinvención.';
+    const diag = diagData || await cargarDiagnostico();
+    if (!diag) {
+      document.getElementById('feed').innerHTML = `<div class="card" style="text-align:center;padding:32px"><p style="font-size:13px;color:var(--text-2);font-weight:300">No hay diagnóstico todavía.</p></div>`;
+      return;
+    }
+    document.getElementById('feed').innerHTML = renderDiagCard(diag);
+    abrirDiagModal();
+  }
+
+  // ── INIT ──
   async function init() {
     document.body.style.opacity = '0';
     document.body.style.transition = 'opacity .3s ease';
     const { data: { session } } = await sb.auth.getSession();
     if (!session?.user) { window.location.href = '/'; return; }
     cu = session.user;
+    const { data: cartResult } = await sb.from('cartografo_resultados').select('id').eq('usuario_id',cu.id).maybeSingle();
+    if (!cartResult) { window.location.href = '/cartografo.html'; return; }
     await loadUser();
     document.body.style.opacity = '1';
+    if (new URLSearchParams(window.location.search).get('upgraded') === 'true') {
+      await sb.from('usuarios').update({ is_pro: true }).eq('id', cu.id);
+      window.history.replaceState({}, '', '/app.html');
+    }
     await loadData();
+    await cargarDiagnostico();
     render();
   }
 
@@ -388,7 +478,6 @@
     const { count } = await sb.from('conversaciones').select('id',{count:'exact',head:true}).eq('usuario_id',cu.id);
     ud.count = count || 0;
     ud.hasMsgs = ud.count > 0;
-
     if (ud.hasMsgs) {
       const { data: um } = await sb.from('conversaciones').select('mensaje,created_at').eq('usuario_id',cu.id).eq('rol','user').order('created_at',{ascending:false}).limit(6);
       ud.userMsgs = um || [];
@@ -411,6 +500,7 @@
     document.getElementById('tb-title').innerHTML = `Hola, <span>${uname}</span>. 👋`;
     document.getElementById('tb-sub').textContent = 'Este es tu espacio para pensar, aclararte y avanzar. RenaIA está acá para acompañarte.';
     document.getElementById('feed').innerHTML = `
+      ${diagData ? renderDiagCard(diagData) : ''}
       <div class="card fi" style="text-align:center;padding:40px 32px">
         <div style="font-size:26px;color:var(--green);margin-bottom:18px;opacity:.9">✦</div>
         <h2 style="font-family:'Playfair Display',serif;font-size:26px;font-weight:500;color:var(--text-1);letter-spacing:-.5px;margin-bottom:10px;line-height:1.2">Todavía no comenzamos<br><em style="color:var(--green)">tu proceso de reinvención.</em></h2>
@@ -422,59 +512,23 @@
   async function renderFree() {
     document.getElementById('tb-title').innerHTML = `Hola, <span>${uname}</span>. 👋`;
     document.getElementById('tb-sub').textContent = 'Este es tu espacio para pensar, aclararte y avanzar. RenaIA está acá para acompañarte.';
-
-    // Sidebar progress
     document.getElementById('sb-prog').style.display = 'block';
     document.getElementById('sb-quote').style.display = 'block';
     const wk = Math.min(ud.count, 5);
     document.getElementById('sb-prog-label').textContent = `${wk}/5 conversaciones esta semana`;
     document.getElementById('sb-prog-fill').style.width = (wk/5*100)+'%';
-    if (ud.aiMsgs?.length) {
-      document.getElementById('sb-quote-txt').textContent = '"' + trunc(clean(ud.aiMsgs[0].mensaje), 80) + '"';
-    }
-
-    // Conv rows
+    if (ud.aiMsgs?.length) document.getElementById('sb-quote-txt').textContent = '"' + trunc(clean(ud.aiMsgs[0].mensaje), 80) + '"';
     const convRows = ud.userMsgs?.length
-      ? ud.userMsgs.slice(0,4).map((m,i) => `
-          <div class="conv-row fi d${i+1}" onclick="retomar()">
-            <div class="conv-dot"></div>
-            <span class="conv-name">${trunc(clean(m.mensaje),30)}</span>
-            <span class="conv-prev">Hablamos sobre esto en tu proceso...</span>
-            <span class="conv-date">${fdate(m.created_at)}</span>
-            <span class="conv-arr">›</span>
-          </div>`).join('')
+      ? ud.userMsgs.slice(0,4).map((m,i) => `<div class="conv-row fi d${i+1}" onclick="retomar()"><div class="conv-dot"></div><span class="conv-name">${trunc(clean(m.mensaje),30)}</span><span class="conv-prev">Hablamos sobre esto en tu proceso...</span><span class="conv-date">${fdate(m.created_at)}</span><span class="conv-arr">›</span></div>`).join('')
       : `<div style="padding:12px;font-size:13px;color:var(--text-3);text-align:center">No hay conversaciones aún.</div>`;
-
-    // Reflexiones
-    let reflHTML = '';
-    if (ud.aiMsgs?.length) {
-      reflHTML = `<div class="refl-cols">
-        ${ud.aiMsgs.slice(0,3).map((r,i)=>`
-          <div class="refl-card fi d${i+1}">
-            <div class="refl-qmark">"</div>
-            <p class="refl-txt">${trunc(clean(r.mensaje),130)}</p>
-            <p class="refl-date">${fdate(r.created_at)}</p>
-          </div>`).join('')}
-      </div>`;
-    } else {
-      reflHTML = `<div class="refl-empty">📖 Las reflexiones de RenaIA aparecerán aquí después de conversar.</div>`;
-    }
-
-    // Render con proceso placeholder
+    let reflHTML = ud.aiMsgs?.length
+      ? `<div class="refl-cols">${ud.aiMsgs.slice(0,3).map((r,i)=>`<div class="refl-card fi d${i+1}"><div class="refl-qmark">"</div><p class="refl-txt">${trunc(clean(r.mensaje),130)}</p><p class="refl-date">${fdate(r.created_at)}</p></div>`).join('')}</div>`
+      : `<div class="refl-empty">📖 Las reflexiones de RenaIA aparecerán aquí después de conversar.</div>`;
     document.getElementById('feed').innerHTML = `
+      ${diagData ? renderDiagCard(diagData) : ''}
       <div id="proceso-card"><div class="card fi"><div class="c-title"><span class="c-title-dot">✦</span> Tu proceso actual</div><div style="padding:20px 0;text-align:center;font-size:13px;color:var(--text-3)">Analizando tu proceso...</div></div></div>
-      <div class="card fi d2">
-        <div class="c-title">Conversaciones recientes</div>
-        <div class="conv-list">${convRows}</div>
-        <button class="see-all" onclick="showConversaciones(event)">Ver todas las conversaciones →</button>
-      </div>
-      <div class="card fi d3">
-        <div class="c-title">Reflexiones recientes</div>
-        ${reflHTML}
-        <button class="see-all" onclick="showReflexiones(event)">Ver todas mis reflexiones →</button>
-      </div>`;
-
-    // Cargar proceso en background
+      <div class="card fi d2"><div class="c-title">Conversaciones recientes</div><div class="conv-list">${convRows}</div><button class="see-all" onclick="showConversaciones(event)">Ver todas las conversaciones →</button></div>
+      <div class="card fi d3"><div class="c-title">Reflexiones recientes</div>${reflHTML}<button class="see-all" onclick="showReflexiones(event)">Ver todas mis reflexiones →</button></div>`;
     const proc = await cargarProceso();
     const procEl = document.getElementById('proceso-card');
     if (procEl) procEl.innerHTML = renderProceso(proc);
@@ -482,168 +536,47 @@
 
   async function cargarProceso() {
     try {
-      const res = await fetch('/generar-proceso', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId: cu.id })
-      });
-      const data = await res.json();
-      return data;
-    } catch(err) {
-      console.error('Proceso error:', err);
-      return null;
-    }
+      const res = await fetch('/generar-proceso', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ userId: cu.id }) });
+      return await res.json();
+    } catch(err) { console.error('Proceso error:', err); return null; }
   }
 
   function renderProceso(proc) {
     const situ = proc?.situacion_actual || 'Estás explorando tu situación profesional y buscando claridad sobre tus próximos pasos.';
     const ultimo = proc?.ultimo_descubrimiento || 'Continúa conversando para descubrir más sobre tu proceso.';
     const proximo = proc?.proximo_paso || 'Continúa conversando para definir tu próximo paso concreto.';
-    return `
-      <div class="card fi">
-        <div class="c-title"><span class="c-title-dot">✦</span> Tu proceso actual</div>
-        <div class="proc-grid">
-          <div class="proc-col">
-            <p class="proc-label">Situación actual</p>
-            <p class="proc-text">${situ}</p>
-            <div class="proc-actions"><button class="proc-btn ghost" onclick="showChat(null)">Editar</button></div>
-          </div>
-          <div class="proc-divider"></div>
-          <div class="proc-col">
-            <p class="proc-label">Lo último que descubrimos</p>
-            <p class="proc-text">${ultimo}</p>
-            <div class="proc-actions"><button class="proc-btn ghost" onclick="retomar()">Ver detalles</button></div>
-          </div>
-          <div class="proc-divider"></div>
-          <div class="proc-col">
-            <p class="proc-label">Próximo paso sugerido</p>
-            <p class="proc-text green">${proximo}</p>
-            <div class="proc-actions"><button class="proc-btn solid" onclick="retomar()">Continuar conversación →</button></div>
-          </div>
-        </div>
-      </div>`;
+    return `<div class="card fi"><div class="c-title"><span class="c-title-dot">✦</span> Tu proceso actual</div><div class="proc-grid"><div class="proc-col"><p class="proc-label">Situación actual</p><p class="proc-text">${situ}</p><div class="proc-actions"><button class="proc-btn ghost" onclick="showChat(null)">Editar</button></div></div><div class="proc-divider"></div><div class="proc-col"><p class="proc-label">Lo último que descubrimos</p><p class="proc-text">${ultimo}</p><div class="proc-actions"><button class="proc-btn ghost" onclick="retomar()">Ver detalles</button></div></div><div class="proc-divider"></div><div class="proc-col"><p class="proc-label">Próximo paso sugerido</p><p class="proc-text green">${proximo}</p><div class="proc-actions"><button class="proc-btn solid" onclick="retomar()">Continuar conversación →</button></div></div></div></div>`;
   }
 
   async function renderPro() {
     document.getElementById('tb-title').innerHTML = `Hola, <span>${uname}</span>. 👋`;
     document.getElementById('tb-sub').textContent = 'Este es tu espacio de reinvención. RenaIA te acompaña de cerca.';
-
-    // Sidebar pro — solo quote, sin barra de progreso
     document.getElementById('sb-prog').style.display = 'none';
     document.getElementById('sb-quote').style.display = 'block';
     document.getElementById('sb-plan').textContent = '✦ Plan Pro';
-    if (ud.aiMsgs?.length) {
-      document.getElementById('sb-quote-txt').textContent = '"' + trunc(clean(ud.aiMsgs[0].mensaje), 80) + '"';
-    }
-
-    // Desbloquear nav Pro — quitar locked y candados
-    ['nav-road','nav-seg','nav-cal','nav-ins'].forEach(id => {
-      const el = document.getElementById(id);
-      if (el) { el.classList.remove('locked'); el.style.opacity='1'; el.style.pointerEvents='auto'; }
-    });
-    ['lock-road','lock-seg','lock-cal','lock-ins'].forEach(id => {
-      const el = document.getElementById(id);
-      if (el) el.innerHTML = '';
-    });
-
-    // Detectar fase del roadmap
+    if (ud.aiMsgs?.length) document.getElementById('sb-quote-txt').textContent = '"' + trunc(clean(ud.aiMsgs[0].mensaje), 80) + '"';
+    ['nav-road','nav-seg','nav-cal','nav-ins'].forEach(id => { const el = document.getElementById(id); if (el) { el.classList.remove('locked'); el.style.opacity='1'; el.style.pointerEvents='auto'; } });
+    ['lock-road','lock-seg','lock-cal','lock-ins'].forEach(id => { const el = document.getElementById(id); if (el) el.innerHTML = ''; });
     const fase = ud.count <= 5 ? 0 : ud.count <= 12 ? 1 : ud.count <= 20 ? 2 : 3;
     const fases = ['Claridad', 'Dirección', 'Acción', 'Reinvención'];
     const faseIcons = ['◎', '↗', '✦', '★'];
-
-    const roadmapHTML = `
-      <div class="roadmap-wrap">
-        ${fases.map((f, i) => `
-          <div class="rm-phase">
-            <div class="rm-circle ${i < fase ? 'done' : i === fase ? 'active' : ''}">${i < fase ? '✓' : faseIcons[i]}</div>
-            <span class="rm-label ${i === fase ? 'active' : ''}">${f}</span>
-          </div>
-          ${i < 3 ? `<div class="rm-line ${i < fase ? 'done' : ''}"></div>` : ''}
-        `).join('')}
-      </div>
-      <p style="font-size:12px;color:var(--text-3);margin-top:8px;font-weight:300">
-        Estás en la fase de <span style="color:var(--green);font-weight:500">${fases[fase]}</span> — ${
-          fase === 0 ? 'entendiendo tu situación actual.' :
-          fase === 1 ? 'descubriendo tu dirección.' :
-          fase === 2 ? 'tomando acción concreta.' :
-          'completando tu reinvención.'
-        }
-      </p>`;
-
-    // Verificar seguimiento semanal
+    const roadmapHTML = `<div class="roadmap-wrap">${fases.map((f,i) => `<div class="rm-phase"><div class="rm-circle ${i<fase?'done':i===fase?'active':''}">${i<fase?'✓':faseIcons[i]}</div><span class="rm-label ${i===fase?'active':''}">${f}</span></div>${i<3?`<div class="rm-line ${i<fase?'done':''}"></div>`:''}`).join('')}</div><p style="font-size:12px;color:var(--text-3);margin-top:8px;font-weight:300">Estás en la fase de <span style="color:var(--green);font-weight:500">${fases[fase]}</span> — ${fase===0?'entendiendo tu situación actual.':fase===1?'descubriendo tu dirección.':fase===2?'tomando acción concreta.':'completando tu reinvención.'}</p>`;
     let checkinHTML = '';
     if (ud.userMsgs?.length) {
-      const lastDate = new Date(ud.userMsgs[0].created_at);
-      const diasSinConv = Math.floor((Date.now() - lastDate.getTime()) / (1000 * 60 * 60 * 24));
-      if (diasSinConv >= 7) {
-        checkinHTML = `
-          <div class="checkin-banner fi">
-            <span class="checkin-icon">🌱</span>
-            <div class="checkin-text">
-              <p class="checkin-title">Han pasado ${diasSinConv} días desde tu última conversación</p>
-              <p class="checkin-sub">¿Cómo te sientes respecto a tu proceso? Retomemos desde donde lo dejamos.</p>
-            </div>
-            <button class="checkin-btn" onclick="retomar()">Retomar →</button>
-          </div>`;
-      }
+      const diasSinConv = Math.floor((Date.now() - new Date(ud.userMsgs[0].created_at).getTime()) / (1000*60*60*24));
+      if (diasSinConv >= 7) checkinHTML = `<div class="checkin-banner fi"><span class="checkin-icon">🌱</span><div class="checkin-text"><p class="checkin-title">Han pasado ${diasSinConv} días desde tu última conversación</p><p class="checkin-sub">¿Cómo te sientes respecto a tu proceso? Retomemos desde donde lo dejamos.</p></div><button class="checkin-btn" onclick="retomar()">Retomar →</button></div>`;
     }
-
-    // Insights placeholder mientras cargan
     document.getElementById('feed').innerHTML = `
       ${checkinHTML}
+      ${diagData ? renderDiagCard(diagData) : ''}
       <div id="proceso-card-pro"><div class="card fi"><div class="c-title"><span class="c-title-dot">✦</span> Tu proceso actual</div><div style="padding:20px 0;text-align:center;font-size:13px;color:var(--text-3)">Analizando tu proceso...</div></div></div>
-      <div class="card fi">
-        <div class="c-title"><span class="c-title-dot">◎</span> Tu roadmap de reinvención</div>
-        ${roadmapHTML}
-      </div>
-      <div class="card fi d1" id="insights-card">
-        <div class="c-title"><span class="c-title-dot">✦</span> Insights personalizados <span class="pro-badge-inline">PRO</span></div>
-        <div class="insight-grid">
-          <div class="insight-card"><div class="insight-icon">◌</div><p class="insight-txt" style="color:var(--text-3)">Generando insights...</p></div>
-          <div class="insight-card"><div class="insight-icon">◌</div><p class="insight-txt" style="color:var(--text-3)">Analizando tus conversaciones...</p></div>
-          <div class="insight-card"><div class="insight-icon">◌</div><p class="insight-txt" style="color:var(--text-3)">Un momento...</p></div>
-        </div>
-      </div>
-      <div class="card fi d2">
-        <div class="c-title">Conversaciones recientes</div>
-        <div class="conv-list">${ud.userMsgs?.length
-          ? ud.userMsgs.slice(0,4).map((m,i) => `
-              <div class="conv-row fi d${i+1}" onclick="retomar()">
-                <div class="conv-dot"></div>
-                <span class="conv-name">${trunc(clean(m.mensaje),30)}</span>
-                <span class="conv-prev">Hablamos sobre esto en tu proceso...</span>
-                <span class="conv-date">${fdate(m.created_at)}</span>
-                <span class="conv-arr">›</span>
-              </div>`).join('')
-          : `<div style="padding:12px;font-size:13px;color:var(--text-3);text-align:center">No hay conversaciones aún.</div>`}
-        </div>
-        <button class="see-all" onclick="showConversaciones(event)">Ver todas las conversaciones →</button>
-      </div>`;
-
-    // Cargar proceso e insights en background (paralelo)
+      <div class="card fi"><div class="c-title"><span class="c-title-dot">◎</span> Tu roadmap de reinvención</div>${roadmapHTML}</div>
+      <div class="card fi d1" id="insights-card"><div class="c-title"><span class="c-title-dot">✦</span> Insights personalizados <span class="pro-badge-inline">PRO</span></div><div class="insight-grid"><div class="insight-card"><div class="insight-icon">◌</div><p class="insight-txt" style="color:var(--text-3)">Generando insights...</p></div><div class="insight-card"><div class="insight-icon">◌</div><p class="insight-txt" style="color:var(--text-3)">Analizando tus conversaciones...</p></div><div class="insight-card"><div class="insight-icon">◌</div><p class="insight-txt" style="color:var(--text-3)">Un momento...</p></div></div></div>
+      <div class="card fi d2"><div class="c-title">Conversaciones recientes</div><div class="conv-list">${ud.userMsgs?.length?ud.userMsgs.slice(0,4).map((m,i)=>`<div class="conv-row fi d${i+1}" onclick="retomar()"><div class="conv-dot"></div><span class="conv-name">${trunc(clean(m.mensaje),30)}</span><span class="conv-prev">Hablamos sobre esto en tu proceso...</span><span class="conv-date">${fdate(m.created_at)}</span><span class="conv-arr">›</span></div>`).join(''):`<div style="padding:12px;font-size:13px;color:var(--text-3);text-align:center">No hay conversaciones aún.</div>`}</div><button class="see-all" onclick="showConversaciones(event)">Ver todas las conversaciones →</button></div>`;
     Promise.all([
-      cargarProceso().then(proc => {
-        const el = document.getElementById('proceso-card-pro');
-        if (el) el.innerHTML = renderProceso(proc);
-      }),
-      fetch('/generar-insights', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId: cu.id })
-      }).then(r => r.json()).then(({ insights }) => {
-        if (insights?.length) {
-          const icons = ['◎', '✦', '↗'];
-          const el = document.getElementById('insights-card');
-          if (el) el.innerHTML = `
-            <div class="c-title"><span class="c-title-dot">✦</span> Insights personalizados <span class="pro-badge-inline">PRO</span></div>
-            <div class="insight-grid">
-              ${insights.slice(0,3).map((ins, i) => `
-                <div class="insight-card">
-                  <div class="insight-icon">${icons[i]}</div>
-                  <p class="insight-txt">"${clean(ins)}"</p>
-                </div>`).join('')}
-            </div>`;
-        }
+      cargarProceso().then(proc => { const el = document.getElementById('proceso-card-pro'); if (el) el.innerHTML = renderProceso(proc); }),
+      fetch('/generar-insights',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({userId:cu.id})}).then(r=>r.json()).then(({insights})=>{
+        if (insights?.length) { const icons=['◎','✦','↗']; const el=document.getElementById('insights-card'); if(el) el.innerHTML=`<div class="c-title"><span class="c-title-dot">✦</span> Insights personalizados <span class="pro-badge-inline">PRO</span></div><div class="insight-grid">${insights.slice(0,3).map((ins,i)=>`<div class="insight-card"><div class="insight-icon">${icons[i]}</div><p class="insight-txt">"${clean(ins)}"</p></div>`).join('')}</div>`; }
       })
     ]).catch(err => console.error('Background load error:', err));
   }
@@ -651,109 +584,24 @@
   function renderRP() {
     const rp = document.getElementById('rp');
     if (state === 'empty') {
-      rp.innerHTML = `
-        <div class="rp-card fi">
-          <div class="rp-head"><span class="rp-htitle">Tu espacio</span></div>
-          <div class="rp-illus"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></div>
-          <p class="rp-locked-t">Empieza a conversar</p>
-          <p class="rp-locked-s">Tu progreso aparecerá aquí después de tu primera conversación.</p>
-        </div>`;
+      rp.innerHTML = `<div class="rp-card fi"><div class="rp-head"><span class="rp-htitle">Tu espacio</span></div><div class="rp-illus"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></div><p class="rp-locked-t">Empieza a conversar</p><p class="rp-locked-s">Tu progreso aparecerá aquí después de tu primera conversación.</p></div>`;
       return;
     }
-
     if (state === 'pro') {
       const fase = ud.count <= 5 ? 0 : ud.count <= 12 ? 1 : ud.count <= 20 ? 2 : 3;
       const fases = ['Claridad', 'Dirección', 'Acción', 'Reinvención'];
       const pct = Math.min(Math.round((ud.count / 25) * 100), 95);
       const lastConvDate = ud.userMsgs?.length ? `Última sesión: ${fdate(ud.userMsgs[0].created_at)}` : '';
-      rp.innerHTML = `
-        <div class="rp-card fi">
-          <div class="rp-head"><span class="rp-htitle">Tu progreso</span></div>
-          <div style="display:flex;align-items:center;gap:14px;margin:4px 0">
-            <div style="position:relative;width:72px;height:72px;flex-shrink:0">
-              <svg width="72" height="72" viewBox="0 0 72 72" style="transform:rotate(-90deg)">
-                <circle cx="36" cy="36" r="28" fill="none" stroke="rgba(255,255,255,.05)" stroke-width="7"/>
-                <circle cx="36" cy="36" r="28" fill="none" stroke="url(#pg)" stroke-width="7" stroke-linecap="round"
-                  stroke-dasharray="176" stroke-dashoffset="${176 - (176 * pct / 100)}"/>
-                <defs><linearGradient id="pg" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" stop-color="#0f7a55"/><stop offset="100%" stop-color="#1a9e72"/>
-                </linearGradient></defs>
-              </svg>
-              <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center">
-                <span style="font-family:'Playfair Display',serif;font-size:16px;font-weight:500;color:var(--text-1)">${pct}%</span>
-              </div>
-            </div>
-            <div style="display:flex;flex-direction:column;gap:5px;flex:1">
-              <div style="font-size:12px;color:var(--text-2);font-weight:300">Fase actual</div>
-              <div style="font-size:13px;font-weight:500;color:var(--green)">${fases[fase]}</div>
-              <div style="font-size:11px;color:var(--text-3)">${lastConvDate}</div>
-            </div>
-          </div>
-        </div>
-        <div class="rp-card fi d1">
-          <div class="rp-head"><span class="rp-htitle">Siguiente paso</span></div>
-          <p style="font-size:13px;color:var(--text-2);font-weight:300;line-height:1.65;margin:4px 0 10px">${
-            fase === 0 ? 'Continúa explorando tu situación actual. Cuanto más hablemos, más claro será tu camino.' :
-            fase === 1 ? 'Ya tienes claridad. Es momento de definir hacia dónde quieres ir.' :
-            fase === 2 ? 'Tienes dirección. Ahora toca convertirla en acciones concretas.' :
-            'Estás en la fase final. Tu reinvención está tomando forma.'
-          }</p>
-          <button class="rp-cta" onclick="retomar()">Continuar conversación →</button>
-        </div>
-        <div class="rp-card fi d2">
-          <div class="rp-head"><span class="rp-htitle">Memoria profunda <span class="rp-pro">PRO</span></span></div>
-          <div style="display:flex;flex-direction:column;gap:7px;margin-top:4px">
-            <div style="display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--text-2);font-weight:300"><span style="color:var(--green);flex-shrink:0">✓</span>RenaIA recuerda tu contexto entre sesiones</div>
-            <div style="display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--text-2);font-weight:300"><span style="color:var(--green);flex-shrink:0">✓</span>Detecta patrones en tus conversaciones</div>
-            <div style="display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--text-2);font-weight:300"><span style="color:var(--green);flex-shrink:0">✓</span>Insights personalizados cada 24h</div>
-          </div>
-        </div>`;
+      rp.innerHTML = `<div class="rp-card fi"><div class="rp-head"><span class="rp-htitle">Tu progreso</span></div><div style="display:flex;align-items:center;gap:14px;margin:4px 0"><div style="position:relative;width:72px;height:72px;flex-shrink:0"><svg width="72" height="72" viewBox="0 0 72 72" style="transform:rotate(-90deg)"><circle cx="36" cy="36" r="28" fill="none" stroke="rgba(255,255,255,.05)" stroke-width="7"/><circle cx="36" cy="36" r="28" fill="none" stroke="url(#pg)" stroke-width="7" stroke-linecap="round" stroke-dasharray="176" stroke-dashoffset="${176-(176*pct/100)}"/><defs><linearGradient id="pg" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#0f7a55"/><stop offset="100%" stop-color="#1a9e72"/></linearGradient></defs></svg><div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center"><span style="font-family:'Playfair Display',serif;font-size:16px;font-weight:500;color:var(--text-1)">${pct}%</span></div></div><div style="display:flex;flex-direction:column;gap:5px;flex:1"><div style="font-size:12px;color:var(--text-2);font-weight:300">Fase actual</div><div style="font-size:13px;font-weight:500;color:var(--green)">${fases[fase]}</div><div style="font-size:11px;color:var(--text-3)">${lastConvDate}</div></div></div></div>
+      <div class="rp-card fi d1"><div class="rp-head"><span class="rp-htitle">Siguiente paso</span></div><p style="font-size:13px;color:var(--text-2);font-weight:300;line-height:1.65;margin:4px 0 10px">${fase===0?'Continúa explorando tu situación actual. Cuanto más hablemos, más claro será tu camino.':fase===1?'Ya tienes claridad. Es momento de definir hacia dónde quieres ir.':fase===2?'Tienes dirección. Ahora toca convertirla en acciones concretas.':'Estás en la fase final. Tu reinvención está tomando forma.'}</p><button class="rp-cta" onclick="retomar()">Continuar conversación →</button></div>
+      <div class="rp-card fi d2"><div class="rp-head"><span class="rp-htitle">Memoria profunda <span class="rp-pro">PRO</span></span></div><div style="display:flex;flex-direction:column;gap:7px;margin-top:4px"><div style="display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--text-2);font-weight:300"><span style="color:var(--green);flex-shrink:0">✓</span>RenaIA recuerda tu contexto entre sesiones</div><div style="display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--text-2);font-weight:300"><span style="color:var(--green);flex-shrink:0">✓</span>Detecta patrones en tus conversaciones</div><div style="display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--text-2);font-weight:300"><span style="color:var(--green);flex-shrink:0">✓</span>Insights personalizados cada 24h</div></div></div>`;
       return;
     }
-
-    // FREE state
-    rp.innerHTML = `
-      <div class="rp-card fi">
-        <div class="rp-head">
-          <span class="rp-htitle">Tu progreso <span style="font-size:10px;color:var(--text-3);font-weight:300">(vista general)</span></span>
-          <span class="rp-lock">🔒</span>
-        </div>
-        <div class="rp-illus">
-          <svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
-        </div>
-        <p class="rp-locked-t">Desbloquea tu visión completa</p>
-        <p class="rp-locked-s">Con RenaIA Pro puedes ver tu roadmap personal, hitos y progreso detallado.</p>
-        <button class="rp-cta" onclick="activarPro()">Desbloquear Pro</button>
-      </div>
-
-      <div class="rp-card fi d1">
-        <div class="rp-head">
-          <span class="rp-htitle">Roadmap <span class="rp-pro">PRO</span></span>
-          <span class="rp-lock">🔒</span>
-        </div>
-        <div class="rp-illus">
-          <svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="6" r="2"/><circle cx="19" cy="12" r="2"/><circle cx="12" cy="18" r="2"/><path d="M7 12h3M14 12h3M12 8v3M12 15v1" stroke-dasharray="2 1"/></svg>
-        </div>
-        <p class="rp-locked-t">Tu plan paso a paso</p>
-        <p class="rp-locked-s">Crea tu roadmap personalizado y transforma tus objetivos en acciones claras.</p>
-        <button class="rp-cta" onclick="activarPro()">Desbloquear Pro</button>
-      </div>
-
-      <div class="rp-card fi d2">
-        <div class="rp-head">
-          <span class="rp-htitle">Insights personalizados <span class="rp-pro">PRO</span></span>
-          <span class="rp-lock">🔒</span>
-        </div>
-        <div class="rp-illus">
-          <svg viewBox="0 0 24 24"><rect x="3" y="12" width="4" height="8" rx="1"/><rect x="10" y="7" width="4" height="13" rx="1"/><rect x="17" y="4" width="4" height="16" rx="1"/><path d="M2 20h20"/></svg>
-        </div>
-        <p class="rp-locked-t">Patrones de tu proceso</p>
-        <p class="rp-locked-s">Patrones, aprendizajes y oportunidades basados en tu proceso.</p>
-        <button class="rp-cta" onclick="activarPro()">Desbloquear Pro</button>
-      </div>`;
+    rp.innerHTML = `<div class="rp-card fi"><div class="rp-head"><span class="rp-htitle">Tu progreso <span style="font-size:10px;color:var(--text-3);font-weight:300">(vista general)</span></span><span class="rp-lock">🔒</span></div><div class="rp-illus"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></div><p class="rp-locked-t">Desbloquea tu visión completa</p><p class="rp-locked-s">Con RenaIA Pro puedes ver tu roadmap personal, hitos y progreso detallado.</p><button class="rp-cta" onclick="activarPro()">Desbloquear Pro</button></div>
+    <div class="rp-card fi d1"><div class="rp-head"><span class="rp-htitle">Roadmap <span class="rp-pro">PRO</span></span><span class="rp-lock">🔒</span></div><div class="rp-illus"><svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="6" r="2"/><circle cx="19" cy="12" r="2"/><circle cx="12" cy="18" r="2"/></svg></div><p class="rp-locked-t">Tu plan paso a paso</p><p class="rp-locked-s">Crea tu roadmap personalizado y transforma tus objetivos en acciones claras.</p><button class="rp-cta" onclick="activarPro()">Desbloquear Pro</button></div>
+    <div class="rp-card fi d2"><div class="rp-head"><span class="rp-htitle">Insights personalizados <span class="rp-pro">PRO</span></span><span class="rp-lock">🔒</span></div><div class="rp-illus"><svg viewBox="0 0 24 24"><rect x="3" y="12" width="4" height="8" rx="1"/><rect x="10" y="7" width="4" height="13" rx="1"/><rect x="17" y="4" width="4" height="16" rx="1"/><path d="M2 20h20"/></svg></div><p class="rp-locked-t">Patrones de tu proceso</p><p class="rp-locked-s">Patrones, aprendizajes y oportunidades basados en tu proceso.</p><button class="rp-cta" onclick="activarPro()">Desbloquear Pro</button></div>`;
   }
 
-  // ── NAV ──
   function setActive(id) { document.querySelectorAll('.sb-item').forEach(i=>i.classList.remove('active')); document.getElementById(id)?.classList.add('active'); }
   function navClick(e,el) { e?.preventDefault(); document.querySelectorAll('.sb-item').forEach(i=>i.classList.remove('active')); el?.classList.add('active'); }
 
@@ -799,21 +647,12 @@
       document.getElementById('feed').innerHTML = `<div class="card" style="text-align:center;padding:32px"><p style="font-size:13px;color:var(--text-2);font-weight:300;line-height:1.8">Las reflexiones aparecerán aquí después de conversar.</p><button onclick="comenzar()" style="margin-top:16px;display:inline-flex;align-items:center;gap:7px;background:var(--green-dim);color:#fff;padding:10px 20px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;border:none;font-family:'DM Sans',sans-serif">✦ Comenzar →</button></div>`;
       return;
     }
-    document.getElementById('feed').innerHTML = `
-      <div class="refl-cols">
-        ${ud.aiMsgs.map((r,i)=>`
-          <div class="refl-card fi d${i%4+1}">
-            <div class="refl-qmark">"</div>
-            <p class="refl-txt">${trunc(clean(r.mensaje),200)}</p>
-            <p class="refl-date">${fdate(r.created_at)}</p>
-          </div>`).join('')}
-      </div>`;
+    document.getElementById('feed').innerHTML = `<div class="refl-cols">${ud.aiMsgs.map((r,i)=>`<div class="refl-card fi d${i%4+1}"><div class="refl-qmark">"</div><p class="refl-txt">${trunc(clean(r.mensaje),200)}</p><p class="refl-date">${fdate(r.created_at)}</p></div>`).join('')}</div>`;
   }
 
   function nuevaConversacion() { showChat(null); document.getElementById('chat-msgs').innerHTML = ''; }
   function comenzar() { showChat(null); }
 
-  // ── CHAT ──
   function addMsg(text, type) {
     const el = document.getElementById('chat-msgs');
     const d = document.createElement('div');
@@ -821,12 +660,7 @@
     d.innerHTML = `<div class="msg-av ${type}">${type==='ai'?'✦':'Tú'}</div><div class="bubble">${text}</div>`;
     el.appendChild(d); el.scrollTop = el.scrollHeight;
   }
-  function showTyping() {
-    const el = document.getElementById('chat-msgs');
-    const d = document.createElement('div'); d.id='typing'; d.className='typing-wrap';
-    d.innerHTML=`<div class="msg-av ai">✦</div><div class="typing"><span></span><span></span><span></span></div>`;
-    el.appendChild(d); el.scrollTop=el.scrollHeight;
-  }
+  function showTyping() { const el=document.getElementById('chat-msgs'); const d=document.createElement('div'); d.id='typing'; d.className='typing-wrap'; d.innerHTML=`<div class="msg-av ai">✦</div><div class="typing"><span></span><span></span><span></span></div>`; el.appendChild(d); el.scrollTop=el.scrollHeight; }
   function hideTyping() { document.getElementById('typing')?.remove(); }
   function setAgent(a) { document.getElementById('agent-name').textContent = agents[a]||agents.core; }
 
@@ -848,17 +682,11 @@
     } catch { hideTyping(); addMsg('Hubo un error. Intenta de nuevo.','ai'); }
   }
 
-  function enviarDesdeHome() {
-    const i=document.getElementById('home-input'),m=i.value.trim();if(!m)return;
-    i.value='';showChat(null);sendMsg(m);
-  }
-  function enviarChat() {
-    const i=document.getElementById('chat-input'),m=i.value.trim();if(!m)return;
-    i.value='';sendMsg(m);
-  }
+  function enviarDesdeHome() { const i=document.getElementById('home-input'),m=i.value.trim();if(!m)return;i.value='';showChat(null);sendMsg(m); }
+  function enviarChat() { const i=document.getElementById('chat-input'),m=i.value.trim();if(!m)return;i.value='';sendMsg(m); }
   document.getElementById('home-input').addEventListener('keypress',e=>{if(e.key==='Enter')enviarDesdeHome();});
   document.getElementById('chat-input').addEventListener('keypress',e=>{if(e.key==='Enter')enviarChat();});
-  // ── PRO SECCIONES ──
+
   function showSeccion(id, titulo, subtitulo, contenido) {
     document.getElementById('home-view').classList.remove('hidden');
     document.getElementById('chat-view').classList.remove('active');
@@ -870,175 +698,38 @@
 
   function showRoadmap(e) {
     e?.preventDefault();
-    const fase = ud.count <= 5 ? 0 : ud.count <= 12 ? 1 : ud.count <= 20 ? 2 : 3;
-    const fases = ['Claridad', 'Dirección', 'Acción', 'Reinvención'];
-    const faseIcons = ['◎', '↗', '✦', '★'];
-    const descripciones = [
-      'Estás entendiendo tu situación actual, identificando qué te frena y qué te motiva.',
-      'Ya tienes claridad sobre tu punto de partida. Ahora descubres hacia dónde quieres ir.',
-      'Tienes dirección clara. Es momento de convertir esa claridad en acciones concretas.',
-      'Estás ejecutando tu plan de reinvención. Cada conversación te acerca más a tu nueva vida.'
-    ];
-    const siguientes = [
-      'Continúa conversando sobre tu situación actual para obtener más claridad.',
-      'Explora qué tipo de vida profesional quieres construir.',
-      'Define 3 acciones concretas que puedes tomar esta semana.',
-      'Evalúa tu progreso y ajusta el plan según lo que has aprendido.'
-    ];
-
-    showSeccion('nav-road', 'Tu Roadmap', 'Visualiza en qué fase de tu reinvención estás.', `
-      <div class="card fi">
-        <div class="c-title"><span class="c-title-dot">◎</span> Tu camino de reinvención</div>
-        <div class="roadmap-wrap" style="margin-bottom:24px">
-          ${fases.map((f, i) => `
-            <div class="rm-phase">
-              <div class="rm-circle ${i < fase ? 'done' : i === fase ? 'active' : ''}">${i < fase ? '✓' : faseIcons[i]}</div>
-              <span class="rm-label ${i === fase ? 'active' : ''}">${f}</span>
-            </div>
-            ${i < 3 ? `<div class="rm-line ${i < fase ? 'done' : ''}"></div>` : ''}
-          `).join('')}
-        </div>
-        ${fases.map((f, i) => `
-          <div style="display:flex;gap:14px;padding:16px;background:${i === fase ? 'rgba(26,158,114,.08)' : 'rgba(4,9,6,.5)'};border:.5px solid ${i === fase ? 'rgba(26,158,114,.25)' : 'rgba(255,255,255,.05)'};border-radius:11px;margin-bottom:8px;transition:all .2s">
-            <div style="width:32px;height:32px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:13px;background:${i < fase ? 'rgba(26,158,114,.15)' : i === fase ? 'var(--green-dim)' : 'rgba(255,255,255,.04)'};color:${i <= fase ? 'var(--green)' : 'var(--text-3)'}">
-              ${i < fase ? '✓' : faseIcons[i]}
-            </div>
-            <div style="flex:1">
-              <div style="font-size:13px;font-weight:500;color:${i === fase ? 'var(--text-1)' : i < fase ? 'var(--text-2)' : 'var(--text-3)'};margin-bottom:4px">${f} ${i === fase ? '<span style="font-size:10px;color:var(--green);background:rgba(26,158,114,.12);border:.5px solid rgba(26,158,114,.22);border-radius:4px;padding:1px 6px;margin-left:4px">Aquí estás</span>' : ''}</div>
-              <div style="font-size:12px;color:var(--text-3);font-weight:300;line-height:1.6">${descripciones[i]}</div>
-              ${i === fase ? `<div style="margin-top:10px;font-size:12px;color:var(--green);font-weight:400">→ ${siguientes[i]}</div>` : ''}
-            </div>
-          </div>`).join('')}
-      </div>
-      <div class="card fi d1" style="text-align:center;padding:20px">
-        <p style="font-size:13px;color:var(--text-2);font-weight:300;line-height:1.7;margin-bottom:14px">Cada conversación te hace avanzar en tu roadmap.<br>Llevas <strong style="color:var(--text-1)">${ud.count}</strong> mensajes en tu proceso.</p>
-        <button onclick="retomar()" style="display:inline-flex;align-items:center;gap:8px;background:var(--green-dim);color:#fff;padding:10px 22px;border-radius:9px;font-size:13px;font-weight:500;cursor:pointer;border:none;font-family:'DM Sans',sans-serif">✦ Continuar conversación →</button>
-      </div>`);
+    const fase = ud.count<=5?0:ud.count<=12?1:ud.count<=20?2:3;
+    const fases=['Claridad','Dirección','Acción','Reinvención'];
+    const faseIcons=['◎','↗','✦','★'];
+    const descripciones=['Estás entendiendo tu situación actual, identificando qué te frena y qué te motiva.','Ya tienes claridad sobre tu punto de partida. Ahora descubres hacia dónde quieres ir.','Tienes dirección clara. Es momento de convertir esa claridad en acciones concretas.','Estás ejecutando tu plan de reinvención. Cada conversación te acerca más a tu nueva vida.'];
+    const siguientes=['Continúa conversando sobre tu situación actual para obtener más claridad.','Explora qué tipo de vida profesional quieres construir.','Define 3 acciones concretas que puedes tomar esta semana.','Evalúa tu progreso y ajusta el plan según lo que has aprendido.'];
+    showSeccion('nav-road','Tu Roadmap','Visualiza en qué fase de tu reinvención estás.',`<div class="card fi"><div class="c-title"><span class="c-title-dot">◎</span> Tu camino de reinvención</div><div class="roadmap-wrap" style="margin-bottom:24px">${fases.map((f,i)=>`<div class="rm-phase"><div class="rm-circle ${i<fase?'done':i===fase?'active':''}">${i<fase?'✓':faseIcons[i]}</div><span class="rm-label ${i===fase?'active':''}">${f}</span></div>${i<3?`<div class="rm-line ${i<fase?'done':''}"></div>`:''}`).join('')}</div>${fases.map((f,i)=>`<div style="display:flex;gap:14px;padding:16px;background:${i===fase?'rgba(26,158,114,.08)':'rgba(4,9,6,.5)'};border:.5px solid ${i===fase?'rgba(26,158,114,.25)':'rgba(255,255,255,.05)'};border-radius:11px;margin-bottom:8px"><div style="width:32px;height:32px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:13px;background:${i<fase?'rgba(26,158,114,.15)':i===fase?'var(--green-dim)':'rgba(255,255,255,.04)'};color:${i<=fase?'var(--green)':'var(--text-3)'}">${i<fase?'✓':faseIcons[i]}</div><div style="flex:1"><div style="font-size:13px;font-weight:500;color:${i===fase?'var(--text-1)':i<fase?'var(--text-2)':'var(--text-3)'};margin-bottom:4px">${f}${i===fase?'<span style="font-size:10px;color:var(--green);background:rgba(26,158,114,.12);border:.5px solid rgba(26,158,114,.22);border-radius:4px;padding:1px 6px;margin-left:4px">Aquí estás</span>':''}</div><div style="font-size:12px;color:var(--text-3);font-weight:300;line-height:1.6">${descripciones[i]}</div>${i===fase?`<div style="margin-top:10px;font-size:12px;color:var(--green);font-weight:400">→ ${siguientes[i]}</div>`:''}</div></div>`).join('')}</div><div class="card fi d1" style="text-align:center;padding:20px"><p style="font-size:13px;color:var(--text-2);font-weight:300;line-height:1.7;margin-bottom:14px">Cada conversación te hace avanzar en tu roadmap.<br>Llevas <strong style="color:var(--text-1)">${ud.count}</strong> mensajes en tu proceso.</p><button onclick="retomar()" style="display:inline-flex;align-items:center;gap:8px;background:var(--green-dim);color:#fff;padding:10px 22px;border-radius:9px;font-size:13px;font-weight:500;cursor:pointer;border:none;font-family:'DM Sans',sans-serif">✦ Continuar conversación →</button></div>`);
   }
 
   function showSeguimiento(e) {
     e?.preventDefault();
-    const diasSinConv = ud.userMsgs?.length
-      ? Math.floor((Date.now() - new Date(ud.userMsgs[0].created_at).getTime()) / (1000*60*60*24))
-      : null;
-
-    showSeccion('nav-seg', 'Seguimiento semanal', 'Tu progreso semana a semana.', `
-      <div class="card fi">
-        <div class="c-title"><span class="c-title-dot">📅</span> Estado actual</div>
-        ${diasSinConv === null ? `
-          <p style="font-size:13px;color:var(--text-2);font-weight:300">Aún no hay conversaciones registradas.</p>
-        ` : diasSinConv === 0 ? `
-          <div style="display:flex;align-items:center;gap:12px;padding:16px;background:rgba(26,158,114,.08);border:.5px solid rgba(26,158,114,.2);border-radius:11px">
-            <span style="font-size:24px">🌟</span>
-            <div>
-              <p style="font-size:13px;font-weight:500;color:var(--text-1);margin-bottom:3px">Conversaste hoy</p>
-              <p style="font-size:12px;color:var(--text-2);font-weight:300">Excelente. Mantener el ritmo es clave para tu reinvención.</p>
-            </div>
-          </div>
-        ` : diasSinConv <= 3 ? `
-          <div style="display:flex;align-items:center;gap:12px;padding:16px;background:rgba(26,158,114,.05);border:.5px solid rgba(26,158,114,.15);border-radius:11px">
-            <span style="font-size:24px">🌱</span>
-            <div>
-              <p style="font-size:13px;font-weight:500;color:var(--text-1);margin-bottom:3px">Hace ${diasSinConv} días</p>
-              <p style="font-size:12px;color:var(--text-2);font-weight:300">Vas bien. ¿Hay algo nuevo que quieras explorar hoy?</p>
-            </div>
-          </div>
-        ` : `
-          <div style="display:flex;align-items:center;gap:12px;padding:16px;background:rgba(26,158,114,.04);border:.5px solid var(--border-faint);border-radius:11px">
-            <span style="font-size:24px">💭</span>
-            <div>
-              <p style="font-size:13px;font-weight:500;color:var(--text-1);margin-bottom:3px">Han pasado ${diasSinConv} días</p>
-              <p style="font-size:12px;color:var(--text-2);font-weight:300">¿Cómo te sientes respecto a tu proceso? Retomemos.</p>
-            </div>
-          </div>
-        `}
-        <button onclick="retomar()" style="display:inline-flex;align-items:center;gap:8px;background:var(--green-dim);color:#fff;padding:10px 22px;border-radius:9px;font-size:13px;font-weight:500;cursor:pointer;border:none;font-family:'DM Sans',sans-serif;margin-top:14px">Retomar conversación →</button>
-      </div>
-      <div class="card fi d1">
-        <div class="c-title"><span class="c-title-dot">✦</span> Conversaciones recientes</div>
-        <div class="conv-list">
-          ${ud.userMsgs?.length ? ud.userMsgs.slice(0,6).map((m,i) => `
-            <div class="conv-row fi d${i%4+1}" onclick="retomar()">
-              <div class="conv-dot"></div>
-              <span class="conv-name">${trunc(clean(m.mensaje),30)}</span>
-              <span class="conv-prev">Hablamos sobre esto en tu proceso...</span>
-              <span class="conv-date">${fdate(m.created_at)}</span>
-              <span class="conv-arr">›</span>
-            </div>`).join('') : '<p style="font-size:13px;color:var(--text-3);padding:12px">No hay conversaciones aún.</p>'}
-        </div>
-      </div>`);
+    const diasSinConv = ud.userMsgs?.length ? Math.floor((Date.now()-new Date(ud.userMsgs[0].created_at).getTime())/(1000*60*60*24)) : null;
+    showSeccion('nav-seg','Seguimiento semanal','Tu progreso semana a semana.',`<div class="card fi"><div class="c-title"><span class="c-title-dot">📅</span> Estado actual</div>${diasSinConv===null?`<p style="font-size:13px;color:var(--text-2);font-weight:300">Aún no hay conversaciones registradas.</p>`:diasSinConv===0?`<div style="display:flex;align-items:center;gap:12px;padding:16px;background:rgba(26,158,114,.08);border:.5px solid rgba(26,158,114,.2);border-radius:11px"><span style="font-size:24px">🌟</span><div><p style="font-size:13px;font-weight:500;color:var(--text-1);margin-bottom:3px">Conversaste hoy</p><p style="font-size:12px;color:var(--text-2);font-weight:300">Excelente. Mantener el ritmo es clave para tu reinvención.</p></div></div>`:diasSinConv<=3?`<div style="display:flex;align-items:center;gap:12px;padding:16px;background:rgba(26,158,114,.05);border:.5px solid rgba(26,158,114,.15);border-radius:11px"><span style="font-size:24px">🌱</span><div><p style="font-size:13px;font-weight:500;color:var(--text-1);margin-bottom:3px">Hace ${diasSinConv} días</p><p style="font-size:12px;color:var(--text-2);font-weight:300">Vas bien. ¿Hay algo nuevo que quieras explorar hoy?</p></div></div>`:`<div style="display:flex;align-items:center;gap:12px;padding:16px;background:rgba(26,158,114,.04);border:.5px solid var(--border-faint);border-radius:11px"><span style="font-size:24px">💭</span><div><p style="font-size:13px;font-weight:500;color:var(--text-1);margin-bottom:3px">Han pasado ${diasSinConv} días</p><p style="font-size:12px;color:var(--text-2);font-weight:300">¿Cómo te sientes respecto a tu proceso? Retomemos.</p></div></div>`}<button onclick="retomar()" style="display:inline-flex;align-items:center;gap:8px;background:var(--green-dim);color:#fff;padding:10px 22px;border-radius:9px;font-size:13px;font-weight:500;cursor:pointer;border:none;font-family:'DM Sans',sans-serif;margin-top:14px">Retomar conversación →</button></div><div class="card fi d1"><div class="c-title"><span class="c-title-dot">✦</span> Conversaciones recientes</div><div class="conv-list">${ud.userMsgs?.length?ud.userMsgs.slice(0,6).map((m,i)=>`<div class="conv-row fi d${i%4+1}" onclick="retomar()"><div class="conv-dot"></div><span class="conv-name">${trunc(clean(m.mensaje),30)}</span><span class="conv-prev">Hablamos sobre esto en tu proceso...</span><span class="conv-date">${fdate(m.created_at)}</span><span class="conv-arr">›</span></div>`).join(''):'<p style="font-size:13px;color:var(--text-3);padding:12px">No hay conversaciones aún.</p>'}</div></div>`);
   }
 
   function showCalendario(e) {
     e?.preventDefault();
-    const hoy = new Date();
-    const mes = hoy.toLocaleDateString('es-CL', { month: 'long', year: 'numeric' });
-    const diasMes = new Date(hoy.getFullYear(), hoy.getMonth()+1, 0).getDate();
-    const primerDia = new Date(hoy.getFullYear(), hoy.getMonth(), 1).getDay();
-    const diasConConv = new Set(ud.userMsgs?.map(m => new Date(m.created_at).getDate()) || []);
-
-    let calHTML = '<div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-top:8px">';
-    ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'].forEach(d => {
-      calHTML += `<div style="text-align:center;font-size:10px;color:var(--text-3);padding:4px;font-weight:500">${d}</div>`;
-    });
-    for (let i = 0; i < primerDia; i++) calHTML += '<div></div>';
-    for (let d = 1; d <= diasMes; d++) {
-      const esHoy = d === hoy.getDate();
-      const tieneConv = diasConConv.has(d);
-      calHTML += `<div style="text-align:center;padding:7px 4px;border-radius:8px;font-size:12px;font-weight:${esHoy?'600':'300'};
-        background:${esHoy ? 'var(--green-dim)' : tieneConv ? 'rgba(26,158,114,.12)' : 'transparent'};
-        color:${esHoy ? '#fff' : tieneConv ? 'var(--green)' : 'var(--text-2)'};
-        border:.5px solid ${esHoy ? 'transparent' : tieneConv ? 'rgba(26,158,114,.2)' : 'transparent'}">${d}</div>`;
-    }
-    calHTML += '</div>';
-
-    showSeccion('nav-cal', 'Calendario', 'Tus días de conversación este mes.', `
-      <div class="card fi">
-        <div class="c-title"><span class="c-title-dot">🗓</span> ${mes.charAt(0).toUpperCase() + mes.slice(1)}</div>
-        ${calHTML}
-        <div style="display:flex;align-items:center;gap:16px;margin-top:16px;padding-top:14px;border-top:.5px solid var(--border-faint)">
-          <div style="display:flex;align-items:center;gap:7px;font-size:12px;color:var(--text-2)"><div style="width:12px;height:12px;border-radius:3px;background:var(--green-dim)"></div> Hoy</div>
-          <div style="display:flex;align-items:center;gap:7px;font-size:12px;color:var(--text-2)"><div style="width:12px;height:12px;border-radius:3px;background:rgba(26,158,114,.12);border:.5px solid rgba(26,158,114,.2)"></div> Conversaste</div>
-        </div>
-      </div>
-      <div class="card fi d1" style="text-align:center;padding:20px">
-        <p style="font-size:13px;color:var(--text-2);font-weight:300;line-height:1.7;margin-bottom:14px">Llevas <strong style="color:var(--text-1)">${diasConConv.size}</strong> días con conversaciones este mes.</p>
-        <button onclick="retomar()" style="display:inline-flex;align-items:center;gap:8px;background:var(--green-dim);color:#fff;padding:10px 22px;border-radius:9px;font-size:13px;font-weight:500;cursor:pointer;border:none;font-family:'DM Sans',sans-serif">✦ Conversar hoy →</button>
-      </div>`);
+    const hoy=new Date(); const mes=hoy.toLocaleDateString('es-CL',{month:'long',year:'numeric'}); const diasMes=new Date(hoy.getFullYear(),hoy.getMonth()+1,0).getDate(); const primerDia=new Date(hoy.getFullYear(),hoy.getMonth(),1).getDay(); const diasConConv=new Set(ud.userMsgs?.map(m=>new Date(m.created_at).getDate())||[]);
+    let calHTML='<div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-top:8px">';
+    ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'].forEach(d=>{calHTML+=`<div style="text-align:center;font-size:10px;color:var(--text-3);padding:4px;font-weight:500">${d}</div>`;});
+    for(let i=0;i<primerDia;i++)calHTML+='<div></div>';
+    for(let d=1;d<=diasMes;d++){const esHoy=d===hoy.getDate();const tieneConv=diasConConv.has(d);calHTML+=`<div style="text-align:center;padding:7px 4px;border-radius:8px;font-size:12px;font-weight:${esHoy?'600':'300'};background:${esHoy?'var(--green-dim)':tieneConv?'rgba(26,158,114,.12)':'transparent'};color:${esHoy?'#fff':tieneConv?'var(--green)':'var(--text-2)'};border:.5px solid ${esHoy?'transparent':tieneConv?'rgba(26,158,114,.2)':'transparent'}">${d}</div>`;}
+    calHTML+='</div>';
+    showSeccion('nav-cal','Calendario','Tus días de conversación este mes.',`<div class="card fi"><div class="c-title"><span class="c-title-dot">🗓</span> ${mes.charAt(0).toUpperCase()+mes.slice(1)}</div>${calHTML}<div style="display:flex;align-items:center;gap:16px;margin-top:16px;padding-top:14px;border-top:.5px solid var(--border-faint)"><div style="display:flex;align-items:center;gap:7px;font-size:12px;color:var(--text-2)"><div style="width:12px;height:12px;border-radius:3px;background:var(--green-dim)"></div> Hoy</div><div style="display:flex;align-items:center;gap:7px;font-size:12px;color:var(--text-2)"><div style="width:12px;height:12px;border-radius:3px;background:rgba(26,158,114,.12);border:.5px solid rgba(26,158,114,.2)"></div> Conversaste</div></div></div><div class="card fi d1" style="text-align:center;padding:20px"><p style="font-size:13px;color:var(--text-2);font-weight:300;line-height:1.7;margin-bottom:14px">Llevas <strong style="color:var(--text-1)">${diasConConv.size}</strong> días con conversaciones este mes.</p><button onclick="retomar()" style="display:inline-flex;align-items:center;gap:8px;background:var(--green-dim);color:#fff;padding:10px 22px;border-radius:9px;font-size:13px;font-weight:500;cursor:pointer;border:none;font-family:'DM Sans',sans-serif">✦ Conversar hoy →</button></div>`);
   }
 
   async function showInsights(e) {
     e?.preventDefault();
-    showSeccion('nav-ins', 'Insights', 'Lo que RenaIA ha detectado sobre tu proceso.', `
-      <div class="card fi" id="insights-full-card">
-        <div class="c-title"><span class="c-title-dot">✦</span> Insights personalizados</div>
-        <div class="insight-grid">
-          <div class="insight-card"><div class="insight-icon">◌</div><p class="insight-txt" style="color:var(--text-3)">Generando insights...</p></div>
-          <div class="insight-card"><div class="insight-icon">◌</div><p class="insight-txt" style="color:var(--text-3)">Analizando tus conversaciones...</p></div>
-          <div class="insight-card"><div class="insight-icon">◌</div><p class="insight-txt" style="color:var(--text-3)">Un momento...</p></div>
-        </div>
-      </div>`);
-
+    showSeccion('nav-ins','Insights','Lo que RenaIA ha detectado sobre tu proceso.',`<div class="card fi" id="insights-full-card"><div class="c-title"><span class="c-title-dot">✦</span> Insights personalizados</div><div class="insight-grid"><div class="insight-card"><div class="insight-icon">◌</div><p class="insight-txt" style="color:var(--text-3)">Generando insights...</p></div><div class="insight-card"><div class="insight-icon">◌</div><p class="insight-txt" style="color:var(--text-3)">Analizando tus conversaciones...</p></div><div class="insight-card"><div class="insight-icon">◌</div><p class="insight-txt" style="color:var(--text-3)">Un momento...</p></div></div></div>`);
     try {
-      const res = await fetch('/generar-insights', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId: cu.id })
-      });
+      const res = await fetch('/generar-insights',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({userId:cu.id})});
       const { insights } = await res.json();
-      if (insights?.length) {
-        const icons = ['◎', '✦', '↗'];
-        document.getElementById('insights-full-card').innerHTML = `
-          <div class="c-title"><span class="c-title-dot">✦</span> Insights personalizados</div>
-          <p style="font-size:12px;color:var(--text-3);margin-bottom:16px;font-weight:300">Basados en tus conversaciones — se actualizan cada 24h.</p>
-          <div class="insight-grid">
-            ${insights.slice(0,3).map((ins, i) => `
-              <div class="insight-card">
-                <div class="insight-icon">${icons[i]}</div>
-                <p class="insight-txt">"${clean(ins)}"</p>
-              </div>`).join('')}
-          </div>`;
-      }
+      if (insights?.length) { const icons=['◎','✦','↗']; document.getElementById('insights-full-card').innerHTML=`<div class="c-title"><span class="c-title-dot">✦</span> Insights personalizados</div><p style="font-size:12px;color:var(--text-3);margin-bottom:16px;font-weight:300">Basados en tus conversaciones — se actualizan cada 24h.</p><div class="insight-grid">${insights.slice(0,3).map((ins,i)=>`<div class="insight-card"><div class="insight-icon">${icons[i]}</div><p class="insight-txt">"${clean(ins)}"</p></div>`).join('')}</div>`; }
     } catch(err) { console.error(err); }
   }
 
@@ -1047,47 +738,11 @@
   async function activarPro() {
     try {
       const { data: { session } } = await sb.auth.getSession();
-      const res = await fetch('/crear-checkout', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId: cu.id, email: session.user.email })
-      });
+      const res = await fetch('/crear-checkout',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({userId:cu.id,email:session.user.email})});
       const data = await res.json();
       if (data.url) window.location.href = data.url;
-      else console.error('No URL recibida:', data);
-    } catch(err) {
-      console.error('Error activarPro:', err);
-    }
+    } catch(err) { console.error('Error activarPro:', err); }
   }
-
- async function init() {
-  document.body.style.opacity = '0';
-  document.body.style.transition = 'opacity .3s ease';
-  const { data: { session } } = await sb.auth.getSession();
-  if (!session?.user) { window.location.href = '/'; return; }
-  cu = session.user;
-
-  // Verificar si completó el Cartógrafo
-  const { data: cartResult } = await sb
-    .from('cartografo_resultados')
-    .select('id')
-    .eq('usuario_id', cu.id)
-    .maybeSingle();
-
-  if (!cartResult) {
-    window.location.href = '/cartografo.html';
-    return;
-  }
-
-  await loadUser();
-  document.body.style.opacity = '1';
-  if (new URLSearchParams(window.location.search).get('upgraded') === 'true') {
-    await sb.from('usuarios').update({ is_pro: true }).eq('id', cu.id);
-    window.history.replaceState({}, '', '/app.html');
-  }
-  await loadData();
-  render();
-}
 
   init();
 </script>
