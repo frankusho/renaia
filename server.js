@@ -352,7 +352,8 @@ app.post("/api/cartografo", async (req, res) => {
       .update({ roadmap_fase: 1, cartografo_completado: true })
       .eq("id", userId);
   } catch (err) {
-    console.error("Cartógrafo Supabase error:", err);
+    console.error("Cartógrafo Supabase error:", JSON.stringify(err));
+    return res.status(500).json({ error: err.message || "Error Supabase" });
   }
 
   const parrafo = await generarParrafoCartografo(scores, fase, desafio, answers);
