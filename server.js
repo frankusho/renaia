@@ -326,8 +326,24 @@ app.post("/api/cartografo", async (req, res) => {
     return res.status(400).json({ error: "Faltan datos" });
   }
 
-  try {
-    await supabase.from("cartografo_resultados").upsert(
+  console.log("CARTOGRAFO: iniciando para userId:", userId);
+
+  // Asegurar que el usuario existe en tabla usuarios antes del upsert
+  const { data: usuarioExiste } = await supabase
+    .from("usuarios")
+    .select("id")
+    .eq("id", userId)
+    .maybeSingle();
+
+  if (!usuarioExiste) {
+    console.log("CARTOGRAFO: usuario no existe en tabla, insertando...");
+    await supabase.from("usuarios").insert({ id: userId });
+  }
+
+  // Upsert resultado del cartógrafo
+  const { data: upsertData, error: upsertError } = await supabase
+    .from("cartografo_resultados")
+    .upsert(
       {
         usuario_id: userId,
         fase,
@@ -339,7 +355,7 @@ app.post("/api/cartografo", async (req, res) => {
         presion_critica: scores.flags?.presion_critica || false,
         principal_desafio: desafio,
         situacion_laboral: answers?.P1 || null,
-        tiempo_situacion: answers?.P2 || null,
+        tiempo_situacion: String(answers?.P2 || ''),
         contexto_adicional: answers?.CIERRE || null,
         respuestas_raw: answers,
         version: 1
@@ -347,25 +363,35 @@ app.post("/api/cartografo", async (req, res) => {
       { onConflict: "usuario_id" }
     );
 
-    await supabase
-      .from("usuarios")
-      .update({ roadmap_fase: 1, cartografo_completado: true })
-      .eq("id", userId);
-  } catch (err) {
-    console.error("Cartógrafo Supabase error:", JSON.stringify(err));
-    return res.status(500).json({ error: err.message || "Error Supabase" });
+  if (upsertError) {
+    console.error("CARTOGRAFO upsert error:", JSON.stringify(upsertError));
+    // No bloqueamos — intentamos generar el párrafo igual
+  } else {
+    console.log("CARTOGRAFO: upsert exitoso");
   }
 
+  // Actualizar tabla usuarios
+  const { error: updateError } = await supabase
+    .from("usuarios")
+    .update({ roadmap_fase: 1, cartografo_completado: true })
+    .eq("id", userId);
+
+  if (updateError) {
+    console.error("CARTOGRAFO update usuarios error:", JSON.stringify(updateError));
+  }
+
+  // Generar párrafo con Groq
   const parrafo = await generarParrafoCartografo(scores, fase, desafio, answers);
 
+  // Guardar párrafo si existe
   if (parrafo) {
-    try {
-      await supabase
-        .from("cartografo_resultados")
-        .update({ resumen_ia: parrafo })
-        .eq("usuario_id", userId);
-    } catch(e) {
-      console.error("Error guardando párrafo:", e);
+    const { error: parrafoError } = await supabase
+      .from("cartografo_resultados")
+      .update({ resumen_ia: parrafo })
+      .eq("usuario_id", userId);
+
+    if (parrafoError) {
+      console.error("CARTOGRAFO parrafo save error:", JSON.stringify(parrafoError));
     }
   }
 
@@ -396,12 +422,12 @@ async function generarParrafoCartografo(scores, fase, desafio, answers) {
   }[situacion] || 'situación profesional en transición';
 
   const tiempoTexto = {
-    20: 'menos de 1 mes',
-    40: 'entre 1 y 3 meses',
-    60: 'entre 3 y 6 meses',
-    80: 'entre 6 meses y 1 año',
-    95: 'más de 1 año',
-  }[tiempo] || null;
+    '20': 'menos de 1 mes',
+    '40': 'entre 1 y 3 meses',
+    '60': 'entre 3 y 6 meses',
+    '80': 'entre 6 meses y 1 año',
+    '95': 'más de 1 año',
+  }[String(tiempo)] || null;
 
   const prompt = `Eres el Cartógrafo de RenaIA. Tu función es diagnosticar dónde se encuentra una persona en su proceso de reinvención profesional.
 
