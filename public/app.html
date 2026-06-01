@@ -1060,21 +1060,34 @@
     }
   }
 
-  async function init() {
-    document.body.style.opacity = '0';
-    document.body.style.transition = 'opacity .3s ease';
-    const { data: { session } } = await sb.auth.getSession();
-    if (!session?.user) { window.location.href = '/'; return; }
-    cu = session.user;
-    await loadUser();
-    document.body.style.opacity = '1';
-    if (new URLSearchParams(window.location.search).get('upgraded') === 'true') {
-      await sb.from('usuarios').update({ is_pro: true }).eq('id', cu.id);
-      window.history.replaceState({}, '', '/app.html');
-    }
-    await loadData();
-    render();
+ async function init() {
+  document.body.style.opacity = '0';
+  document.body.style.transition = 'opacity .3s ease';
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session?.user) { window.location.href = '/'; return; }
+  cu = session.user;
+
+  // Verificar si completó el Cartógrafo
+  const { data: cartResult } = await sb
+    .from('cartografo_resultados')
+    .select('id')
+    .eq('usuario_id', cu.id)
+    .maybeSingle();
+
+  if (!cartResult) {
+    window.location.href = '/cartografo.html';
+    return;
   }
+
+  await loadUser();
+  document.body.style.opacity = '1';
+  if (new URLSearchParams(window.location.search).get('upgraded') === 'true') {
+    await sb.from('usuarios').update({ is_pro: true }).eq('id', cu.id);
+    window.history.replaceState({}, '', '/app.html');
+  }
+  await loadData();
+  render();
+}
 
   init();
 </script>

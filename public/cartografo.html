@@ -1,0 +1,1471 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RenaIA — Cartógrafo</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=Playfair+Display:ital,wght@0,500;0,600;1,500;1,600&display=swap');
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { height: 100%; }
+
+    :root {
+      --green: #1a9e72;
+      --green-dim: #0f7a55;
+      --green-hover: #15b882;
+      --green-faint: rgba(26,158,114,.08);
+      --border: rgba(26,158,114,.18);
+      --border-faint: rgba(255,255,255,.06);
+      --bg: #060a07;
+      --bg2: rgba(5,11,7,.98);
+      --text-1: #e8f0ea;
+      --text-2: #6b8a78;
+      --text-3: #2e4038;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text-1);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      overflow-x: hidden;
+    }
+
+    /* Background subtle */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(ellipse 80% 60% at 50% -10%, rgba(26,158,114,.07) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: .6; }
+      50%       { opacity: 1; }
+    }
+    @keyframes barFill {
+      from { width: 0%; }
+      to   { width: var(--target-width); }
+    }
+    @keyframes bounce {
+      0%,60%,100% { transform: translateY(0); }
+      30%         { transform: translateY(-4px); }
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 580px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding: 32px 20px;
+    }
+
+    /* ── HEADER ── */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 48px;
+      animation: fadeIn .5s ease;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      text-decoration: none;
+    }
+    .brand-name {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text-1);
+      letter-spacing: -.4px;
+    }
+    .brand-name span { color: var(--green); }
+
+    .progress-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .progress-bar {
+      width: 120px;
+      height: 3px;
+      background: rgba(255,255,255,.07);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--green-dim), var(--green));
+      border-radius: 99px;
+      transition: width .6s cubic-bezier(.4,0,.2,1);
+      width: 0%;
+    }
+    .progress-label {
+      font-size: 11px;
+      color: var(--text-3);
+      font-weight: 400;
+      min-width: 28px;
+      text-align: right;
+    }
+
+    /* ── INTRO SCREEN ── */
+    #screen-intro {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 0;
+      animation: fadeInUp .6s ease;
+    }
+    #screen-intro.hidden { display: none; }
+
+    .intro-eyebrow {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--green);
+      margin-bottom: 20px;
+      opacity: .9;
+    }
+    .intro-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(30px, 5vw, 40px);
+      font-weight: 500;
+      line-height: 1.15;
+      color: var(--text-1);
+      letter-spacing: -.5px;
+      margin-bottom: 20px;
+    }
+    .intro-title em {
+      font-style: italic;
+      color: var(--green);
+    }
+    .intro-body {
+      font-size: 15px;
+      color: var(--text-2);
+      font-weight: 300;
+      line-height: 1.8;
+      margin-bottom: 40px;
+      max-width: 440px;
+    }
+    .intro-divider {
+      width: 32px;
+      height: 1.5px;
+      background: var(--green);
+      opacity: .4;
+      margin: 28px 0;
+    }
+    .intro-meta {
+      display: flex;
+      gap: 24px;
+      margin-bottom: 40px;
+    }
+    .intro-meta-item {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 12px;
+      color: var(--text-3);
+      font-weight: 300;
+    }
+    .intro-meta-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--green);
+      opacity: .6;
+      flex-shrink: 0;
+    }
+    .btn-start {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--green-dim);
+      color: #fff;
+      padding: 14px 28px;
+      border-radius: 11px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      font-family: 'DM Sans', sans-serif;
+      box-shadow: 0 6px 24px rgba(15,122,85,.28);
+      transition: background .2s, transform .15s;
+      align-self: flex-start;
+    }
+    .btn-start:hover { background: var(--green-hover); transform: translateY(-1px); }
+    .btn-start:active { transform: translateY(0); }
+
+    /* ── QUESTION SCREEN ── */
+    #screen-question {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    #screen-question.hidden { display: none; }
+
+    .q-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 0;
+    }
+
+    .q-step {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--text-3);
+      margin-bottom: 14px;
+      animation: fadeIn .4s ease;
+    }
+
+    .q-text {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(20px, 3.5vw, 26px);
+      font-weight: 500;
+      line-height: 1.35;
+      color: var(--text-1);
+      letter-spacing: -.3px;
+      margin-bottom: 10px;
+    }
+
+    .q-sub {
+      font-size: 13px;
+      color: var(--text-2);
+      font-weight: 300;
+      line-height: 1.7;
+      margin-bottom: 32px;
+    }
+
+    /* Options */
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+
+    .opt {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 14px 16px;
+      background: rgba(4,9,6,.6);
+      border: .5px solid var(--border-faint);
+      border-radius: 11px;
+      cursor: pointer;
+      transition: all .2s;
+      font-size: 13.5px;
+      color: var(--text-2);
+      font-weight: 300;
+      line-height: 1.5;
+      animation: slideUp .35s ease both;
+      text-align: left;
+      font-family: 'DM Sans', sans-serif;
+      width: 100%;
+    }
+    .opt:hover {
+      border-color: var(--border);
+      background: rgba(6,16,10,.85);
+      color: var(--text-1);
+    }
+    .opt.selected {
+      border-color: var(--green);
+      background: rgba(26,158,114,.1);
+      color: var(--text-1);
+    }
+    .opt.selected .opt-radio { background: var(--green); border-color: var(--green); }
+    .opt.selected .opt-radio::after { opacity: 1; }
+    .opt-radio {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      border: 1.5px solid var(--text-3);
+      flex-shrink: 0;
+      margin-top: 1px;
+      transition: all .2s;
+      position: relative;
+    }
+    .opt-radio::after {
+      content: '';
+      position: absolute;
+      inset: 3px;
+      border-radius: 50%;
+      background: #fff;
+      opacity: 0;
+      transition: opacity .2s;
+    }
+    .opt-check {
+      width: 16px;
+      height: 16px;
+      border-radius: 4px;
+      border: 1.5px solid var(--text-3);
+      flex-shrink: 0;
+      margin-top: 1px;
+      transition: all .2s;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .opt.selected .opt-check {
+      background: var(--green);
+      border-color: var(--green);
+    }
+    .opt.selected .opt-check::after {
+      content: '✓';
+      color: #fff;
+      font-size: 10px;
+      font-weight: 600;
+    }
+
+    /* Scale options */
+    .scale-wrap {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+    .scale-opt {
+      flex: 1;
+      min-width: 52px;
+      padding: 12px 8px;
+      background: rgba(4,9,6,.6);
+      border: .5px solid var(--border-faint);
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all .2s;
+      text-align: center;
+      font-family: 'DM Sans', sans-serif;
+      animation: slideUp .35s ease both;
+    }
+    .scale-opt:hover { border-color: var(--border); background: rgba(6,16,10,.85); }
+    .scale-opt.selected { border-color: var(--green); background: rgba(26,158,114,.1); }
+    .scale-number {
+      font-size: 18px;
+      font-weight: 500;
+      color: var(--text-2);
+      display: block;
+      margin-bottom: 4px;
+    }
+    .scale-opt.selected .scale-number { color: var(--green); }
+    .scale-label {
+      font-size: 10px;
+      color: var(--text-3);
+      line-height: 1.3;
+      display: block;
+    }
+    .scale-opt.selected .scale-label { color: var(--text-2); }
+    .scale-ends {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--text-3);
+      font-weight: 300;
+      margin-bottom: 28px;
+      padding: 0 4px;
+    }
+
+    /* Textarea */
+    .q-textarea {
+      width: 100%;
+      background: rgba(4,9,6,.6);
+      border: .5px solid var(--border-faint);
+      border-radius: 11px;
+      padding: 16px;
+      color: var(--text-1);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 300;
+      line-height: 1.7;
+      resize: none;
+      outline: none;
+      min-height: 100px;
+      margin-bottom: 16px;
+      transition: border-color .2s;
+    }
+    .q-textarea:focus { border-color: var(--border); }
+    .q-textarea::placeholder { color: var(--text-3); }
+
+    .q-hint {
+      font-size: 12px;
+      color: var(--text-3);
+      font-weight: 300;
+      margin-bottom: 24px;
+    }
+
+    .q-multi-hint {
+      font-size: 12px;
+      color: var(--text-3);
+      font-weight: 300;
+      margin-bottom: 12px;
+    }
+
+    /* CTA */
+    .q-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding-top: 4px;
+    }
+    .btn-next {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--green-dim);
+      color: #fff;
+      padding: 12px 24px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      font-family: 'DM Sans', sans-serif;
+      box-shadow: 0 4px 16px rgba(15,122,85,.24);
+      transition: background .2s, opacity .2s;
+    }
+    .btn-next:hover { background: var(--green-hover); }
+    .btn-next:disabled { opacity: .4; cursor: not-allowed; }
+    .btn-skip {
+      font-size: 12px;
+      color: var(--text-3);
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      transition: color .2s;
+      padding: 4px;
+    }
+    .btn-skip:hover { color: var(--text-2); }
+
+    /* ── LOADING SCREEN ── */
+    #screen-loading {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      text-align: center;
+    }
+    #screen-loading.hidden { display: none; }
+    .loading-icon {
+      font-size: 28px;
+      color: var(--green);
+      animation: pulse 1.8s ease-in-out infinite;
+    }
+    .loading-dots {
+      display: flex;
+      gap: 6px;
+    }
+    .loading-dots span {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--green);
+      animation: bounce 1.2s infinite;
+    }
+    .loading-dots span:nth-child(2) { animation-delay: .18s; }
+    .loading-dots span:nth-child(3) { animation-delay: .36s; }
+    .loading-txt {
+      font-size: 15px;
+      color: var(--text-2);
+      font-weight: 300;
+      line-height: 1.7;
+    }
+    .loading-sub {
+      font-size: 12px;
+      color: var(--text-3);
+    }
+
+    /* ── RESULT SCREEN ── */
+    #screen-result {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      padding-bottom: 40px;
+    }
+    #screen-result.hidden { display: none; }
+
+    .result-eyebrow {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--green);
+      margin-bottom: 24px;
+      animation: fadeIn .6s ease;
+    }
+
+    .result-phase-card {
+      background: linear-gradient(135deg, rgba(8,22,14,.98), rgba(4,12,8,.98));
+      border: .5px solid var(--border);
+      border-radius: 16px;
+      padding: 28px;
+      margin-bottom: 16px;
+      animation: slideUp .5s ease;
+    }
+    .result-phase-icon {
+      font-size: 28px;
+      margin-bottom: 12px;
+      display: block;
+    }
+    .result-phase-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 26px;
+      font-weight: 500;
+      color: var(--text-1);
+      letter-spacing: -.4px;
+      margin-bottom: 6px;
+    }
+    .result-phase-sub {
+      font-size: 12px;
+      color: var(--green);
+      font-weight: 500;
+      letter-spacing: .4px;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+    .result-divider {
+      height: .5px;
+      background: var(--border-faint);
+      margin: 20px 0;
+    }
+
+    .result-section-title {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--text-3);
+      margin-bottom: 12px;
+    }
+    .result-bullets {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+    .result-bullet {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 13px;
+      color: var(--text-2);
+      font-weight: 300;
+      line-height: 1.6;
+    }
+    .result-bullet-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      margin-top: 7px;
+    }
+    .result-bullet-dot.neg { background: rgba(255,255,255,.2); }
+    .result-bullet-dot.pos { background: var(--green); }
+
+    .result-objetivo {
+      background: rgba(26,158,114,.08);
+      border: .5px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+      font-size: 13px;
+      color: var(--text-1);
+      font-weight: 400;
+      line-height: 1.6;
+    }
+    .result-objetivo-label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--green);
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    /* Bars */
+    .result-bars-card {
+      background: rgba(4,9,6,.7);
+      border: .5px solid var(--border-faint);
+      border-radius: 14px;
+      padding: 22px;
+      margin-bottom: 16px;
+      animation: slideUp .55s ease;
+    }
+    .bar-row {
+      margin-bottom: 16px;
+    }
+    .bar-row:last-child { margin-bottom: 0; }
+    .bar-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 7px;
+    }
+    .bar-name {
+      font-size: 12px;
+      color: var(--text-2);
+      font-weight: 400;
+    }
+    .bar-pct {
+      font-size: 12px;
+      color: var(--text-3);
+      font-weight: 300;
+    }
+    .bar-track {
+      height: 4px;
+      background: rgba(255,255,255,.06);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+    .bar-fill {
+      height: 100%;
+      border-radius: 99px;
+      background: linear-gradient(90deg, var(--green-dim), var(--green));
+      width: 0%;
+      transition: width 1.2s cubic-bezier(.4,0,.2,1);
+    }
+
+    /* IA paragraph */
+    .result-ia-card {
+      background: rgba(4,9,6,.5);
+      border: .5px solid var(--border-faint);
+      border-radius: 14px;
+      padding: 22px;
+      margin-bottom: 24px;
+      animation: slideUp .6s ease;
+    }
+    .result-ia-icon {
+      font-size: 14px;
+      color: var(--green);
+      margin-bottom: 10px;
+      opacity: .8;
+    }
+    .result-ia-text {
+      font-size: 14px;
+      color: var(--text-2);
+      font-weight: 300;
+      line-height: 1.85;
+      font-style: italic;
+    }
+    .result-ia-loading {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      color: var(--text-3);
+    }
+
+    .btn-continuar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      background: var(--green-dim);
+      color: #fff;
+      padding: 15px 28px;
+      border-radius: 11px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      font-family: 'DM Sans', sans-serif;
+      box-shadow: 0 6px 24px rgba(15,122,85,.28);
+      transition: background .2s, transform .15s;
+      width: 100%;
+      animation: slideUp .65s ease;
+    }
+    .btn-continuar:hover { background: var(--green-hover); transform: translateY(-1px); }
+
+    /* Urgencia badge */
+    .urgencia-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 9px;
+      border-radius: 6px;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: .3px;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+    .urgencia-badge.baja { background: rgba(26,158,114,.12); color: var(--green); border: .5px solid var(--border); }
+    .urgencia-badge.media { background: rgba(200,160,50,.1); color: #c8a032; border: .5px solid rgba(200,160,50,.2); }
+    .urgencia-badge.alta { background: rgba(200,100,50,.1); color: #c86432; border: .5px solid rgba(200,100,50,.2); }
+    .urgencia-badge.critica { background: rgba(200,50,50,.1); color: #c83232; border: .5px solid rgba(200,50,50,.2); }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="header">
+    <a class="brand" href="/">
+      <svg width="20" height="20" viewBox="0 0 30 30" fill="none">
+        <path d="M7 5L7 25" stroke="#1a9e72" stroke-width="2.5" stroke-linecap="round"/>
+        <path d="M7 5L18 5C22 5 24 7.5 24 11C24 14.5 22 17 18 17L7 17" stroke="#1a9e72" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M15 17L24 25" stroke="#1a9e72" stroke-width="2.5" stroke-linecap="round"/>
+      </svg>
+      <div class="brand-name">Rena<span>IA</span></div>
+    </a>
+    <div class="progress-wrap">
+      <div class="progress-bar">
+        <div class="progress-fill" id="progress-fill"></div>
+      </div>
+      <div class="progress-label" id="progress-label"></div>
+    </div>
+  </div>
+
+  <!-- INTRO -->
+  <div id="screen-intro">
+    <div class="intro-eyebrow">El Cartógrafo</div>
+    <h1 class="intro-title">
+      Antes de acompañarte,<br>
+      necesito saber<br>
+      <em>dónde estás hoy.</em>
+    </h1>
+    <div class="intro-divider"></div>
+    <p class="intro-body">
+      No me interesa tu cargo anterior ni tu currículum.<br>
+      Solo quiero entender tu momento actual para acompañarte mejor.
+    </p>
+    <div class="intro-meta">
+      <div class="intro-meta-item">
+        <div class="intro-meta-dot"></div>
+        <span>Menos de 5 minutos</span>
+      </div>
+      <div class="intro-meta-item">
+        <div class="intro-meta-dot"></div>
+        <span>7 preguntas</span>
+      </div>
+      <div class="intro-meta-item">
+        <div class="intro-meta-dot"></div>
+        <span>Sin formularios</span>
+      </div>
+    </div>
+    <button class="btn-start" onclick="startCartografo()">
+      Comenzar <span style="opacity:.7">→</span>
+    </button>
+  </div>
+
+  <!-- QUESTION -->
+  <div id="screen-question" class="hidden">
+    <div class="q-container" id="q-container"></div>
+    <div class="q-nav" id="q-nav">
+      <button class="btn-skip" id="btn-skip" onclick="skipQuestion()">Omitir</button>
+      <button class="btn-next" id="btn-next" onclick="nextQuestion()" disabled>
+        Continuar <span style="opacity:.7">→</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- LOADING -->
+  <div id="screen-loading" class="hidden">
+    <div class="loading-icon">✦</div>
+    <div class="loading-dots">
+      <span></span><span></span><span></span>
+    </div>
+    <p class="loading-txt" id="loading-txt">Analizando tus respuestas...</p>
+    <p class="loading-sub">Esto tarda unos segundos</p>
+  </div>
+
+  <!-- RESULT -->
+  <div id="screen-result" class="hidden" id="screen-result"></div>
+
+</div>
+
+<script>
+  const SB_URL = 'https://lmfgfpawtlrbneleodcn.supabase.co';
+  const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxtZmdmcGF3dGxyYm5lbGVvZGNuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkzMjQzNzgsImV4cCI6MjA5NDkwMDM3OH0.IqZpjeL1c2nHG1zrB3WgbQyP6Ll_TDcGS0Iu6CRBM1c';
+  const { createClient } = supabase;
+  const sb = createClient(SB_URL, SB_KEY);
+
+  let cu = null;
+  let answers = {};
+  let currentQ = 0;
+  let profundizacion = null; // 'A' o 'B'
+
+  // ── DEFINICIÓN DE PREGUNTAS ──
+  const PREGUNTAS_BASE = [
+    {
+      id: 'P1',
+      tipo: 'single',
+      bloque: 'Situación actual',
+      texto: '¿Cómo describirías tu situación profesional en este momento?',
+      sub: null,
+      skipable: false,
+      opciones: [
+        { texto: 'Estoy trabajando, pero quiero cambiar de rumbo', valor: 'trabaja_cambio' },
+        { texto: 'Estoy trabajando, pero me siento estancado/a', valor: 'trabaja_estancado' },
+        { texto: 'Acabo de dejar o perder mi trabajo (menos de 3 meses)', valor: 'perdio_reciente' },
+        { texto: 'Llevo un tiempo sin trabajar (más de 3 meses)', valor: 'sin_trabajo_largo' },
+        { texto: 'Estoy entre proyectos o en transición activa', valor: 'transicion' },
+        { texto: 'Nunca he tenido claridad sobre mi camino profesional', valor: 'sin_claridad' },
+      ]
+    },
+    {
+      id: 'P2',
+      tipo: 'single',
+      bloque: 'Situación actual',
+      texto: '¿Cuánto tiempo llevas en esta situación?',
+      sub: null,
+      skipable: false,
+      opciones: [
+        { texto: 'Menos de 1 mes', valor: 20 },
+        { texto: 'Entre 1 y 3 meses', valor: 40 },
+        { texto: 'Entre 3 y 6 meses', valor: 60 },
+        { texto: 'Entre 6 meses y 1 año', valor: 80 },
+        { texto: 'Más de 1 año', valor: 95 },
+      ]
+    },
+    {
+      id: 'P3',
+      tipo: 'multi',
+      bloque: 'Estado emocional',
+      maxSelect: 2,
+      texto: 'Cuando piensas en tu situación profesional hoy, ¿qué sientes con más frecuencia?',
+      sub: 'Elige hasta 2 opciones.',
+      skipable: false,
+      opciones: [
+        { texto: 'Confusión — no sé por dónde empezar', valor: 25, flag: 'neg' },
+        { texto: 'Miedo — me paraliza pensar en el futuro', valor: 20, flag: 'neg' },
+        { texto: 'Frustración — siento que no avanzo', valor: 35, flag: 'neg' },
+        { texto: 'Cansancio — ya no tengo energía para esto', valor: 15, flag: 'neg' },
+        { texto: 'Esperanza — creo que algo puede cambiar', valor: 65, flag: 'pos' },
+        { texto: 'Determinación — estoy listo/a para moverme', valor: 85, flag: 'pos' },
+      ]
+    },
+    {
+      id: 'P4',
+      tipo: 'scale',
+      bloque: 'Claridad',
+      texto: 'Cuando imaginas tu vida profesional dentro de 2 años, ¿qué tan claro te parece ese camino?',
+      sub: null,
+      skipable: false,
+      escala: [
+        { numero: 1, label: 'Completamente\nnublado', valor: 5 },
+        { numero: 2, label: 'Muy\nnublado', valor: 25 },
+        { numero: 3, label: 'Algo\nnublado', valor: 50 },
+        { numero: 4, label: 'Bastante\nclaro', valor: 75 },
+        { numero: 5, label: 'Muy\nclaro', valor: 95 },
+      ]
+    },
+    {
+      id: 'P5',
+      tipo: 'single',
+      bloque: 'Claridad',
+      texto: '¿Qué sientes que más te impide ver con claridad tu próximo paso?',
+      sub: null,
+      skipable: false,
+      opciones: [
+        { texto: 'No sé qué quiero realmente', valor: -15, desafio: 'Encontrar qué quieres realmente' },
+        { texto: 'Sé lo que quiero pero no sé cómo lograrlo', valor: 5, desafio: 'Trazar el camino hacia lo que ya sabes que quieres' },
+        { texto: 'Tengo miedo de elegir mal', valor: -10, desafio: 'Superar el miedo a la equivocación' },
+        { texto: 'Las circunstancias externas me limitan (familia, dinero, mercado)', valor: 0, desafio: 'Navegar las restricciones externas' },
+        { texto: 'Tengo demasiadas opciones y no sé cuál tomar', valor: -5, desafio: 'Priorizar entre múltiples posibilidades' },
+        { texto: 'Nada me lo impide — tengo claridad', valor: 20, desafio: 'Convertir la claridad en acción' },
+      ]
+    },
+    {
+      id: 'P6',
+      tipo: 'scale',
+      bloque: 'Confianza',
+      texto: '¿Qué tan capaz te sientes hoy de construir el camino profesional que quieres?',
+      sub: null,
+      skipable: false,
+      escala: [
+        { numero: 1, label: 'No me siento\ncapaz', valor: 5 },
+        { numero: 2, label: 'Casi\nnada', valor: 25 },
+        { numero: 3, label: 'Algo\ncapaz', valor: 50 },
+        { numero: 4, label: 'Bastante\ncapaz', valor: 75 },
+        { numero: 5, label: 'Completamente\ncapaz', valor: 95 },
+      ]
+    },
+    {
+      id: 'P7',
+      tipo: 'single',
+      bloque: 'Urgencia',
+      texto: '¿Cómo describirías tu situación económica en este momento?',
+      sub: null,
+      skipable: false,
+      opciones: [
+        { texto: 'Estable — tengo tiempo para explorar sin presión', valor: 10 },
+        { texto: 'Con algo de presión — necesito avanzar en los próximos meses', valor: 40 },
+        { texto: 'Con presión real — necesito resultados en las próximas semanas', valor: 75 },
+        { texto: 'Crítica — necesito resolver esto lo antes posible', valor: 95 },
+      ]
+    },
+  ];
+
+  const PREGUNTA_PA = {
+    id: 'PA',
+    tipo: 'single',
+    bloque: 'Profundización',
+    texto: 'Después de un tiempo así, es natural que algo cambie internamente. ¿Cómo te has sentido respecto a ti mismo/a durante este período?',
+    sub: null,
+    skipable: true,
+    opciones: [
+      { texto: 'He perdido confianza en mis capacidades', valor: -20 },
+      { texto: 'Me he cuestionado si realmente tengo algo valioso que ofrecer', valor: -10 },
+      { texto: 'Ha sido difícil, pero sigo creyendo en mí', valor: 0 },
+      { texto: 'He mantenido mi autoconfianza intacta', valor: 10 },
+    ]
+  };
+
+  const PREGUNTA_PB = {
+    id: 'PB',
+    tipo: 'single',
+    bloque: 'Profundización',
+    texto: 'Ese tipo de cambios suele venir con mucho ruido interno. ¿Qué es lo que más está ocupando tu cabeza ahora mismo?',
+    sub: null,
+    skipable: true,
+    opciones: [
+      { texto: 'El golpe emocional de lo que pasó', valor: -15 },
+      { texto: 'La incertidumbre de qué viene ahora', valor: -5 },
+      { texto: 'La presión por resolver esto rápido', valor: 0 },
+      { texto: 'Ya lo procesé — estoy enfocado/a en lo que sigue', valor: 15 },
+    ]
+  };
+
+  const PREGUNTA_CIERRE = {
+    id: 'CIERRE',
+    tipo: 'textarea',
+    bloque: 'Cierre',
+    texto: 'Antes de mostrarte dónde te encuentras, quiero preguntarte directamente:',
+    sub: '¿Hay algo importante sobre tu situación que sientas que no he capturado todavía? (opcional)',
+    skipable: true,
+  };
+
+  // ── FLUJO ──
+  let preguntas = [];
+  let qIndex = 0;
+
+  function buildPreguntas() {
+    preguntas = [...PREGUNTAS_BASE];
+    // Añadir profundización según P1
+    const p1 = answers['P1'];
+    if (p1 === 'sin_trabajo_largo') {
+      profundizacion = 'A';
+      preguntas.push(PREGUNTA_PA);
+    } else if (p1 === 'perdio_reciente') {
+      profundizacion = 'B';
+      preguntas.push(PREGUNTA_PB);
+    }
+    preguntas.push(PREGUNTA_CIERRE);
+  }
+
+  function startCartografo() {
+    document.getElementById('screen-intro').classList.add('hidden');
+    document.getElementById('screen-question').classList.remove('hidden');
+    preguntas = [...PREGUNTAS_BASE, PREGUNTA_CIERRE]; // default sin profundización
+    qIndex = 0;
+    renderQuestion();
+  }
+
+  function renderQuestion() {
+    const q = preguntas[qIndex];
+    const total = preguntas.length;
+    const pct = Math.round((qIndex / total) * 100);
+
+    document.getElementById('progress-fill').style.width = pct + '%';
+    document.getElementById('progress-label').textContent = `${qIndex + 1}/${total}`;
+
+    const btn = document.getElementById('btn-next');
+    btn.disabled = true;
+
+    const skip = document.getElementById('btn-skip');
+    skip.style.visibility = q.skipable ? 'visible' : 'hidden';
+
+    const container = document.getElementById('q-container');
+    container.innerHTML = buildQuestionHTML(q);
+
+    // Stagger animation
+    container.style.opacity = '0';
+    container.style.transform = 'translateY(16px)';
+    requestAnimationFrame(() => {
+      container.style.transition = 'opacity .35s ease, transform .35s ease';
+      container.style.opacity = '1';
+      container.style.transform = 'translateY(0)';
+    });
+
+    // Re-attach events
+    if (q.tipo === 'single') {
+      container.querySelectorAll('.opt').forEach(el => {
+        el.addEventListener('click', () => selectSingle(el, q));
+      });
+    } else if (q.tipo === 'multi') {
+      container.querySelectorAll('.opt').forEach(el => {
+        el.addEventListener('click', () => selectMulti(el, q));
+      });
+    } else if (q.tipo === 'scale') {
+      container.querySelectorAll('.scale-opt').forEach(el => {
+        el.addEventListener('click', () => selectScale(el, q));
+      });
+    } else if (q.tipo === 'textarea') {
+      const ta = container.querySelector('.q-textarea');
+      ta.addEventListener('input', () => {
+        btn.disabled = false; // always enable for textarea (optional)
+      });
+      btn.disabled = false; // optional, can skip
+    }
+  }
+
+  function buildQuestionHTML(q) {
+    let html = `
+      <div class="q-step">${q.bloque}</div>
+      <div class="q-text">${q.texto}</div>
+      ${q.sub ? `<div class="q-sub">${q.sub}</div>` : ''}
+    `;
+
+    if (q.tipo === 'single') {
+      html += `<div class="options">`;
+      q.opciones.forEach((op, i) => {
+        html += `<button class="opt" data-value="${op.valor}" data-desafio="${op.desafio || ''}" style="animation-delay:${i * 0.05}s">
+          <div class="opt-radio"></div>
+          <span>${op.texto}</span>
+        </button>`;
+      });
+      html += `</div>`;
+    } else if (q.tipo === 'multi') {
+      html += `<div class="q-multi-hint">Elige hasta ${q.maxSelect} opciones</div><div class="options">`;
+      q.opciones.forEach((op, i) => {
+        html += `<button class="opt" data-value="${op.valor}" data-flag="${op.flag || ''}" style="animation-delay:${i * 0.05}s">
+          <div class="opt-check"></div>
+          <span>${op.texto}</span>
+        </button>`;
+      });
+      html += `</div>`;
+    } else if (q.tipo === 'scale') {
+      html += `<div class="scale-wrap">`;
+      q.escala.forEach((s, i) => {
+        html += `<button class="scale-opt" data-value="${s.valor}" style="animation-delay:${i * 0.07}s">
+          <span class="scale-number">${s.numero}</span>
+          <span class="scale-label">${s.label.replace('\n', '<br>')}</span>
+        </button>`;
+      });
+      html += `</div>`;
+      html += `<div class="scale-ends"><span>← Bajo</span><span>Alto →</span></div>`;
+    } else if (q.tipo === 'textarea') {
+      html += `<textarea class="q-textarea" placeholder="Escribe aquí si hay algo que quieras agregar..." rows="4"></textarea>`;
+      html += `<div class="q-hint">Esta pregunta es completamente opcional.</div>`;
+    }
+
+    return html;
+  }
+
+  function selectSingle(el, q) {
+    const container = document.getElementById('q-container');
+    container.querySelectorAll('.opt').forEach(o => o.classList.remove('selected'));
+    el.classList.add('selected');
+    answers[q.id] = el.dataset.value;
+    if (el.dataset.desafio) answers[q.id + '_desafio'] = el.dataset.desafio;
+    document.getElementById('btn-next').disabled = false;
+
+    // Reconstruir flujo si es P1
+    if (q.id === 'P1') {
+      buildPreguntas();
+    }
+  }
+
+  function selectMulti(el, q) {
+    const selected = document.getElementById('q-container').querySelectorAll('.opt.selected');
+    if (!el.classList.contains('selected') && selected.length >= q.maxSelect) return;
+    el.classList.toggle('selected');
+
+    const vals = [];
+    const flags = [];
+    document.getElementById('q-container').querySelectorAll('.opt.selected').forEach(o => {
+      vals.push(parseFloat(o.dataset.value));
+      flags.push(o.dataset.flag);
+    });
+    answers[q.id] = vals;
+    answers[q.id + '_flags'] = flags;
+
+    document.getElementById('btn-next').disabled = vals.length === 0;
+  }
+
+  function selectScale(el, q) {
+    const container = document.getElementById('q-container');
+    container.querySelectorAll('.scale-opt').forEach(o => o.classList.remove('selected'));
+    el.classList.add('selected');
+    answers[q.id] = parseFloat(el.dataset.value);
+    document.getElementById('btn-next').disabled = false;
+  }
+
+  function skipQuestion() {
+    const q = preguntas[qIndex];
+    answers[q.id] = null;
+    advance();
+  }
+
+  function nextQuestion() {
+    const q = preguntas[qIndex];
+    if (q.tipo === 'textarea') {
+      const ta = document.getElementById('q-container').querySelector('.q-textarea');
+      answers[q.id] = ta.value.trim() || null;
+    }
+    advance();
+  }
+
+  function advance() {
+    qIndex++;
+    if (qIndex >= preguntas.length) {
+      finalizarCartografo();
+    } else {
+      renderQuestion();
+    }
+  }
+
+  // ── SCORING ──
+  function calcularScores() {
+    // URGENCIA
+    let urgencia = typeof answers['P2'] === 'number' ? answers['P2'] : 40;
+
+    // ESTADO EMOCIONAL
+    let emocional = 50;
+    if (Array.isArray(answers['P3']) && answers['P3'].length > 0) {
+      emocional = answers['P3'].reduce((a, b) => a + b, 0) / answers['P3'].length;
+    }
+    // Modificador urgencia financiera afecta emocional levemente
+    if (answers['P7'] >= 75) emocional = Math.max(5, emocional - 8);
+
+    // Profundización B modifica emocional
+    if (answers['PB'] !== undefined && answers['PB'] !== null) {
+      emocional = Math.min(100, Math.max(0, emocional + parseFloat(answers['PB'])));
+    }
+
+    // CLARIDAD
+    let claridad = typeof answers['P4'] === 'number' ? answers['P4'] : 50;
+    // Modificador P5
+    if (answers['P5'] !== undefined && answers['P5'] !== null) {
+      claridad = Math.min(100, Math.max(0, claridad + parseFloat(answers['P5'])));
+    }
+
+    // CONFIANZA
+    let confianza = typeof answers['P6'] === 'number' ? answers['P6'] : 50;
+    // Profundización A modifica confianza
+    if (answers['PA'] !== undefined && answers['PA'] !== null) {
+      confianza = Math.min(100, Math.max(0, confianza + parseFloat(answers['PA'])));
+    }
+
+    // Flags
+    const flags = answers['P3_flags'] || [];
+    const tension = flags.includes('pos') && flags.includes('neg');
+    const presionCritica = answers['P7'] >= 95;
+
+    return {
+      claridad: Math.round(claridad),
+      confianza: Math.round(confianza),
+      emocional: Math.round(emocional),
+      urgencia: Math.round(urgencia),
+      flags: { tension_emocional: tension, presion_critica: presionCritica }
+    };
+  }
+
+  function clasificarFase(scores) {
+    const { claridad, confianza, emocional } = scores;
+
+    if (claridad < 35 && emocional < 40) return 'Recuperando Claridad';
+    if (confianza < 40 && claridad >= 35 && claridad <= 60) return 'Reconstruyendo Confianza';
+    if (claridad >= 40 && claridad <= 65 && confianza >= 40 && confianza <= 65) return 'Explorando Posibilidades';
+    if (claridad > 65 && confianza > 50) return 'Diseñando Camino';
+    if (claridad > 70 && confianza > 70) return 'Acción y Ejecución';
+
+    // Fallback por dimensión más baja
+    if (claridad <= confianza && claridad < 50) return 'Recuperando Claridad';
+    if (confianza < claridad && confianza < 50) return 'Reconstruyendo Confianza';
+    return 'Explorando Posibilidades';
+  }
+
+  const FASES_CONFIG = {
+    'Recuperando Claridad': {
+      icon: '◎',
+      color: 'rgba(26,158,114,.15)',
+      objetivo: 'Recuperar claridad sobre tu situación actual y lo que quieres.',
+      ocurriendo: [
+        'Tienes más preguntas que respuestas en este momento.',
+        'El camino hacia adelante todavía no está definido.',
+        'El estado emocional pesa sobre la capacidad de ver con claridad.'
+      ],
+      positivo: [
+        'Sigues buscando — eso no es poca cosa.',
+        'El primer paso siempre es reconocer dónde estás.'
+      ]
+    },
+    'Reconstruyendo Confianza': {
+      icon: '↗',
+      color: 'rgba(26,158,114,.12)',
+      objetivo: 'Reconstruir la confianza en tus propias capacidades.',
+      ocurriendo: [
+        'Tienes más claridad que confianza en este momento.',
+        'Sabes lo que quieres, pero algo frena el movimiento.',
+        'La duda sobre ti mismo/a es el obstáculo principal.'
+      ],
+      positivo: [
+        'Tu claridad es una base sólida para avanzar.',
+        'La confianza se reconstruye con pequeños logros concretos.'
+      ]
+    },
+    'Explorando Posibilidades': {
+      icon: '✦',
+      color: 'rgba(26,158,114,.1)',
+      objetivo: 'Explorar qué caminos encajan con quién eres hoy.',
+      ocurriendo: [
+        'Estás en un momento de apertura y búsqueda.',
+        'Claridad y confianza están creciendo, pero todavía no están completas.',
+        'Es un momento de exploración, no de certezas.'
+      ],
+      positivo: [
+        'Estás en el lugar correcto para descubrir qué sigue.',
+        'Tienes los recursos internos para avanzar.'
+      ]
+    },
+    'Diseñando Camino': {
+      icon: '◈',
+      color: 'rgba(26,158,114,.08)',
+      objetivo: 'Diseñar con claridad el camino hacia donde quieres ir.',
+      ocurriendo: [
+        'Tienes claridad sobre tu dirección.',
+        'Tu confianza está en un buen lugar.',
+        'El foco ahora es convertir esa claridad en un plan.'
+      ],
+      positivo: [
+        'Llegas a esta etapa con una base sólida.',
+        'Estás listo/a para diseñar el siguiente capítulo.'
+      ]
+    },
+    'Acción y Ejecución': {
+      icon: '★',
+      color: 'rgba(26,158,114,.06)',
+      objetivo: 'Ejecutar con foco y mantener el momentum.',
+      ocurriendo: [
+        'Tienes claridad y confianza para avanzar.',
+        'El foco ahora es la ejecución consistente.',
+        'Cada semana importa.'
+      ],
+      positivo: [
+        'Estás en la fase donde ocurren los cambios reales.',
+        'Tu trabajo ahora es mantener el ritmo.'
+      ]
+    }
+  };
+
+  function urgenciaLabel(val) {
+    if (val <= 20) return { label: 'Baja', class: 'baja' };
+    if (val <= 60) return { label: 'Media', class: 'media' };
+    if (val <= 80) return { label: 'Alta', class: 'alta' };
+    return { label: 'Crítica', class: 'critica' };
+  }
+
+  // ── FINALIZAR ──
+  async function finalizarCartografo() {
+    document.getElementById('screen-question').classList.add('hidden');
+    document.getElementById('screen-loading').classList.remove('hidden');
+
+    const scores = calcularScores();
+    const fase = clasificarFase(scores);
+    const desafio = answers['P5_desafio'] || 'Encontrar claridad sobre el próximo paso';
+
+    const loadingMsgs = [
+      'Analizando tus respuestas...',
+      'Detectando patrones...',
+      'Construyendo tu diagnóstico...'
+    ];
+    let li = 0;
+    const lInterval = setInterval(() => {
+      li = (li + 1) % loadingMsgs.length;
+      document.getElementById('loading-txt').textContent = loadingMsgs[li];
+    }, 1800);
+
+    // Llamar al endpoint
+    let parrafoIA = null;
+    try {
+      const res = await fetch('/api/cartografo', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: cu?.id,
+          answers,
+          scores,
+          fase,
+          desafio
+        })
+      });
+      const data = await res.json();
+      parrafoIA = data.parrafo || null;
+    } catch(e) {
+      console.error('Cartógrafo API error:', e);
+    }
+
+    clearInterval(lInterval);
+    showResult(scores, fase, desafio, parrafoIA);
+  }
+
+  function showResult(scores, fase, desafio, parrafoIA) {
+    document.getElementById('screen-loading').classList.add('hidden');
+    const resultEl = document.getElementById('screen-result');
+    resultEl.classList.remove('hidden');
+
+    const config = FASES_CONFIG[fase] || FASES_CONFIG['Explorando Posibilidades'];
+    const urgObj = urgenciaLabel(scores.urgencia);
+
+    resultEl.innerHTML = `
+      <div class="result-eyebrow">Tu diagnóstico</div>
+
+      <div class="result-phase-card">
+        <span class="result-phase-icon">${config.icon}</span>
+        <div class="result-phase-name">${fase}</div>
+        <div class="result-phase-sub">Fase actual</div>
+
+        <span class="urgencia-badge ${urgObj.class}">
+          Urgencia ${urgObj.label}
+        </span>
+
+        <div class="result-section-title">Lo que está ocurriendo</div>
+        <div class="result-bullets">
+          ${config.ocurriendo.map(b => `
+            <div class="result-bullet">
+              <div class="result-bullet-dot neg"></div>
+              <span>${b}</span>
+            </div>`).join('')}
+        </div>
+
+        <div class="result-divider"></div>
+
+        <div class="result-section-title">Lo que ya tienes</div>
+        <div class="result-bullets" style="margin-bottom:20px">
+          ${config.positivo.map(b => `
+            <div class="result-bullet">
+              <div class="result-bullet-dot pos"></div>
+              <span>${b}</span>
+            </div>`).join('')}
+        </div>
+
+        <div class="result-objetivo-label">Tu siguiente objetivo</div>
+        <div class="result-objetivo">${config.objetivo}</div>
+      </div>
+
+      <div class="result-bars-card">
+        ${[
+          { name: 'Claridad', val: scores.claridad },
+          { name: 'Confianza', val: scores.confianza },
+          { name: 'Energía emocional', val: scores.emocional },
+        ].map(b => `
+          <div class="bar-row">
+            <div class="bar-meta">
+              <span class="bar-name">${b.name}</span>
+              <span class="bar-pct">${b.val}%</span>
+            </div>
+            <div class="bar-track">
+              <div class="bar-fill" data-target="${b.val}"></div>
+            </div>
+          </div>`).join('')}
+      </div>
+
+      <div class="result-ia-card">
+        <div class="result-ia-icon">✦</div>
+        ${parrafoIA
+          ? `<p class="result-ia-text">${parrafoIA}</p>`
+          : `<div class="result-ia-loading"><div class="loading-dots"><span></span><span></span><span></span></div> <span>Generando análisis...</span></div>`
+        }
+      </div>
+
+      <button class="btn-continuar" onclick="irADashboard()">
+        Comenzar mi proceso →
+      </button>
+    `;
+
+    // Animar barras
+    setTimeout(() => {
+      resultEl.querySelectorAll('.bar-fill').forEach(el => {
+        const target = el.dataset.target;
+        el.style.width = target + '%';
+      });
+    }, 400);
+
+    // Si no hay párrafo, intentar de nuevo
+    if (!parrafoIA) {
+      regenerarParrafo(scores, fase, desafio);
+    }
+  }
+
+  async function regenerarParrafo(scores, fase, desafio) {
+    try {
+      const res = await fetch('/api/cartografo/parrafo', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: cu?.id, scores, fase, desafio, answers })
+      });
+      const data = await res.json();
+      if (data.parrafo) {
+        const iaEl = document.querySelector('.result-ia-text, .result-ia-loading');
+        if (iaEl) {
+          iaEl.className = 'result-ia-text';
+          iaEl.textContent = data.parrafo;
+        }
+      }
+    } catch(e) {
+      console.error('Párrafo retry error:', e);
+    }
+  }
+
+  function irADashboard() {
+    window.location.href = '/app.html';
+  }
+
+  // ── AUTH ──
+  async function init() {
+    const { data: { session } } = await sb.auth.getSession();
+    if (!session?.user) { window.location.href = '/'; return; }
+    cu = session.user;
+
+    // Verificar si ya completó el cartógrafo
+    const { data } = await sb
+      .from('cartografo_resultados')
+      .select('id')
+      .eq('usuario_id', cu.id)
+      .maybeSingle();
+
+    if (data) {
+      // Ya lo completó, ir al dashboard
+      window.location.href = '/app.html';
+      return;
+    }
+  }
+
+  init();
+</script>
+</body>
+</html>
